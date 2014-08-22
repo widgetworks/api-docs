@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <title>API Reference</title>
+    <title>Widget API Reference</title>
 
     <link href="stylesheets/screen.css" rel="stylesheet" type="text/css" media="screen" />
     <link href="stylesheets/print.css" rel="stylesheet" type="text/css" media="print" />
@@ -13,7 +13,7 @@
 
       <script>
         $(function() {
-          setupLanguages(["shell","ruby","python"]);
+          setupLanguages(["javascript"]);
         });
       </script>
   </head>
@@ -28,9 +28,7 @@
     <div class="tocify-wrapper">
       <img src="images/logo.png" />
         <div class="lang-selector">
-              <a href="#" data-language-name="shell">shell</a>
-              <a href="#" data-language-name="ruby">ruby</a>
-              <a href="#" data-language-name="python">python</a>
+              <a href="#" data-language-name="javascript">javascript</a>
         </div>
         <div class="search">
           <input type="text" class="search" id="input-search" placeholder="Search">
@@ -39,217 +37,306 @@
       <div id="toc">
       </div>
         <ul class="toc-footer">
-            <li><a href='#'>Sign Up for a Developer Key</a></li>
+            <li><a href='http://widgetworks.com.au'>Widget Works - Engage. Inform. Convert</a></li>
             <li><a href='http://github.com/tripit/slate'>Documentation Powered by Slate</a></li>
         </ul>
     </div>
     <div class="page-wrapper">
       <div class="dark-box"></div>
       <div class="content">
-        <h1 id='introduction'>Introduction</h1>
-<p>Welcome to the Kittn API! You can use our API to access Kittn API endpoints, which can get information on various cats, kittens, and breeds in our database.</p>
-
-<p>We have language bindings in Shell, Ruby, and Python! You can view code examples in the dark area to the right, and you can switch the programming language of the examples with the tabs in the top right.</p>
-
-<p>This example API documentation page was created with <a href="http://github.com/tripit/slate">Slate</a>. Feel free to edit it and use it as a base for your own API&rsquo;s documentation.</p>
-<h1 id='authentication'>Authentication</h1>
+        
+          <h1 id='widget-works-widget-api'>Widget Works Widget API</h1><h2 id='data-in-data-out-dido-api'>Data In, Data Out (dido) API</h2>
 <blockquote>
-<p>To authorize, use this code:</p>
-</blockquote>
-<pre class="highlight ruby"><span class="nb">require</span> <span class="s1">'kittn'</span>
-
-<span class="n">api</span> <span class="o">=</span> <span class="no">Kittn</span><span class="o">::</span><span class="no">APIClient</span><span class="p">.</span><span class="nf">authorize!</span><span class="p">(</span><span class="s1">'meowmeowmeow'</span><span class="p">)</span>
-</pre>
-<pre class="highlight python"><span class="kn">import</span> <span class="s">'kittn'</span>
-
-<span class="n">api</span> <span class="o">=</span> <span class="n">Kittn</span><span class="o">.</span><span class="n">authorize</span><span class="p">(</span><span class="s">'meowmeowmeow'</span><span class="p">)</span>
-</pre>
-<pre class="highlight shell"><span class="c"># With shell, you can just pass the correct header with each request</span>
-curl <span class="s2">"api_endpoint_here"</span>
-  -H <span class="s2">"Authorization: meowmeowmeow"</span>
-</pre>
-
-<blockquote>
-<p>Make sure to replace <code class="prettyprint">meowmeowmeow</code> with your API key.</p>
+<p>All Widget Works Widgets provide an interaction API.</p>
 </blockquote>
 
-<p>Kittn uses API keys to allow access to the API. You can register a new Kittn API key at our <a href="http://example.com/developers">developer portal</a>.</p>
+<p>Once a widget is placed on a page using the Widget Manager provided license and links, you can use our simple API to set and get calculatin specific data from the widget. The Widget itself runs in the iframe and you can&rsquo;t communicate to it directly due to cross domain limitations. Our helpful scout provides a secure, cross-frame communications API which you can use to query the Widget.</p>
 
-<p>Kittn expects for the API key to be included in all API requests to the server in a header that looks like the following:</p>
+<p>The API is event based and asynchronous:</p>
 
-<p><code class="prettyprint">Authorization: meowmeowmeow</code></p>
+<blockquote>
+<p>The namespace for all Widget Works API libraries is : <code class="prettyprint">wiwo</code></p>
+</blockquote>
+
+<ul>
+<li>use our <code class="prettyprint">wiwo.iframeUtil</code> to create event listeners for <code class="prettyprint">wiwo.dido.getDataResult</code> or <code class="prettyprint">wiwo.dido.setDataResult</code> with your callbacks to take action with the data returned</li>
+<li>once the iframe has loaded, use <code class="prettyprint">wiwo.iframeUtil.postMessage</code> to fire a <code class="prettyprint">&#39;wiwo.dido.getData&#39;</code> or <code class="prettyprint">&#39;wiwo.dido.setData&#39;</code> event, with your data payload</li>
+<li>the Widget recevies the postMessage and will internally process the event. Depending on the action, it may offer the user options to save data before continuing</li>
+<li>once ready, the Widget will fire a <code class="prettyprint">&#39;wiwo.dido.getDataResult&#39;</code> or <code class="prettyprint">&#39;wiwo.dido.setDataResult&#39;</code> via iframeUtil for your listener to be invoked</li>
+</ul>
+
+<p>In most cases the response from the Widget will be virtually immediate. Responses always provide:</p>
+
+<ul>
+<li>an <em>event result object</em> : failure/success, and details of any errors</li>
+<li>a <em>data object</em> : actual data from the widget, calculation results, etc. <em>Refer to your Widget specific documentation for the data properties.</em></li>
+</ul>
+<h2 id='page-setup'>Page setup</h2>
+<blockquote>
+<p>To add a Widget to your page</p>
+</blockquote>
+<pre class="highlight html"><span class="c">&lt;!-- Start Widget Works - do not change --&gt;</span>
+<span class="nt">&lt;script </span><span class="na">type=</span><span class="s">"text/javascript"</span> <span class="na">src=</span><span class="s">"https://w.widgetworks.com.au/s/bojumo.js"</span><span class="nt">&gt;&lt;/script&gt;</span>
+ <span class="nt">&lt;iframe</span> <span class="na">id=</span><span class="s">"wiwo-bojumo"</span> <span class="na">width=</span><span class="s">"100%"</span> <span class="na">height=</span><span class="s">"100"</span> <span class="na">src=</span><span class="s">""</span> <span class="na">frameborder=</span><span class="s">"0"</span> <span class="na">data-wiwo-init=</span><span class="s">"false"</span><span class="nt">&gt;&lt;/iframe&gt;</span>
+<span class="nt">&lt;script </span><span class="na">type=</span><span class="s">"text/javascript"</span> <span class="na">src=</span><span class="s">"//s3-ap-southeast-2.amazonaws.com/w-widgetworks-com-au/widget/widget-scout.min.js"</span><span class="nt">&gt;&lt;/script&gt;</span>
+<span class="c">&lt;!-- End Widget Works --&gt;</span>
+</pre>
+
+<p>First, copy and insert the Widget embed code from <a href="https://wm.widgetworks.com.au">Widget Manager</a>. Our examples will use the following Mortgage Repayment Widget:</p>
+
+<p>You can have multiple Widgets on the same page, just use the iframe id to refer to each instance specifically.</p>
 
 <p><aside class="notice">
-You must replace <code class="prettyprint">meowmeowmeow</code> with your personal API key.
+The iframe id (<em>wiwo-bojumo</em> in this case) identifies your license and the iframe itself.
 </aside></p>
-<h1 id='kittens'>Kittens</h1><h2 id='get-all-kittens'>Get All Kittens</h1><pre class="highlight ruby"><span class="nb">require</span> <span class="s1">'kittn'</span>
 
-<span class="n">api</span> <span class="o">=</span> <span class="no">Kittn</span><span class="o">::</span><span class="no">APIClient</span><span class="p">.</span><span class="nf">authorize!</span><span class="p">(</span><span class="s1">'meowmeowmeow'</span><span class="p">)</span>
-<span class="n">api</span><span class="p">.</span><span class="nf">kittens</span><span class="p">.</span><span class="nf">get</span>
-</pre>
-<pre class="highlight python"><span class="kn">import</span> <span class="s">'kittn'</span>
-
-<span class="n">api</span> <span class="o">=</span> <span class="n">Kittn</span><span class="o">.</span><span class="n">authorize</span><span class="p">(</span><span class="s">'meowmeowmeow'</span><span class="p">)</span>
-<span class="n">api</span><span class="o">.</span><span class="n">kittens</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
-</pre>
-<pre class="highlight shell">curl <span class="s2">"http://example.com/api/kittens"</span>
-  -H <span class="s2">"Authorization: meowmeowmeow"</span>
-</pre>
-
+          <h1 id='the-api'>The API</h1><h2 id='available-messages'>Available messages</h2>
 <blockquote>
-<p>The above command returns JSON structured like this:</p>
+<p>getData and setData - easy as that!</p>
 </blockquote>
-<pre class="highlight json"><span class="p">[</span><span class="w">
-  </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Fluffums"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"breed"</span><span class="p">:</span><span class="w"> </span><span class="s2">"calico"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"fluffiness"</span><span class="p">:</span><span class="w"> </span><span class="mi">6</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"cuteness"</span><span class="p">:</span><span class="w"> </span><span class="mi">7</span><span class="w">
-  </span><span class="p">},</span><span class="w">
-  </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Isis"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"breed"</span><span class="p">:</span><span class="w"> </span><span class="s2">"unknown"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"fluffiness"</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"cuteness"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="w">
-  </span><span class="p">}</span><span class="w">
-</span><span class="p">]</span><span class="w">
-</span></pre>
+<pre class="highlight javascript">  <span class="nx">jQuery</span><span class="p">(</span><span class="kd">function</span><span class="p">(){</span>
+    <span class="nx">wiwo</span><span class="p">.</span><span class="nx">iframeUtil</span><span class="p">.</span><span class="nx">postMessage</span><span class="p">(</span><span class="s1">'wiwo-bojumo'</span><span class="p">,</span> <span class="s1">'wiwo.dido.getData'</span><span class="p">);</span>
+    <span class="nx">wiwo</span><span class="p">.</span><span class="nx">iframeUtil</span><span class="p">.</span><span class="nx">postMessage</span><span class="p">(</span><span class="s1">'wiwo-bojumo'</span><span class="p">,</span> <span class="s1">'wiwo.dido.setData'</span><span class="p">);</span>
+  <span class="p">)};</span>
+</pre>
 
-<p>This endpoint retrieves all kittens.</p>
-<h3 id='http-request'>HTTP Request</h1>
-<p><code class="prettyprint">GET http://example.com/kittens</code></p>
-<h3 id='query-parameters'>Query Parameters</h1>
 <table><thead>
 <tr>
-<th>Parameter</th>
-<th>Default</th>
-<th>Description</th>
+<th>Message</th>
+<th>Function</th>
 </tr>
 </thead><tbody>
 <tr>
-<td>include_cats</td>
-<td>false</td>
-<td>If set to true, the result will also include cats.</td>
+<td>wiwo.dido.getData</td>
+<td>queues a request to get data from the specified widget</td>
 </tr>
 <tr>
-<td>available</td>
-<td>true</td>
-<td>If set to false, the result will include kittens that have already been adopted.</td>
+<td>wiwo.dido.setData</td>
+<td>queues a request to set your data payload on the specified widget</td>
 </tr>
 </tbody></table>
 
-<p><aside class="success">
-Remember — a happy kitten is an authenticated kitten!
-</aside></p>
-<h2 id='get-a-specific-kitten'>Get a Specific Kitten</h1><pre class="highlight ruby"><span class="nb">require</span> <span class="s1">'kittn'</span>
+<p>To invoke actions on the Widget, use <code class="prettyprint">wiwo.iframeUtil.postMessage</code>. Ensure you wrap any of these calls in <code class="prettyprint">jQuery(function(){})</code> to ensure <code class="prettyprint">wiwo.iframeUtil</code> is ready and that the Widget has fully loaded and waiting for your messages.</p>
+<h2 id='response-events'>Response events</h2>
+<table><thead>
+<tr>
+<th>Event</th>
+<th>Result</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>&lsquo;wiwo.dido.getDataResult&rsquo;</td>
+<td>result object with <code class="prettyprint">result.data.output</code> and <code class="prettyprint">result.data.input</code></td>
+</tr>
+<tr>
+<td>&lsquo;wiwo.dido.setDataResult&rsquo;</td>
+<td>result object with <code class="prettyprint">result.data.input</code>, the values you called setData with</td>
+</tr>
+</tbody></table>
 
-<span class="n">api</span> <span class="o">=</span> <span class="no">Kittn</span><span class="o">::</span><span class="no">APIClient</span><span class="p">.</span><span class="nf">authorize!</span><span class="p">(</span><span class="s1">'meowmeowmeow'</span><span class="p">)</span>
-<span class="n">api</span><span class="p">.</span><span class="nf">kittens</span><span class="p">.</span><span class="nf">get</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
-</pre>
-<pre class="highlight python"><span class="kn">import</span> <span class="s">'kittn'</span>
-
-<span class="n">api</span> <span class="o">=</span> <span class="n">Kittn</span><span class="o">.</span><span class="n">authorize</span><span class="p">(</span><span class="s">'meowmeowmeow'</span><span class="p">)</span>
-<span class="n">api</span><span class="o">.</span><span class="n">kittens</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
-</pre>
-<pre class="highlight shell">curl <span class="s2">"http://example.com/api/kittens/3"</span>
-  -H <span class="s2">"Authorization: meowmeowmeow"</span>
-</pre>
-
+<p>All event listeners and callbacks need to be setup in the context of <code class="prettyprint">wiwo.iframeUtil_config.ready</code>, which ensures your functions are only run once the Widget has fully loaded.</p>
+<h2 id='event-properties'>Event Properties</h2>
 <blockquote>
-<p>The above command returns JSON structured like this:</p>
+<p>Your returned data will be in an object like this</p>
 </blockquote>
 <pre class="highlight json"><span class="p">{</span><span class="w">
-  </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Isis"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"breed"</span><span class="p">:</span><span class="w"> </span><span class="s2">"unknown"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"fluffiness"</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"cuteness"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="w">
+  </span><span class="s2">"wiwoEvent"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string - the name of the event"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"frameId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string - id of the frame that raised the event"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"frame"</span><span class="p">:</span><span class="w"> </span><span class="s2">"iframe element - DOM reference to the frame that raised the event"</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></pre>
 
-<p>This endpoint retrieves a specific kitten.</p>
-
-<p><aside class="warning">If you&rsquo;re not using an administrator API key, note that some kittens will return 403 Forbidden if they are hidden for admins only.</aside></p>
-<h3 id='http-request'>HTTP Request</h1>
-<p><code class="prettyprint">GET http://example.com/kittens/&lt;ID&gt;</code></p>
-<h3 id='url-parameters'>URL Parameters</h1>
 <table><thead>
 <tr>
-<th>Parameter</th>
-<th>Description</th>
+<th>Property</th>
+<th>Details</th>
 </tr>
 </thead><tbody>
 <tr>
-<td>ID</td>
-<td>The ID of the cat to retrieve</td>
+<td>event.wiwoEvent</td>
+<td>string - the name of the event</td>
+</tr>
+<tr>
+<td>event.frameId</td>
+<td>string - id of the frame that raised the event</td>
+</tr>
+<tr>
+<td>event.frame</td>
+<td>iframe element - DOM reference to the frame that raised the event</td>
 </tr>
 </tbody></table>
+<pre class="highlight javascript"><span class="nx">wiwo</span><span class="p">.</span><span class="nx">iframeUtil_config</span><span class="p">.</span><span class="nx">ready</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">iframeUtil</span><span class="p">){</span>
+    <span class="nx">iframeUtil</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">'wiwo.dido.getDataResult'</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">event</span><span class="p">,</span> <span class="nx">result</span><span class="p">){</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">result</span><span class="p">.</span><span class="nx">success</span><span class="p">){</span>
+            <span class="c1">//your data handling here
+</span>            <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">result</span><span class="p">.</span><span class="nx">data</span><span class="p">.</span><span class="nx">output</span><span class="p">);</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+            <span class="c1">//your error handling here
+</span>            <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'Error getting data: '</span><span class="p">,</span> <span class="nx">result</span><span class="p">.</span><span class="nx">message</span><span class="p">)</span>
+        <span class="p">}</span>
+    <span class="p">});</span>
+<span class="p">}</span>
+</pre>
+<h2 id='helpers'>Helpers</h2><pre class="highlight javascript"><span class="nx">wiwo</span><span class="p">.</span><span class="nx">iframeUtil</span><span class="p">.</span><span class="nx">getFrameList</span><span class="p">()</span>
 
-          <h1 id='errors'>Errors</h1>
-<p><aside class="notice">This error section is stored in a separate file in <code class="prettyprint">includes/_errors.md</code>. Slate allows you to optionally separate out your docs into many files&hellip;just save them to the <code class="prettyprint">includes</code> folder and add them to the top of your <code class="prettyprint">index.md</code>&rsquo;s frontmatter. Files are included in the order listed.</aside></p>
+<span class="c1">// returns
+</span>
+<span class="p">[</span>
+  <span class="p">{</span>
+    <span class="na">frameId</span><span class="p">:</span> <span class="nx">string</span> <span class="o">-</span> <span class="nx">name</span> <span class="nx">of</span> <span class="nx">the</span> <span class="nx">frame</span>
+    <span class="na">frame</span><span class="p">:</span> <span class="nx">DOM</span> <span class="nx">element</span> <span class="nx">reference</span> <span class="nx">to</span> <span class="nx">the</span> <span class="nx">frame</span> <span class="nx">itself</span>
+  <span class="p">},</span>
+  <span class="p">{...}</span>
+<span class="p">]</span>
+</pre>
 
-<p>The Kittn API uses the following error codes:</p>
+<p><code class="prettyprint">wiwo.iframeUtil.getFrameList()</code> returns a list of all the Widget frames it knows about on a page.</p>
+<h2 id='get-data-from-widget'>Get data from widget</h2><pre class="highlight javascript">  <span class="s2">"result"</span><span class="err">:</span> <span class="p">{</span>
+    <span class="s2">"data"</span><span class="p">:</span> <span class="p">{</span>
+      <span class="s2">"output"</span><span class="p">:</span> <span class="p">{</span>       
+        <span class="s2">"repaymentResultModel"</span><span class="p">:</span> <span class="p">{</span>
+          <span class="s2">"hasFixedRepayment"</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
+          <span class="s2">"fixedRepayment"</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+          <span class="s2">"ongoingRepayment"</span><span class="p">:</span> <span class="mf">690.911525212645</span><span class="p">,</span>
+          <span class="s2">"totalInterestPayable"</span><span class="p">:</span> <span class="mf">89094.6689249568</span><span class="p">,</span>
+          <span class="s2">"totalLoanAmount"</span><span class="p">:</span> <span class="mf">189094.66892495676</span><span class="p">,</span>
+          <span class="s2">"loanDuration"</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">"rawPeriods"</span><span class="p">:</span> <span class="mi">300</span><span class="p">,</span>
+            <span class="s2">"totalYears"</span><span class="p">:</span> <span class="mi">25</span><span class="p">,</span>
+            <span class="s2">"years"</span><span class="p">:</span> <span class="mi">25</span><span class="p">,</span>
+            <span class="s2">"periods"</span><span class="p">:</span> <span class="mi">0</span>
+          <span class="p">},</span>
+          <span class="s2">"chartSeries"</span><span class="p">:</span> <span class="p">{</span>
+              <span class="s2">"lastTerm"</span><span class="p">:</span> <span class="mi">25</span><span class="p">,</span>
+              <span class="s2">"repaymentSeries"</span><span class="p">:</span> <span class="p">[</span>
+                  <span class="p">[</span>
+                    <span class="mi">0</span><span class="p">,</span>
+                    <span class="mf">189094.67</span>
+                  <span class="p">]</span>
+                  <span class="c1">//, ....
+</span>              <span class="p">]</span>
+            <span class="p">}</span>
+        <span class="p">}</span>       
 
-<table><thead>
-<tr>
-<th>Error Code</th>
-<th>Meaning</th>
-</tr>
-</thead><tbody>
-<tr>
-<td>400</td>
-<td>Bad Request &ndash; Your request sucks</td>
-</tr>
-<tr>
-<td>401</td>
-<td>Unauthorized &ndash; Your API key is wrong</td>
-</tr>
-<tr>
-<td>403</td>
-<td>Forbidden &ndash; The kitten requested is hidden for administrators only</td>
-</tr>
-<tr>
-<td>404</td>
-<td>Not Found &ndash; The specified kitten could not be found</td>
-</tr>
-<tr>
-<td>405</td>
-<td>Method Not Allowed &ndash; You tried to access a kitten with an invalid method</td>
-</tr>
-<tr>
-<td>406</td>
-<td>Not Acceptable &ndash; You requested a format that isn&rsquo;t json</td>
-</tr>
-<tr>
-<td>410</td>
-<td>Gone &ndash; The kitten requested has been removed from our servers</td>
-</tr>
-<tr>
-<td>418</td>
-<td>I&rsquo;m a teapot</td>
-</tr>
-<tr>
-<td>429</td>
-<td>Too Many Requests &ndash; You&rsquo;re requesting too many kittens! Slown down!</td>
-</tr>
-<tr>
-<td>500</td>
-<td>Internal Server Error &ndash; We had a problem with our server. Try again later.</td>
-</tr>
-<tr>
-<td>503</td>
-<td>Service Unavailable &ndash; We&rsquo;re temporarially offline for maintanance. Please try again later.</td>
-</tr>
-</tbody></table>
+      <span class="p">},</span>
+      <span class="s2">"input"</span><span class="p">:</span> <span class="p">{</span>
+        <span class="c1">//all the input fields
+</span>      <span class="p">}</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+</pre>
+
+<p><code class="prettyprint">getData</code> will return you a <code class="prettyprint">result</code> with two primary objects, the <em>standard input fields</em> under <code class="prettyprint">data.input</code> and the <em>calculation results</em> under <code class="prettyprint">data.output</code>. You can modify the input fields and send it right back for recalculation via <code class="prettyprint">setData</code>.</p>
+
+<p>You can call <code class="prettyprint">getData</code> at any time. Widgets aim to always be in a consistent state - even if they have to rely on default input values. Internal calculations are always attempted before the <code class="prettyprint">getData</code> request is fulfilled.</p>
+
+<blockquote>
+<p>Putting it all together</p>
+</blockquote>
+<pre class="highlight javascript">    <span class="c1">//setup your event listeners, which will receive data in result
+</span>    <span class="nx">wiwo</span><span class="p">.</span><span class="nx">iframeUtil_config</span> <span class="o">=</span> <span class="nx">wiwo</span><span class="p">.</span><span class="nx">iframeUtil_config</span> <span class="o">||</span> <span class="p">{};</span> <span class="c1">//manual namespace in case the support script haven't loaded yet
+</span>    <span class="nx">wiwo</span><span class="p">.</span><span class="nx">iframeUtil_config</span><span class="p">.</span><span class="nx">ready</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">iframeUtil</span><span class="p">){</span>
+      <span class="nx">iframeUtil</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">'wiwo.dido.getDataResult'</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">event</span><span class="p">,</span> <span class="nx">result</span><span class="p">){</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">result</span><span class="p">.</span><span class="nx">success</span><span class="p">){</span>
+          <span class="c1">//all result.data.input and result.data.output is available to you
+</span>          <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">"You will pay a total of %d interest for the loan"</span><span class="p">,</span>
+            <span class="nx">result</span><span class="p">.</span><span class="nx">data</span><span class="p">.</span><span class="nx">output</span><span class="p">.</span><span class="nx">repaymentResultModel</span><span class="p">.</span><span class="nx">totalInterestAmt</span>
+          <span class="p">);</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+          <span class="c1">//handle the error
+</span>          <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'Error getting data: '</span><span class="p">,</span> <span class="nx">result</span><span class="p">.</span><span class="nx">message</span><span class="p">)</span>
+        <span class="p">}</span>
+      <span class="p">});</span>
+    <span class="p">}</span>
+
+    <span class="cm">/** 
+     * Once the page is ready (which will ensure the Widget is ready and listening too),
+     * send a getData request. Once it's fulfilled, a 'wiwo.dido.getDataResult' will be 
+     * raised and your listener above will be invoked
+     */</span>
+    <span class="nx">jQuery</span><span class="p">(</span><span class="kd">function</span><span class="p">(){</span>
+      <span class="c1">// Need to make sure the frame content has been loaded. 
+</span>      <span class="nx">wiwo</span><span class="p">.</span><span class="nx">iframeUtil</span><span class="p">.</span><span class="nx">postMessage</span><span class="p">(</span><span class="s1">'wiwo-bojumo'</span><span class="p">,</span> <span class="s1">'wiwo.dido.getData'</span><span class="p">);</span>
+    <span class="p">});</span>
+
+</pre>
+<h2 id='set-data-on-the-widget'>Set data on the widget</h2>
+<blockquote>
+<p>The data payload you send must follow the input.modelName format style that is returned from a getData:</p>
+</blockquote>
+<pre class="highlight javascript"><span class="kd">var</span> <span class="nx">myData</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="na">input</span><span class="p">:</span> <span class="p">{</span>
+        <span class="na">modelName</span><span class="p">:</span> <span class="p">{</span>
+            <span class="na">property</span><span class="p">:</span> <span class="nx">value</span>
+            <span class="c1">// ...
+</span>        <span class="p">},</span>
+        <span class="na">modelName</span><span class="p">:</span> <span class="p">{</span>
+            <span class="c1">// ...
+</span>        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+</pre>
+<pre class="highlight javascript">
+    <span class="c1">//setup your event listeners, which will receive data in result
+</span>    <span class="nx">wiwo</span><span class="p">.</span><span class="nx">iframeUtil_config</span> <span class="o">=</span> <span class="nx">wiwo</span><span class="p">.</span><span class="nx">iframeUtil_config</span> <span class="o">||</span> <span class="p">{};</span> <span class="c1">//manual namespace in case the support script haven't loaded yet
+</span>    <span class="nx">wiwo</span><span class="p">.</span><span class="nx">iframeUtil_config</span><span class="p">.</span><span class="nx">ready</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">iframeUtil</span><span class="p">){</span>
+      <span class="nx">iframeUtil</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">'wiwo.dido.setDataResult'</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">event</span><span class="p">,</span> <span class="nx">result</span><span class="p">){</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">result</span><span class="p">.</span><span class="nx">success</span><span class="p">){</span>
+          <span class="c1">//all result.data.input and result.data.output is available to you
+</span>          <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">"Your data was set, run getData to get the calc results"</span><span class="p">);</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+          <span class="c1">//handle the error
+</span>          <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'Error getting data: '</span><span class="p">,</span> <span class="nx">result</span><span class="p">.</span><span class="nx">message</span><span class="p">)</span>
+        <span class="p">}</span>
+      <span class="p">});</span>
+    <span class="p">}</span>
+
+    <span class="cm">/** 
+     * Once the page is ready (which will ensure the Widget is ready and listening too),
+     * send a setData request with your payload. Once it's fulfilled, 
+     * a 'wiwo.dido.setDataResult' will be 
+     * raised and your listener above will be invoked
+     */</span>
+    <span class="nx">jQuery</span><span class="p">(</span><span class="kd">function</span><span class="p">(){</span>
+      <span class="c1">// Need to make sure the frame content has been loaded.       
+</span>      <span class="kd">var</span> <span class="nx">myData</span> <span class="o">=</span> <span class="p">{</span> 
+        <span class="na">input</span><span class="p">:</span> <span class="p">{</span>
+          <span class="na">repaymentModel</span><span class="p">:</span> <span class="p">{</span>
+            <span class="na">principle</span><span class="p">:</span> <span class="mi">150000</span><span class="p">,</span>
+            <span class="na">rate</span><span class="p">:</span> <span class="mf">0.065</span>
+            <span class="c1">// ...
+</span>          <span class="p">},</span> 
+          <span class="na">savingsModel</span><span class="p">:</span> <span class="p">{</span>
+            <span class="c1">// ...
+</span>          <span class="p">}</span>
+        <span class="p">}</span>       
+      <span class="p">};</span>      
+      <span class="nx">wiwo</span><span class="p">.</span><span class="nx">iframeUtil</span><span class="p">.</span><span class="nx">postMessage</span><span class="p">(</span><span class="s1">'wiwo-bojumo'</span><span class="p">,</span> <span class="s1">'wiwo.dido.setData'</span><span class="p">,</span> <span class="nx">myData</span><span class="p">);</span>      
+    <span class="p">});</span>
+
+</pre>
+
+<p>Using setData, you provide an object to the widget with all the of the standard input fields. Any input field which is usually provided on screen can be set on via the API. Refer to your Widget specific documentation for the input object model.</p>
+
+          <h1 id='error-handling'>Error Handling</h1>
+<p>Widgets do their best to keep in a consistent state and ensure they don&rsquo;t show complex or code related errors to users. We design them to accept a wide range of inputs, but to ensure accuracy they are conservative in their approach to error handling - they will reject data on error and provide you a result object detailing what went wrong.</p>
+
+<p><aside class="notice">Widgets do their best to keep in a consistent state and ensure they don&rsquo;t show complex or code related errors</aside></p>
+<h2 id='data-issues'>Data issues</h2>
+<p>Widgets pre-process all input data and perform type conversion and internal lookups before calculating or displaying the data you give them. If lookups are invalid or outdated (eg. when you try to look up an outdated product) the widget will log errors and return the error information in the result object.</p>
+
+<p>Most of the time you will still get a calculation value back from <code class="prettyprint">getDataResult</code>, but it will use internal defaults for fields with errors.</p>
+<h2 id='missing-required-data'>Missing required data</h2>
+<p>Required values that are not supplied will be logged to console and in the result object.</p>
+<h2 id='invalid-datatypes'>Invalid datatypes</h2>
+<p>Simply rejected</p>
+<h2 id='outdatedinvalid-lookup-references-ie-product-names'>Outdated/invalid lookup references (ie Product names)</h2>
+<p>You control all product information and settings from your Widget Manager account so you must ensure you keep any external references to product keys up to date. If you try and set data with references to a product which doesn&rsquo;t exist the Widget will either default to the first applicable in the list or reject your set data.</p>
 
       </div>
       <div class="dark-box">
           <div class="lang-selector">
-                <a href="#" data-language-name="shell">shell</a>
-                <a href="#" data-language-name="ruby">ruby</a>
-                <a href="#" data-language-name="python">python</a>
+                <a href="#" data-language-name="javascript">javascript</a>
           </div>
       </div>
     </div>
