@@ -29,8 +29,8 @@ In most cases the response from the Widget will be virtually immediate. Response
 
 ```html
 <!-- Start Widget Works - do not change -->
-<script type="text/javascript" src="https://w.widgetworks.com.au/s/bojumo.js"></script>
- <iframe id="wiwo-bojumo" width="100%" height="100" src="" frameborder="0" data-wiwo-init="false"></iframe>
+<script type="text/javascript" src="https://w.widgetworks.com.au/s/bimade.js"></script>
+ <iframe id="wiwo-bimade" width="100%" height="100" src="" frameborder="0" data-wiwo-init="false"></iframe>
 <script type="text/javascript" src="//s3-ap-southeast-2.amazonaws.com/w-widgetworks-com-au/widget/widget-scout.min.js"></script>
 <!-- End Widget Works -->
 ```
@@ -40,5 +40,5 @@ First, copy and insert the Widget embed code from [Widget Manager](https://wm.wi
  You can have multiple Widgets on the same page, just use the iframe id to refer to each instance specifically.
 
 <aside class="notice">
-The iframe id (*wiwo-bojumo* in this case) identifies your license and the iframe itself.
+The iframe id (*wiwo-bimade* in this case) identifies your license and the iframe itself.
 </aside>
