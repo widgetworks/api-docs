@@ -1,0 +1,21 @@
+@import url(//fonts.googleapis.com/css?family=Roboto:400);
+
+//space the logo a touch
+.tocify-wrapper > img {
+    margin-left: 6px;
+}
+
+.content aside.success {
+    color: #fff;
+}
+
+//make code inline text heavier/more visible
+code.prettyprint {
+    color: #000;
+    font-weight: bold;
+}
+blockquote {
+    code.prettyprint {
+        color: #fff;
+    }
+}
