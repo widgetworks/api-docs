@@ -11,6 +11,7 @@ toc_footers:
 includes:
  - intro
  - api
+ - urlparams
  - errors
 
 search: true

@@ -33,20 +33,22 @@ All event listeners and callbacks need to be setup in the context of `wiwo.ifram
 
 > Your returned data will be in an object like this
 
-```json
+```javascript
 {
-  "wiwoEvent": "string - the name of the event",
-  "frameId": "string - id of the frame that raised the event",
-  "frame": "iframe element - DOM reference to the frame that raised the event"
+      wiwoEvent: string, // The name of the event
+      frameId: string, // ID of the frame that raised the event
+      frame: HTMLIFrameElement // Reference to the iframe DOM element that raised the event
 }
 ```
 
-Property | Details
--------|------------
-event.wiwoEvent | string - the name of the event
-event.frameId | string - id of the frame that raised the event
-event.frame | iframe element - DOM reference to the frame that raised the event
+Property | Type | Details
+-------|------|------
+event.wiwoEvent | string | The name of the event
+event.frameId | string | ID of the frame that raised the event
+event.frame | HTMLIFrameElement | Reference to iframe DOM element that raised the event
 
+
+> And then you can use it to check the result and take action
 
 ```javascript
 wiwo.iframeUtil_config.ready = function(iframeUtil){
@@ -71,11 +73,11 @@ wiwo.iframeUtil.getFrameList()
 // returns
  
 [
-  {
-    frameId: string - name of the frame
-    frame: DOM element reference to the frame itself
-  },
-  {...}
+    {
+        frameId: string, // ID of the frame
+        frame: HTMLIFrameElement // Reference to the iframe DOM element
+    },
+    // ...
 ]
 ```
 
@@ -85,6 +87,7 @@ wiwo.iframeUtil.getFrameList()
 
 ## Get data from widget
 
+> getData provides the full dataset (user inputs and calculated fields) of the Widget
 
 ```javascript
   "result": {
@@ -125,8 +128,6 @@ wiwo.iframeUtil.getFrameList()
 `getData` will return you a `result` with two primary objects, the *standard input fields* under `data.input` and the *calculation results* under `data.output`. You can modify the input fields and send it right back for recalculation via `setData`.
 
 
-You can call `getData` at any time. Widgets aim to always be in a consistent state - even if they have to rely on default input values. Internal calculations are always attempted before the `getData` request is fulfilled.
-
 > Putting it all together
 
 ```javascript
@@ -158,9 +159,12 @@ You can call `getData` at any time. Widgets aim to always be in a consistent sta
  
 ```
 
+
+You can call `getData` at any time. Widgets aim to always be in a consistent state - even if they have to rely on default input values. Internal calculations are always attempted before the `getData` request is fulfilled.
+
 ## Set data on the widget
 
-> The data payload you send must follow the input.modelName format style that is returned from a getData:
+> The data payload you send is the object structure returned by a `getData`, minus the output section.
 
 ```javascript
 var myData = {
@@ -176,45 +180,61 @@ var myData = {
 };
 ```
 
+> __Example:__ Setting data on the Widget
+
 ```javascript
 
-    //setup your event listeners, which will receive data in result
-    wiwo.iframeUtil_config = wiwo.iframeUtil_config || {}; //manual namespace in case the support script haven't loaded yet
-    wiwo.iframeUtil_config.ready = function(iframeUtil){
-      iframeUtil.on('wiwo.dido.setDataResult', function(event, result){
-        if (result.success){
-          //all result.data.input and result.data.output is available to you
-          console.log("Your data was set, run getData to get the calc results");
-        } else {
-          //handle the error
-          console.log('Error getting data: ', result.message)
-        }
-      });
-    }
-
-    /** 
-     * Once the page is ready (which will ensure the Widget is ready and listening too),
-     * send a setData request with your payload. Once it's fulfilled, 
-     * a 'wiwo.dido.setDataResult' will be 
-     * raised and your listener above will be invoked
-     */
-    jQuery(function(){
-      // Need to make sure the frame content has been loaded.       
-      var myData = { 
-        input: {
-          repaymentModel: {
-            principle: 150000,
-            rate: 0.065
-            // ...
-          }, 
-          savingsModel: {
-            // ...
+        //setup your event listeners, which will receive data in result
+      var wiwo = wiwo || {};
+      wiwo.iframeUtil_config = wiwo.iframeUtil_config || {};
+      
+      wiwo.iframeUtil_config.ready = function(iframeUtil){
+        iframeUtil.on('wiwo.dido.setDataResult', function(event, result){
+          if (result.success){
+            //all result.data.input and result.data.output is available to you
+            console.log("Your data was set, run getData to get the calc results");
+          } else {
+            //handle the error
+            console.log('Error getting data: ', result.message)
           }
-        }       
-      };      
-      wiwo.iframeUtil.postMessage('wiwo-bojumo', 'wiwo.dido.setData', myData);      
-    });
+        });
+      }
+
+      /** 
+       * Once the page is ready (which will ensure the Widget is ready and listening too),
+       * send a setData request with your payload. Once it's fulfilled, 
+       * a 'wiwo.dido.setDataResult' will be 
+       * raised and your listener above will be invoked
+       */
+      jQuery(function(){
+        // Need to make sure the frame content has been loaded.       
+        var myData = {
+          id: 'wiwo-repayment-widget', //the product identifier
+          version: 0,          //future use
+          input: {
+            repaymentModel: {
+              principle: 150000,
+              rate: 0.065
+              // ...
+            }, 
+            savingsModel: {
+              // ...
+            }
+          }       
+        };      
+        wiwo.iframeUtil.postMessage('wiwo-bimade', 'wiwo.dido.setData', myData);      
+      });
 
 ```
 
 Using setData, you provide an object to the widget with all the of the standard input fields. Any input field which is usually provided on screen can be set on via the API. Refer to your Widget specific documentation for the input object model.
+
+<aside class="notice">
+The input data payload must:
+
+ * follow the `input.modelName` format style that is returned from a getData
+ * provide a property `id:string`, the product identifier, specified in your Widget specific documentation. In this case it's *'wiwo-repayment-widget'*
+ * provide a property `version:int`, currently defaulted to 0 and will be used in future Widget revisions
+ 
+</aside>
+

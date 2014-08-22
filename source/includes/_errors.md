@@ -1,8 +1,48 @@
 # Error Handling
 
+> The structure of the result object:
+
+``` javascript
+	{
+		success: boolean,
+		message: string,
+		data: object
+	}
+```
+
+> 'getDataResult' detail:
+
+``` javascript
+	wiwo.iframeUtil.on('wiwo.dido.getDataResult', function(event, result){
+		if (result.success){
+			result.message 	// Extra information about the result (can be empty).
+			result.data;	// Holds the Widget's input and result data.
+		} else {
+			result.message 	// Error message.
+			result.data;	// Will be null.
+		}
+	});
+```
+
+> 'setDataResult' detail:
+
+``` javascript
+	wiwo.iframeUtil.on('wiwo.dido.setDataResult', function(event, result){
+		if (result.success){
+			result.message 	// Holds information about 'setData' request (can be empty).
+			result.data;	// Will be null.
+		} else {
+			result.message 	// Holds information about the error.
+			result.data;	// Will be null.
+		}
+	});
+```
+
 Widgets do their best to keep in a consistent state and ensure they don't show complex or code related errors to users. We design them to accept a wide range of inputs, but to ensure accuracy they are conservative in their approach to error handling - they will reject data on error and provide you a result object detailing what went wrong.
 
 <aside class="notice">Widgets do their best to keep in a consistent state and ensure they don't show complex or code related errors</aside>
+
+
 
 ## Data issues
 

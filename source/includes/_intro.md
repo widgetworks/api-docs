@@ -1,11 +1,11 @@
 # Widget Works Widget API
 
-##Data In, Data Out (dido) API
+## Data In, Data Out (dido) API
 
 > All Widget Works Widgets provide an interaction API.
 
 
-Once a widget is placed on a page using the Widget Manager provided license and links, you can use our simple API to set and get calculatin specific data from the widget. The Widget itself runs in the iframe and you can't communicate to it directly due to cross domain limitations. Our helpful scout provides a secure, cross-frame communications API which you can use to query the Widget.
+Once a Widget is placed on a page using the Widget Manager provided license and links, you can use our simple API to set and get calculation-specific data from the Widget. The Widget itself runs in the iframe and you can't communicate to it directly due to cross domain limitations. Our helpful scout provides a secure, cross-frame communications API which you can use to query the Widget.
 
 The API is event based and asynchronous:
 
