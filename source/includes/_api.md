@@ -1,32 +1,66 @@
 # The API
 
+## Overview
+
+Asynchronous API
+
+"ready" listener
+
+```javascript
+var _wiwo = _wiwo || [];
+var iframeUtil;
+_wiwo.push([function(_iframeUtil){
+  iframeUtil = _iframeUtil;
+}]);
+```
+
+
+## Event listeners
+
+Add event listeners
+
+```javascript
+var _wiwo = _wiwo || [];
+_wiwo.push(['on', 'eventName', function(e, data){
+  
+}]);
+```
+
+All event listeners should be registered using the asynchronous `_wiwo.push(['on', ...]);` syntax (see [iframeUtil.on() documentation](#on) for more detail).
+
+
+## Sending messages
+
+```javascript
+var _wiwo = _wiwo || [];
+_wiwo.push(['postMessage', 'frameId', 'eventName', data]);
+```
+
+In our examples "wiwo-bimade"
+
+
+
 ## Available messages
 
 > getData and setData - easy as that!
 
 ```javascript
-  jQuery(function(){
-    wiwo.iframeUtil.postMessage('wiwo-bojumo', 'wiwo.dido.getData');
-    wiwo.iframeUtil.postMessage('wiwo-bojumo', 'wiwo.dido.setData');
-  )};
+var _wiwo = _wiwo || [];
+_wiwo.push([function(iframeUtil){
+  iframeUtil.postMessage('wiwo-bojumo', 'wiwo.dido.getData');
+  iframeUtil.postMessage('wiwo-bojumo', 'wiwo.dido.setData', {...});
+}]);
 ```
 
-Message | Function
----------- | -----------
-wiwo.dido.getData | queues a request to get data from the specified widget
-wiwo.dido.setData | queues a request to set your data payload on the specified widget
+To invoke actions on the Widget, use `iframeUtil.postMessage()`. ([see documentation](#postmessage)).
 
-To invoke actions on the Widget, use `wiwo.iframeUtil.postMessage`. Ensure you wrap any of these calls in `jQuery(function(){})` to ensure `wiwo.iframeUtil` is ready and that the Widget has fully loaded and waiting for your messages.
+Ensure you wrap any of these calls in `_wiwo.push([function(){}])` to ensure the `iframeUtil` has been initialised on the page.
 
+Message to Widget | Function | Response event from Widget
+----------------- | ----------- | --------
+wiwo.dido.getData | Request data from the specified widget | wiwo.dido.getDataResult
+wiwo.dido.setData | Request to set your data payload on the specified widget | wiwo.dido.setDataResult
 
-## Response events
-
-Event | Result
----------- | -----------
-'wiwo.dido.getDataResult' | result object with `result.data.output` and `result.data.input`
-'wiwo.dido.setDataResult' | result object with `result.data.input`, the values you called setData with
-
-All event listeners and callbacks need to be setup in the context of `wiwo.iframeUtil_config.ready`, which ensures your functions are only run once the Widget has fully loaded.
 
 
 ## Event Properties
