@@ -11,10 +11,11 @@ toc_footers:
 includes:
  - intro
  - api
- - dido
- - iframeUtil
  - urlparams
  - errors
+ - iframeUtil
+ - dido
+ - analytics
 
 search: true
 ---

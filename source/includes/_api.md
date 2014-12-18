@@ -1,250 +1,182 @@
 # The API
 
-## Overview
 
-Asynchronous API
-
-"ready" listener
-
-```javascript
-var _wiwo = _wiwo || [];
-var iframeUtil;
-_wiwo.push([function(_iframeUtil){
-  iframeUtil = _iframeUtil;
-}]);
-```
-
-
-## Event listeners
-
-Add event listeners
-
-```javascript
-var _wiwo = _wiwo || [];
-_wiwo.push(['on', 'eventName', function(e, data){
-  
-}]);
-```
-
-All event listeners should be registered using the asynchronous `_wiwo.push(['on', ...]);` syntax (see [iframeUtil.on() documentation](#on) for more detail).
-
-
-## Sending messages
-
-```javascript
-var _wiwo = _wiwo || [];
-_wiwo.push(['postMessage', 'frameId', 'eventName', data]);
-```
-
-In our examples "wiwo-bimade"
-
-
-
-## Available messages
+## Host events
 
 > getData and setData - easy as that!
 
 ```javascript
 var _wiwo = _wiwo || [];
+_wiwo.push(['postMessage', 'wiwo-bimade', 'wiwo.dido.getData']);
+_wiwo.push(['postMessage', 'wiwo-bimade', 'wiwo.dido.setData', {...}]);
+```
+
+```javascript
+// Equivalent to above example:
+var _wiwo = _wiwo || [];
 _wiwo.push([function(iframeUtil){
-  iframeUtil.postMessage('wiwo-bojumo', 'wiwo.dido.getData');
-  iframeUtil.postMessage('wiwo-bojumo', 'wiwo.dido.setData', {...});
+  iframeUtil.postMessage('wiwo-bimade', 'wiwo.dido.getData');
+  iframeUtil.postMessage('wiwo-bimade', 'wiwo.dido.setData', {...});
 }]);
 ```
 
-To invoke actions on the Widget, use `iframeUtil.postMessage()`. ([see documentation](#postmessage)).
+The following events may be sent from the host page to the Widget:
 
-Ensure you wrap any of these calls in `_wiwo.push([function(){}])` to ensure the `iframeUtil` has been initialised on the page.
-
-Message to Widget | Function | Response event from Widget
+Event name | Description | Response event from Widget
 ----------------- | ----------- | --------
-wiwo.dido.getData | Request data from the specified widget | wiwo.dido.getDataResult
-wiwo.dido.setData | Request to set your data payload on the specified widget | wiwo.dido.setDataResult
+[wiwo.dido.getData](#getdata) | Request data from the specified widget | [wiwo.dido.getDataResult](#getdataresult)
+[wiwo.dido.setData](#setdata) | Request to set your data payload on the specified widget | [wiwo.dido.setDataResult](#setdataresult)
+
+Ensure you wrap any of these calls in `_wiwo.push([function(){}])` to be sure the `iframeUtil` has been initialised on the page.
+
+
+## Widget events
+
+```javascript
+var _wiwo = _wiwo || [];
+_wiwo.push(['on', 'wiwo.dido.getDataResult', function(e, result){
+  // Handle the event here.
+}]);
+
+_wiwo.push(['on', 'wiwo.dido.setDataResult', function(e, result){
+  // Handle the event here.
+}]);
+
+_wiwo.push(['on', 'pageTrack', function(e, data){
+  // Handle the event here.
+}]);
+
+_wiwo.push(['on', 'eventTrack', function(e, data){
+  // Handle the event here.
+}]);
+```
+
+The following events may be raised by the Widget and handled on the host page:
+
+Event name   | Description
+------------ | ------------
+[wiwo.dido.getDataResult](#getdataresult) | Indicates success of failure of preceeding 'wiwo.dido.getData' event. Returns Widget data if successful.
+[wiwo.dido.setDataResult](#setdataresult) | Indicates success or failure of preceeding 'wiwo.dido.setData' event.
+[pageTrack](#pagetrack) | Analytics event. The user has navigated to a new screen in the Widget.
+[eventTrack](#eventtrack) | Analytics event. The user has interacted with the Widget.
+
+See [iframeUtil.on()](#on) for more detail on registering event listeners.
 
 
 
 ## Event Properties
 
-> Your returned data will be in an object like this
+See [iframeUtil.FrameEvent](#frameevent) for the properties on the `e` parameter in event listeners.
+
+
+
+## Get data from Widget
+
+> __Example:__ Getting data from the Widget.
+
+> 'wiwo.dido.getData' provides the full dataset (user inputs and calculated fields) of the Widget:
 
 ```javascript
-{
-      wiwoEvent: string, // The name of the event
-      frameId: string, // ID of the frame that raised the event
-      frame: HTMLIFrameElement // Reference to the iframe DOM element that raised the event
-}
+var _wiwo = _wiwo || [];
+
+// Setup your 'wiwo.dido.getDataResult' event listener:
+_wiwo.push(['on', 'wiwo.dido.getDataResult', function(event, result){
+  if (result.success){
+    // All `result.data.input` and `result.data.output` is available to you:
+    console.log("You will pay a total of %d interest for the loan",
+      result.data.output.repaymentResultModel.totalInterestPayable
+    );
+    
+    // Log out the entire `result` object.
+    console.log("result =", result);
+  } else {
+    // Handle the error:
+    console.log('Error getting data: ', result.message)
+  }
+}]);
+
+/** 
+ * Send a 'wiwo.dido.getData' event to the Wdiget.
+ * Once Widget has generated the data a 'wiwo.dido.getDataResult' 
+ * event will be raised and your listener above will be invoked.
+ */
+_wiwo.push(['postMessage', 'wiwo-bimade', 'wiwo.dido.getData']);
 ```
 
-Property | Type | Details
--------|------|------
-event.wiwoEvent | string | The name of the event
-event.frameId | string | ID of the frame that raised the event
-event.frame | HTMLIFrameElement | Reference to iframe DOM element that raised the event
-
-
-> And then you can use it to check the result and take action
+> Console output from the above example:
 
 ```javascript
-wiwo.iframeUtil_config.ready = function(iframeUtil){
-    iframeUtil.on('wiwo.dido.getDataResult', function(event, result){
-        if (result.success){
-            //your data handling here
-            console.log(result.data.output);
-        } else {
-            //your error handling here
-            console.log('Error getting data: ', result.message)
-        }
-    });
-}
-```
+"You will pay a total of 89094.6689249568 interest for the loan"
 
+result = {
+  "data": {
+    "output": {       
+      "repaymentResultModel": {
+        "hasFixedRepayment": false,
+        "fixedRepayment": 0,
+        "ongoingRepayment": 690.911525212645,
+        "totalInterestPayable": 89094.6689249568,
+        "totalLoanAmount": 189094.66892495676,
+        "loanDuration": {
+          "rawPeriods": 300,
+          "totalYears": 25,
+          "years": 25,
+          "periods": 0
+        },
+        "chartSeries": {
+            "lastTerm": 25,
+            "repaymentSeries": [
+                [
+                  0,
+                  189094.67
+                ]
+                //, ....
+            ]
+          }
+      }       
 
-## Helpers
-
-```javascript
-wiwo.iframeUtil.getFrameList()
-
-// returns
- 
-[
-    {
-        frameId: string, // ID of the frame
-        frame: HTMLIFrameElement // Reference to the iframe DOM element
     },
-    // ...
-]
-```
-
-`wiwo.iframeUtil.getFrameList()` returns a list of all the Widget frames it knows about on a page.
-
-
-
-## Get data from widget
-
-> getData provides the full dataset (user inputs and calculated fields) of the Widget
-
-```javascript
-  "result": {
-    "data": {
-      "output": {       
-        "repaymentResultModel": {
-          "hasFixedRepayment": false,
-          "fixedRepayment": 0,
-          "ongoingRepayment": 690.911525212645,
-          "totalInterestPayable": 89094.6689249568,
-          "totalLoanAmount": 189094.66892495676,
-          "loanDuration": {
-            "rawPeriods": 300,
-            "totalYears": 25,
-            "years": 25,
-            "periods": 0
-          },
-          "chartSeries": {
-              "lastTerm": 25,
-              "repaymentSeries": [
-                  [
-                    0,
-                    189094.67
-                  ]
-                  //, ....
-              ]
-            }
-        }       
-
-      },
-      "input": {
-        //all the input fields
-      }
+    "input": {
+      ...
     }
   }
+}
 ```
 
-`getData` will return you a `result` with two primary objects, the *standard input fields* under `data.input` and the *calculation results* under `data.output`. You can modify the input fields and send it right back for recalculation via `setData`.
+`'wiwo.dido.getDataResult'` will return you a [DidoResult](#didoresult). You can modify the `result.data` input fields and send the `result.data` object back for recalculation via `'wiwo.dido.setData'`.
+
+You can call `'wiwo.dido.getData'` at any time after the Widget has been initialised. Widgets aim to always be in a consistent state - even if they have to rely on default input values. Internal calculations are always attempted before the `'wiwo.dido.getData'` request is fulfilled.
+
+See [DiDo Events.getData](#getdata) and [DiDo Events.getDataResult](#getdataresult) for more detail.
 
 
-> Putting it all together
+## Set data on the Widget
+
+> __Example:__ Setting data on the Widget.
 
 ```javascript
-    //setup your event listeners, which will receive data in result
-    wiwo.iframeUtil_config = wiwo.iframeUtil_config || {}; //manual namespace in case the support script haven't loaded yet
-    wiwo.iframeUtil_config.ready = function(iframeUtil){
-      iframeUtil.on('wiwo.dido.getDataResult', function(event, result){
+
+      var _wiwo = _wiwo || [];
+      // Setup your result event listeners.
+      _wiwo.push(['on', 'wiwo.dido.setDataResult', function(event, result){
         if (result.success){
-          //all result.data.input and result.data.output is available to you
-          console.log("You will pay a total of %d interest for the loan",
-            result.data.output.repaymentResultModel.totalInterestAmt
-          );
+          console.log("Your data was set, run getData to get the calculation results");
         } else {
-          //handle the error
-          console.log('Error getting data: ', result.message)
+          console.log('Error setting data. Reason: ', result.message)
         }
-      });
-    }
-
-    /** 
-     * Once the page is ready (which will ensure the Widget is ready and listening too),
-     * send a getData request. Once it's fulfilled, a 'wiwo.dido.getDataResult' will be 
-     * raised and your listener above will be invoked
-     */
-    jQuery(function(){
-      // Need to make sure the frame content has been loaded. 
-      wiwo.iframeUtil.postMessage('wiwo-bojumo', 'wiwo.dido.getData');
-    });
- 
-```
-
-
-You can call `getData` at any time. Widgets aim to always be in a consistent state - even if they have to rely on default input values. Internal calculations are always attempted before the `getData` request is fulfilled.
-
-## Set data on the widget
-
-> The data payload you send is the object structure returned by a `getData`, minus the output section.
-
-```javascript
-var myData = {
-    input: {
-        modelName: {
-            property: value
-            // ...
-        },
-        modelName: {
-            // ...
-        }
-    }
-};
-```
-
-> __Example:__ Setting data on the Widget
-
-```javascript
-
-        //setup your event listeners, which will receive data in result
-      var wiwo = wiwo || {};
-      wiwo.iframeUtil_config = wiwo.iframeUtil_config || {};
-      
-      wiwo.iframeUtil_config.ready = function(iframeUtil){
-        iframeUtil.on('wiwo.dido.setDataResult', function(event, result){
-          if (result.success){
-            //all result.data.input and result.data.output is available to you
-            console.log("Your data was set, run getData to get the calc results");
-          } else {
-            //handle the error
-            console.log('Error getting data: ', result.message)
-          }
-        });
-      }
+      }]);
 
       /** 
-       * Once the page is ready (which will ensure the Widget is ready and listening too),
-       * send a setData request with your payload. Once it's fulfilled, 
-       * a 'wiwo.dido.setDataResult' will be 
-       * raised and your listener above will be invoked
+       * When the `iframeUtil` is ready send a 'wiwo.dido.setData' request with your payload. 
+       * Once the data has been loaded a 'wiwo.dido.setDataResult' event will be 
+       * raised and your listener above will be invoked.
        */
-      jQuery(function(){
-        // Need to make sure the frame content has been loaded.       
+      _wiwo.push([function(iframeUtil){
         var myData = {
-          id: 'wiwo-repayment-widget', //the product identifier
-          version: 0,          //future use
+          id: 'wiwo-repayment-widget',
+          version: 0,
+          
+          // Only values included here will be changed in the Widget.
           input: {
             repaymentModel: {
               principle: 150000,
@@ -256,19 +188,19 @@ var myData = {
             }
           }       
         };      
-        wiwo.iframeUtil.postMessage('wiwo-bimade', 'wiwo.dido.setData', myData);      
-      });
-
+        iframeUtil.postMessage('wiwo-bimade', 'wiwo.dido.setData', myData);      
+      }]);
 ```
 
-Using setData, you provide an object to the widget with all the of the standard input fields. Any input field which is usually provided on screen can be set on via the API. Refer to your Widget specific documentation for the input object model.
+> The data payload you send is the `result.data` property returned by 'wiwo.dido.getDataResult', minus the output section.
 
-<aside class="notice">
-The input data payload must:
 
- * follow the `input.modelName` format style that is returned from a getData
- * provide a property `id:string`, the product identifier, specified in your Widget specific documentation. In this case it's *'wiwo-repayment-widget'*
- * provide a property `version:int`, currently defaulted to 0 and will be used in future Widget revisions
- 
-</aside>
+The `'wiwo.dido.setData'` event will send a payload of data to be loaded by the Widget. This event can be triggered at any time after the Widget has been initailised.
 
+The `'wiwo.dido.setData'` event expects a [WidgetData](#widgetdata) object passed as the `payload` parameter.
+
+You may send a subset of Widget data with the `'wiwo.dido.setData'` event. Any properties that are not defined in the payload will be unchanged in the Widget.
+
+See [DiDo Events.setData](#setdata) and [DiDo Events.setDataResult](#setdataresult) for more detail.
+
+To load data at Widget startup see [Loading values from URL](#loading-values-from-url).

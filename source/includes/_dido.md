@@ -1,6 +1,8 @@
-# Data in/Data out
+# DiDo Events
 
-__Note:__ all of the events and response events are asynchronous.
+The Data In/Data Out (DiDo) API.
+
+__Note:__ All of the events and sent to the Widget and any events received back are handled asynchronously. It is __not__ possible to make a synchronous event/method call to the Widget.
 
 
 ## getData
@@ -8,7 +10,7 @@ __Note:__ all of the events and response events are asynchronous.
 ```javascript
 // Post a message to request data from a Widget:
 var _wiwo = _wiwo || [];
-_wiwo.push(['postMessage', 'wiwo-bojumo', 'wiwo.dido.getData']);
+_wiwo.push(['postMessage', 'wiwo-bimade', 'wiwo.dido.getData']);
 ```
 
 
@@ -64,7 +66,7 @@ The `'wiwo.dido.getDataResult'` event is sent from a _Widget_ to the _host page_
 
 Parameter | Type | Description
 --------- | ---- |-------------
-e         | FrameEvent | See the [iframeUtil.on() documentation](#on) for the `FrameEvent` structure.
+e         | [FrameEvent](#frameevent) | Information about the Widget that emitted the event.
 result    | object     | `DidoResult` object. See [DidoResult](#didoresult) for detail.
 
 
@@ -97,7 +99,7 @@ __Note:__ The `result.data` object structure is Widget-specific.
 ```javascript
 // The Widget will respond with a 'wiwo.dido.setDataResult' event.
 var _wiwo = _wiwo || [];
-_wiwo.push('postMessage', 'wiwo-bojumo', 'wiwo.dido.setData', {
+_wiwo.push('postMessage', 'wiwo-bimade', 'wiwo.dido.setData', {
 	"id": "wiwo-repayment-widget",
 	"version": 1,
 	"input": {
@@ -115,6 +117,7 @@ Send `'wiwo.dido.setData'` the event to a _Widget_ to trigger it to load data.
 
 The Widget will respond with a [wiwo.dido.setDataResult](#setdataresult) event.
 
+Using `'wiwo.dido.setData'` you provide an object to the widget with all the of the standard input fields. Generally, any input field which is available on screen can be set via this API. Refer to the Widget-specific documentation for the input object model.
 
 ### Syntax
 
@@ -127,7 +130,16 @@ Parameter           | Type   | Description
 ------------------- | ------ | -------------
 frameId             | string | The ID of the Widget that will receive the event.
 'wiwo.dido.setData' | string | The eventName.
-payload             | object | The data to be loaded by the Widget. This data is Widget-specific.
+payload             | object &#124; [WidgetData](#widgetdata) | The data to be loaded by the Widget. This data is Widget-specific.
+
+
+<aside class="notice">
+The input data payload must:
+
+ * Include the Widget identifier. In this case it's __'wiwo-repayment-widget'__
+ * Include the `version` number of the data structure.
+ 
+</aside>
 
 
 
@@ -157,7 +169,7 @@ wiwo.dido.setDataResult | result object with `result.data.input`, the values you
 > `DidoResult` type structure:
 
 ```javascript
-{
+interface DidoResult {
 	"success": boolean,
 	"message": string,
 	"data": object
@@ -217,7 +229,7 @@ data     | object &#124; [WidgetData](#widgetdata)  | Widget-specific response d
 > `WidgetData` type structure:
 
 ```javascript
-{
+interface WidgetData {
 	"id": string,
 	"version": number,
 	"input": object,

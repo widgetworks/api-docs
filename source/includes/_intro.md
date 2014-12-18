@@ -4,16 +4,16 @@
 
 The Widget is made up of four components that work together to embed the tool on your webpage.
 
- 1. [__Host page__](#page-setup) - your webpage that will host the Widget
- 2. __Widget__ - the Widget and all of its associated assets
- 3. __Helper libraries__ - small scripts on the host page that initialise the Widget and allow communication between the host page and Widget
- 4. __Configuration__ - the customisation and configuration data for the Widget
+ 1. [__Host page__](#page-setup) - your webpage that will host the Widget.
+ 2. __Widget__ - the Widget and all of its associated assets - loaded into an iframe on the host page.
+ 3. __Helper library__ - The [iframeUtil library](#iframeutil) loaded on the host page that allow communication between the host page and Widget.
+ 4. __Configuration__ - the customisation and configuration data for the Widget.
 
 
 
 ## Page setup
 
-> To add a Widget to your page
+> Copy and pase this into your HTML to add a Widget to your page:
 
 ```html
 <!-- Start Widget Works - do not change -->
@@ -37,23 +37,96 @@ The iframe id (*wiwo-bimade* in this case) identifies your license and the ifram
 
 > All Widget Works Widgets provide an interaction API.
 
+> The namespace for all Widget Works libraries is : `wiwo`
 
-Once a Widget is placed on a page using the Widget Manager provided license and links, you can use our simple API to set and get calculation-specific data from the Widget.
+> The namespace the asynchronous cross-frame API is : `_wiwo`
 
-The Widget itself runs in the iframe and you can't communicate to it directly due to cross domain limitations.
+Once a Widget is embedded in a page you can use our simple API to set and get calculation-specific data from the Widget. The Widget itself runs in the iframe and you can't communicate to it directly due to cross domain limitations.
 
-Our helpful scout provides a secure, cross-frame communications API which you can use to interact with the Widget.
+Our helpful scout provides a secure, cross-frame communications API which you can use to interact with the Widget. The API is event based and asynchronous - all events sent to or from the Widget are asynchronous.
 
-The API is event based and asynchronous:
+In most cases the response from the Widget will be virtually immediate.
 
-> The namespace for all Widget Works API libraries is : `wiwo`
 
-* use our `wiwo.iframeUtil` to create event listeners for `wiwo.dido.getDataResult` or `wiwo.dido.setDataResult` with your callbacks to take action with the data returned
-* once the iframe has loaded, use `wiwo.iframeUtil.postMessage` to fire a `'wiwo.dido.getData'` or `'wiwo.dido.setData'` event, with your data payload
-* the Widget recevies the postMessage and will internally process the event. Depending on the action, it may offer the user options to save data before continuing
-* once ready, the Widget will fire a `'wiwo.dido.getDataResult'` or `'wiwo.dido.setDataResult'` via iframeUtil for your listener to be invoked
-
-In most cases the response from the Widget will be virtually immediate. Responses always provide:
+Responses always provide:
 
 * an *event result object* : failure/success, and details of any errors
 * a *data object* : actual data from the widget, calculation results, etc. *Refer to your Widget specific documentation for the data properties.*
+
+
+## Example: get data from a Widget
+
+```javascript
+// `getData` example
+var _wiwo = _wiwo || [];
+
+// 1. Add the `wiwo.dido.getDataResult` listener:
+_wiwo.push(['on', 'wiwo.dido.getDataResult', function(e, result){
+
+  // 4. The Widget raises the `wiwo.dido.getDataResult` for us to handle here:
+  if (result.success){
+    console.log('Received data from Widget ID=', e.frameId, ', data=', result.data);
+  } else {
+    console.warn('Unable to get data from Widget ID=', e.frameId, ', reason=', result.message);
+  }
+  
+}]);
+
+// 2. Send the `wiwo.dido.getData` event to the Widget to get the current data:
+// [3. Step three is handled inside the Widget.]
+_wiwo.push(['postMessage', 'wiwo-bimade', 'wiwo.dido.getData']);
+```
+
+This is the process that occurs to get the current input values and calculation results from a Widget:
+
+ 1. Add listeners for the `'wiwo.dido.getDataResult'` event.
+ 2. Once the Widget has loaded use the [iframeUtil.postMessage() method](#postmessage) to send a `'wiwo.dido.getData'` event to the Widget.
+ 3. The Widget receives the event and processes the data into the required JSON structure.
+ 4. Once processing is complete the Widget raises the `'wiwo.dido.getDataResult'` event for your listener to handle.
+
+See [DiDo.getData](#getdata) and [DiDo.getDataResult](#getdataresult) for more detail.
+
+
+## Example: send data to a Widget
+
+```javascript
+// `setData` example
+var _wiwo = _wiwo || [];
+
+// 1. Add the `wiwo.dido.setDataResult` listener:
+_wiwo.push(['on', 'wiwo.dido.setDataResult', function(e, result){
+  
+  // 4. The Widget raises the `wiwo.dido.setDataResult` event for us to handle here:
+  if (result.success){
+    console.log('Successfully loaded data into Widget ID=', e.frameId);
+  } else {
+    console.warn('Unable to set data on Widget ID=', e.frameId, ', reason=', result.message);
+  }
+  
+}]);
+
+// 2. Send the `wiwo.dido.setData` event to load new data into the Widget:
+// [3. Step three is handled inside the Widget.]
+_wiwo.push('postMessage', 'wiwo-bimade', 'wiwo.dido.setData', {
+  "id": "wiwo-repayment-widget",
+  "version": 1,
+  
+  // This is the data that will be loaded by the Widget:
+  // This data is Widget-specific.
+  "input": {
+    "repaymentModel": {
+      "propertyValue": 530000,
+      "principal": 424000
+    }
+  }
+});
+```
+
+To dynamically load new data into a Widget:
+ 
+ 1. Add listeners for the `'wiwo.dido.setDataResult'` event.
+ 2. Once the Widget has loaded use the [iframeUtil.postMessage() method](#postmessage) to send a `'wiwo.dido.setData'` event to the Widget, along with a data payload.
+ 3. The Widget receives the event, validates the data payload and loads the new data.
+ 4. Once the data has been loaded the Widget will raise the `'wiwo.dido.setDataResult'` for your listener to handle.
+
+See [DiDo.setData](#setdata) and [DiDo.setDataResult](#setdataresult) for more detail.
