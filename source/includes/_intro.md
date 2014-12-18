@@ -107,7 +107,7 @@ _wiwo.push(['on', 'wiwo.dido.setDataResult', function(e, result){
 
 // 2. Send the `wiwo.dido.setData` event to load new data into the Widget:
 // [3. Step three is handled inside the Widget.]
-_wiwo.push('postMessage', 'wiwo-bimade', 'wiwo.dido.setData', {
+_wiwo.push(['postMessage', 'wiwo-bimade', 'wiwo.dido.setData', {
   "id": "wiwo-repayment-widget",
   "version": 1,
   
@@ -119,7 +119,7 @@ _wiwo.push('postMessage', 'wiwo-bimade', 'wiwo.dido.setData', {
       "principal": 424000
     }
   }
-});
+}]);
 ```
 
 To dynamically load new data into a Widget:

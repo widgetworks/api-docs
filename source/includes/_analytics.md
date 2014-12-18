@@ -2,29 +2,75 @@
 
 The Widgets may emit tracking events that can be used to integrate with data analytics services.
 
+See the examples for [Adobe Marketing Cloud](#adobe-marketing-cloud-integration) and [Google Analytics](#google-analytics-integration).
 
 ## pageTrack
+
+> Example 'pageTrack' event listener:
+
+```javascript
+var _wiwo = _wiwo || [];
+_wiwo.push(['on', 'pageTrack', function(e, path){
+	console.log('User viewing path: ', path);
+}]);
+```
 
 ### Summary
 
 The `'pageTrack'` event is emitted by the Widget as the user navigates through the Widget.
 
+The event listener parameters contain information about the Widget that raised the event and the URL path fragment that represents the application state that the user is viewing.
 
 
 ### Listener
 
-`_wiwo.push('on', 'pageTrack', function handler(e, path){...}])`
+`_wiwo.push(['on', 'pageTrack', function handler(e, path){...}])`
 
 #### Handler Parameters
 
 Parameter | Type | Description
 --------- | ---- | -----------
 e | [FrameEvent](#frameevent) | Information about the Widget that emitted the event.
-path | string | The URL path fragment that identifies the 
+path | string | The URL path fragment that represents the application state that the user is viewing. This value always includes a leading slash '/'.
 
 
 
 ## eventTrack
+
+> Example 'eventTrack' event listener:
+
+```javascript
+var _wiwo = _wiwo || [];
+_wiwo.push(['on', 'eventTrack', function(e, properties){
+	console.log('User interaction: category="%s", action="%s", label="%s", value=%s',
+		properties.category,
+		properties.action,
+		properties.label,
+		properties.value
+	);
+}]);
+```
+
+### Summary
+
+The `'eventTrack'` event is emitted by the Widget when the user interacts with the Widget.
+
+It represents the user performing some action inside the Widget - e.g. clicking a button, showing a tooltip, etc.
+
+The first time the user interacts with the Widget a special `'eventTrack'` is raised with the `category` property set to 'initial'.
+
+
+### Listener
+
+`_wiwo.push(['on', 'eventTrack', function handler(e, properties){...}])`
+
+
+#### Handler Parameters
+
+Parameter | Type | Description
+--------- | ---- | -----------
+e | [FrameEvent](#frameevent) | Information about the Widget that emitted the event.
+properties | [EventTrackProperties](#eventtrackproperties) | The tracking properties associated with this event.
 
 
 ## EventTrackProperties
@@ -35,13 +81,6 @@ interface EventTrackProperties {
 	category: string,
 	action: string,
 	label: string,
-	
-	/*
-	Optional. If present then this is the numeric value associated with
-	this event.
-	
-	e.g. For a numeric input this will be the value of that input.
-	*/
 	value: number
 }
 ```
@@ -167,7 +206,12 @@ _wiwo.push(['on', 'pageTrack', function(e, properties){
 }]);
 ```
 
-Formerly Omniture and SiteCatalyst.
+
+Integration with Adobe Marketing Cloud (formerly Omniture/SiteCatalyst) is supported through the `'pageTrack'` and `'eventTrack'` events emitted by the Widgets.
+
+See the [Adobe Marketing Cloud documentation ](http://microsite.omniture.com/t2/help/en_US/sc/implement/oms_sc_implement.pdf) for more information on available tracking options.
+
+See [EventTrackProperties](#eventtrackproperties) for the properties available to the `'eventTrack'` event.
 
 
 
@@ -187,11 +231,20 @@ _wiwo.push(['on', 'pageTrack', function(e, path){
 ```javascript
 var _wiwo = _wiwo || [];
 _wiwo.push(['on', 'eventTrack', function(e, properties){
-	_gaq.push(['_trackPageview', path]);
+	// Pass `properties.value` if it exists, otherwise set `value` to `undefined`.
+	var value = properties.value == null ? void 0 : properties.value;
+	
+	// Set any additional tracking properties as required by your analytics requirements.
+	
+	_gaq.push(['_trackEvent', properties.category, properties.action, properties.label, value]);
 }]);
 ```
 
+Google Analytics tracking is supported through the `'pageTrack'` and `'eventTrack'` events emitted by the Widgets.
 
-See the [Google Analytics documentation](https://developers.google.com/analytics/devguides/collection/gajs/methods/gaJSApiBasicConfiguration#_gat.GA_Tracker_._trackPageview) for more detail.
+See the [Google Analytics documentation](https://developers.google.com/analytics/devguides/collection/gajs/methods/) for more detail:
+
+ * [`_trackPageview` documentation](https://developers.google.com/analytics/devguides/collection/gajs/methods/gaJSApiBasicConfiguration#_gat.GA_Tracker_._trackPageview)
+ * [`_trackEvent` documentation](https://developers.google.com/analytics/devguides/collection/gajs/methods/gaJSApiEventTracking#_gat.GA_EventTracker_._trackEvent)
 
 

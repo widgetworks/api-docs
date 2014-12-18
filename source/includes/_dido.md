@@ -99,7 +99,7 @@ __Note:__ The `result.data` object structure is Widget-specific.
 ```javascript
 // The Widget will respond with a 'wiwo.dido.setDataResult' event.
 var _wiwo = _wiwo || [];
-_wiwo.push('postMessage', 'wiwo-bimade', 'wiwo.dido.setData', {
+_wiwo.push(['postMessage', 'wiwo-bimade', 'wiwo.dido.setData', {
 	"id": "wiwo-repayment-widget",
 	"version": 1,
 	"input": {
@@ -108,7 +108,7 @@ _wiwo.push('postMessage', 'wiwo-bimade', 'wiwo.dido.setData', {
 			"principal": 424000
 		}
 	}
-});
+}]);
 ```
 
 ### Summary
