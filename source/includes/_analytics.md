@@ -114,7 +114,7 @@ interface EventTrackProperties {
 			<td>action</td>
 			<td>string</td>
 			<td>
-				<p>The tpye of interaction that triggered the event.</p>
+				<p>The type of interaction that triggered the event.</p>
 				<p>For controls associated with another input (e.g. a slider associated
 	with a text input field) this will contain the action followed by the control type, separated by a '|' character.</p>
 				<p>

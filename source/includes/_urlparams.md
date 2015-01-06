@@ -36,12 +36,15 @@ The data is passed into the Widget via a URL query parameter that matches the ID
 
 For example, the data from the query parameter `'?wiwo-bimade=...'` will be passed to the Widget loaded into the iframe with the ID `'wiwo-bimade'`.
 
-The parameter should be the same JSON payload that passed with the `'wiwo.dido.setDataResult'` event (see the [Set data on the Widget](#set-data-on-the-widget) section above). However, the JSON payload __must__ be URI-encoded when passed as a URL parameter.
+The parameter should be the same JSON payload that passed with the `'wiwo.dido.setDataResult'` event (see the [send data to Widget example](#example-send-data-to-widget) section above). However, the JSON payload __must__ be URI-encoded when passed as a URL parameter.
 
 
 <aside class="warning">
-__NOTE:__ Setting the URL parameters after the Widgets have loaded will have no effect. The Widgets will only load the default values on page load.
+__NOTE:__ The URL parameters are only passed to the Widget during page load. Setting the URL parameters after the Widgets have loaded will have no effect.
 </aside>
+
+To set values after page load see the ['wiwo.dido.setData' event](#setdata) and ['wiwo.dido.setData' example](#example-send-data-to-widget).
+
 
 ## Example
 
@@ -53,27 +56,36 @@ __NOTE:__ Setting the URL parameters after the Widgets have loaded will have no 
 
 Try it out:
 
-<a href="https://wm.widgetworks.com.au/widget/bimade/live/?wiwo-bimade=%7B%22id%22%3A%22wiwo-repayment-widget%22%2C%22version%22%3A0%2C%22input%22%3A%7B%22repaymentModel%22%3A%7B%22principal%22%3A123456%2C%22term%22%3A13%2C%22interestRate%22%3A0.13%2C%22repaymentType%22%3A%22IO_ARR%22%2C%22repaymentFrequency%22%3A%22fortnight%22%2C%22productGroup%22%3A%22fixed%22%2C%22product%22%3A%22wiwoFixed3Y%22%7D%2C%22savingsModel%22%3A%7B%22savingsEnabled%22%3Afalse%2C%22extraRepayment%22%3A0%2C%22offset%22%3A0%2C%22lumpSum%22%3A0%2C%22lumpSumYear%22%3A3%7D%7D%7D" target="_blank">Load Repayment Widget with custom data...</a>
+<a href="https://wm.widgetworks.com.au/widget/bimade/live/?wiwo-bimade=%7B%22id%22%3A%22wiwo-repayment-widget%22%2C%22version%22%3A0%2C%22input%22%3A%7B%22repaymentModel%22%3A%7B%22principal%22%3A123456%2C%22term%22%3A13%2C%22interestRate%22%3A0.13%2C%22repaymentType%22%3A%22IO_ARR%22%2C%22repaymentFrequency%22%3A%22fortnight%22%2C%22productGroup%22%3A%22fixed%22%2C%22product%22%3A%22wiwoFixed3Y%22%7D%2C%22savingsModel%22%3A%7B%22savingsEnabled%22%3Afalse%2C%22extraRepayment%22%3A0%2C%22offset%22%3A0%2C%22lumpSum%22%3A0%2C%22lumpSumYear%22%3A3%7D%7D%7D" target="_blank">Load Repayment Widget with custom data (look for a loan value of $123 456)</a>
 
 
 ## URI-encoding data
 
-This is a simple example showing one way of encoding the Widget data in the `'wiwo.dido.getDataResult'` event handler:
+> The `data` variable matches the structure of the [WidgetData type](#widgetdata)
 
 ```javascript
-	var _wiwo = _wiwo || [];
-	_wiwo.push(['on', 'wiwo.dido.getDataResult', function(event, result){
-		if (result.success){
-			delete result.data.output 	// Remove the results data.
-			
-			// Encode the JSON data:
-			var encodedData = encodeURIComponent(JSON.stringify(result.data));
-			
-			// Combine the encoded data with the frameId:
-			var widgetParam = event.frameId + '=' + encodedData;
-			
-			// Log out the result.
-			console.log('widgetParam: ', widgetParam);
+var frameId = 'wiwo-bimade';	// The ID of the Widget.
+var data = {					// The data to set on the Widget.
+	id: '',
+	version: 1,
+	input: {
+		repaymentModel: {
+			principal: 123456
 		}
-	}]);
+	}
+};
+
+// Convert the data to a JSON string and encode it with `encodeURIComponent`:
+var encodedData = encodeURIComponent(JSON.stringify(data));
+
+// Combine the encoded data with the frameId:
+var widgetParam = frameId + '=' + encodedData;
+
+// `widgetParam` now has the value:
+// wiwo-bimade=%7B%22id%22%3A%22wiwo-repayment-widget%22%2C%22v...
 ```
+
+> The value of `widgetParam` can now be used to pass data to the Widget via the URL.
+
+This is a simple example showing the most common method of encoding the Widget data to pass on the URL:
+

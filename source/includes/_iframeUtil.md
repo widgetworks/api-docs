@@ -139,6 +139,24 @@ The following methods are available on the `iframeUtil`:
 ## addOrigins()
 
 
+> Add the widget domain as an allowed origin:
+
+```javascript
+var _wiwo = _wiwo || [];
+_wiwo.push(["addOrigins", [
+  "http://your-widget-domain",
+  "https://your-widget-domain"
+]]);
+```
+
+```javascript
+// Equivalent to above but using a RegExp
+var _wiwo = _wiwo | [];
+_wiwo.push(['addOrigins', [
+	/https?:\/\/your-widget-domain/
+]]);
+```
+
 ### Summary
 
 The `addOrigins()` method allows additional domains to communicate with the host page.
@@ -168,24 +186,6 @@ originN | string &#124; string[] &#124; RegExp &#124; RegExp[] | String or RegEx
 
 
 ### Note
-
-> Add the widget domain as an allowed origin:
-
-```javascript
-var _wiwo = _wiwo || [];
-_wiwo.push(["addOrigins", [
-  "http://your-widget-domain",
-  "https://your-widget-domain"
-]]);
-```
-
-```javascript
-// Equivalent to above but using a RegExp
-var _wiwo = _wiwo | [];
-_wiwo.push(['addOrigins', [
-	/https?:\/\/your-widget-domain/
-]]);
-```
 
 If the browser's JavaScript console shows the warning:  
 `(iframeUtil) ERROR: Invalid event.origin="<your domain here>" with event="wiwoResize"`
@@ -276,6 +276,30 @@ originalEvent | Event  | The original browser event, usually a `MessageEvent` in
 ## postMessage()
 
 
+```javascript
+// Request data from the 'wiwo-bimade' Widget iframe.
+// The data will be returned via a 'wiwo.dido.getDataResult' event from that iframe.
+var _wiwo = _wiwo || [];
+_wiwo.push(['postMessage', 'wiwo-bimade', 'wiwo.dido.getData']);
+```
+
+
+```javascript
+// Set new data on the 'wiwo-bimade' Widget.
+// The success/failure result will be returned via a 'wiwo.dido.setDataResult' event.
+var _wiwo = _wiwo || [];
+_wiwo.push(['postMessage', 'wiwo-bimade', 'wiwo.dido.setData', {
+	id: 'wiwo-repayment-widget',
+    version: 0,
+    input: {
+        repaymentModel: {
+            principle: 150000,
+            rate: 0.065
+        }
+    }
+}]);
+```
+
 
 ### Summary
 
@@ -306,36 +330,27 @@ eventName   | string    | The event to send to the iframe. e.g. 'wiwo.dido.getDa
 data        | object    | Optional. The data to send with the frame. This is event-specific.
 
 
-### Examples
-
-```javascript
-// Request data from the 'wiwo-bimade' Widget iframe.
-// The data will be returned via a 'wiwo.dido.getDataResult' event from that iframe.
-var _wiwo = _wiwo || [];
-_wiwo.push(['postMessage', 'wiwo-bimade', 'wiwo.dido.getData']);
-```
-
-
-```javascript
-// Set new data on the 'wiwo-bimade' Widget.
-// The success/failure result will be returned via a 'wiwo.dido.setDataResult' event.
-var _wiwo = _wiwo || [];
-_wiwo.push(['postMessage', 'wiwo-bimade', 'wiwo.dido.setData', {
-	id: 'wiwo-repayment-widget',
-    version: 0,
-    input: {
-        repaymentModel: {
-            principle: 150000,
-            rate: 0.065
-        }
-    }
-}]);
-```
-
-
 
 
 ## getIframes()
+
+```javascript
+// Call `getIframes()` in the iframeUtil ready function:
+var _wiwo = _wiwo || [];
+_wiwo.push([function(iframeUtil){
+	var frameList = iframeUtil.getIframes();
+	console.log('frameList=', frameList);
+}]);
+
+/*
+frameList= [
+	{
+		frame: HTMLIFrameElement,
+		frameId: 'wiwo-bimade'
+	}
+]
+*/
+```
 
 ### Summary
 
@@ -369,26 +384,6 @@ This method should be called __synchronously__
 The `iframeUtil.getIframes()` method returns an array of objects containing a reference to the Widget's iframe element and the ID of the frame.
 
 
-### Examples
-
-```javascript
-// Call `getIframes()` in the iframeUtil ready function:
-var _wiwo = _wiwo || [];
-_wiwo.push([function(iframeUtil){
-	var frameList = iframeUtil.getIframes();
-	console.log('frameList=', frameList);
-}]);
-
-/*
-frameList= [
-	{
-		frame: HTMLIFrameElement,
-		frameId: 'wiwo-bimade'
-	}
-]
-*/
-```
-
 
 ## FrameEvent
 
@@ -402,13 +397,6 @@ interface FrameEvent {
 }
 ```
 
-```javascript
-var _wiwo = _wiwo || [];
-_wiwo.push(['on', 'wiwo.dido.getDataResult', function(e, data){
-	// `e` is a `FrameEvent` object.
-}]);
-```
-
 
 ```javascript
 // Example FrameEvent object:
@@ -420,9 +408,19 @@ _wiwo.push(['on', 'wiwo.dido.getDataResult', function(e, data){
 }
 ```
 
+
+```javascript
+// Example usage:
+var _wiwo = _wiwo || [];
+_wiwo.push(['on', 'wiwo.dido.getDataResult', function(e, data){
+	// `e` is a `FrameEvent` object.
+	// `data` is a `DidoResult` object (event-specific).
+}]);
+```
+
 ### Summary
 
-The `FrameEvent` object is the first parameter returned to the [`on()` event handler](#on).
+The `FrameEvent` type is the first parameter returned to the [`on()` event handler](#on).
 
 ### Properties
 

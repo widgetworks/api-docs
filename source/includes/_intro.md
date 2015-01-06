@@ -6,7 +6,7 @@ The Widget is made up of four components that work together to embed the tool on
 
  1. [__Host page__](#page-setup) - your webpage that will host the Widget.
  2. __Widget__ - the Widget and all of its associated assets - loaded into an iframe on the host page.
- 3. __Helper library__ - The [iframeUtil library](#iframeutil) loaded on the host page that allow communication between the host page and Widget.
+ 3. __Helper library__ - The [iframeUtil library](#iframeutil-api) loaded on the host page that allow communication between the host page and Widget.
  4. __Configuration__ - the customisation and configuration data for the Widget.
 
 
@@ -39,7 +39,7 @@ The iframe id (*wiwo-bimade* in this case) identifies your license and the ifram
 
 > The namespace for all Widget Works libraries is : `wiwo`
 
-> The namespace the asynchronous cross-frame API is : `_wiwo`
+> The namespace for the asynchronous cross-frame API is : `_wiwo`
 
 Once a Widget is embedded in a page you can use our simple API to set and get calculation-specific data from the Widget. The Widget itself runs in the iframe and you can't communicate to it directly due to cross domain limitations.
 
@@ -54,7 +54,11 @@ Responses always provide:
 * a *data object* : actual data from the widget, calculation results, etc. *Refer to your Widget specific documentation for the data properties.*
 
 
-## Example: get data from a Widget
+## Example: get data from Widget
+
+> __Example:__ Getting data from the Widget.
+
+> 'wiwo.dido.getDataResult' returns the full dataset (user inputs and calculated fields) from the Widget:
 
 ```javascript
 // `getData` example
@@ -71,11 +75,54 @@ _wiwo.push(['on', 'wiwo.dido.getDataResult', function(e, result){
   }
   
 }]);
+```
 
+> 'wiwo.dido.getData' requests the data from the Widget:
+
+```javascript
 // 2. Send the `wiwo.dido.getData` event to the Widget to get the current data:
 // [3. Step three is handled inside the Widget.]
 _wiwo.push(['postMessage', 'wiwo-bimade', 'wiwo.dido.getData']);
 ```
+
+> Console output from the above example:
+
+```javascript
+'Received data from Widget ID=wiwo-bimade, data='{
+  "data": {
+    "output": {       
+      "repaymentResultModel": {
+        "hasFixedRepayment": false,
+        "fixedRepayment": 0,
+        "ongoingRepayment": 690.911525212645,
+        "totalInterestPayable": 89094.6689249568,
+        "totalLoanAmount": 189094.66892495676,
+        "loanDuration": {
+          "rawPeriods": 300,
+          "totalYears": 25,
+          "years": 25,
+          "periods": 0
+        },
+        "chartSeries": {
+            "lastTerm": 25,
+            "repaymentSeries": [
+                [
+                  0,
+                  189094.67
+                ]
+                //, ....
+            ]
+          }
+      }
+
+    },
+    "input": {
+      ...
+    }
+  }
+}
+```
+
 
 This is the process that occurs to get the current input values and calculation results from a Widget:
 
@@ -84,10 +131,15 @@ This is the process that occurs to get the current input values and calculation 
  3. The Widget receives the event and processes the data into the required JSON structure.
  4. Once processing is complete the Widget raises the `'wiwo.dido.getDataResult'` event for your listener to handle.
 
-See [DiDo.getData](#getdata) and [DiDo.getDataResult](#getdataresult) for more detail.
+See [DiDo Events.getData](#getdata) and [DiDo Events.getDataResult](#getdataresult) for more detail.
 
 
-## Example: send data to a Widget
+
+## Example: send data to Widget
+
+> __Example:__ Setting data on the Widget.
+
+> The data payload you send should match the structure of the [WidgetData](#widgetdata) type.
 
 ```javascript
 // `setData` example
@@ -122,6 +174,8 @@ _wiwo.push(['postMessage', 'wiwo-bimade', 'wiwo.dido.setData', {
 }]);
 ```
 
+
+
 To dynamically load new data into a Widget:
  
  1. Add listeners for the `'wiwo.dido.setDataResult'` event.
@@ -129,4 +183,9 @@ To dynamically load new data into a Widget:
  3. The Widget receives the event, validates the data payload and loads the new data.
  4. Once the data has been loaded the Widget will raise the `'wiwo.dido.setDataResult'` for your listener to handle.
 
-See [DiDo.setData](#setdata) and [DiDo.setDataResult](#setdataresult) for more detail.
+See [DiDo Events.setData](#setdata) and [DiDo Events.setDataResult](#setdataresult) for more detail.
+
+The `'wiwo.dido.setData'` event expects a [WidgetData](#widgetdata) object passed as the `payload` parameter.
+
+To load data at Widget startup see [Loading values from URL](#loading-values-from-url).
+
