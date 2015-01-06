@@ -6,7 +6,7 @@ The Widget is made up of four components that work together to embed the tool on
 
  1. [__Host page__](#page-setup) - your webpage that will host the Widget.
  2. __Widget__ - the Widget and all of its associated assets - loaded into an iframe on the host page.
- 3. __Helper library__ - The [iframeUtil library](#iframeutil-api) loaded on the host page that allow communication between the host page and Widget.
+ 3. __Helper library__ - The [iframeUtil library](#iframeutil-api-reference) loaded on the host page that allow communication between the host page and Widget.
  4. __Configuration__ - the customisation and configuration data for the Widget.
 
 

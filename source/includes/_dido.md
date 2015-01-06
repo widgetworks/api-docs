@@ -1,4 +1,4 @@
-# DiDo Events
+# DiDo Event Reference
 
 The Data In/Data Out (DiDo) API.
 

@@ -1,4 +1,4 @@
-# Analytics Events
+# Analytics Event Reference
 
 The Widgets may emit tracking events that can be used to integrate with data analytics services.
 

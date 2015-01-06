@@ -31,7 +31,7 @@ Event name | Description | Response event from Widget
 [wiwo.dido.getData](#getdata) | Request data from the specified widget | [wiwo.dido.getDataResult](#getdataresult)
 [wiwo.dido.setData](#setdata) | Request to set your data payload on the specified widget | [wiwo.dido.setDataResult](#setdataresult)
 
-See [iframeUtil API](#iframeutil-api) for detail on how to [add event listeners](#on) and [send messages to the Widget](#postmessage).
+See [iframeUtil API](#iframeutil-api-reference) for detail on how to [add event listeners](#on) and [send messages to the Widget](#postmessage).
 
 
 ## Widget events

@@ -10,7 +10,7 @@ toc_footers:
 
 includes:
  - intro
- - api
+ - eventsAndProperties
  - urlparams
  - errors
  - iframeUtil
