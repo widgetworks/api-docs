@@ -4,7 +4,7 @@ The Widgets may emit tracking events that can be used to integrate with data ana
 
 See the examples for [Adobe Marketing Cloud](#adobe-marketing-cloud-integration) and [Google Analytics](#google-analytics-integration).
 
-## pageTrack
+## Event: pageTrack
 
 > Example 'pageTrack' event listener:
 
@@ -30,12 +30,12 @@ The event listener parameters contain information about the Widget that raised t
 
 Parameter | Type | Description
 --------- | ---- | -----------
-e | [FrameEvent](#frameevent) | Information about the Widget that emitted the event.
+e | [FrameEvent](#type-frameevent) | Information about the Widget that emitted the event.
 path | string | The URL path fragment that represents the application state that the user is viewing. This value always includes a leading slash '/'.
 
 
 
-## eventTrack
+## Event: eventTrack
 
 > Example 'eventTrack' event listener:
 
@@ -69,11 +69,11 @@ The first time the user interacts with the Widget a special `'eventTrack'` is ra
 
 Parameter | Type | Description
 --------- | ---- | -----------
-e | [FrameEvent](#frameevent) | Information about the Widget that emitted the event.
-properties | [EventTrackProperties](#eventtrackproperties) | The tracking properties associated with this event.
+e | [FrameEvent](#type-frameevent) | Information about the Widget that emitted the event.
+properties | [EventTrackProperties](#event-eventtrackproperties) | The tracking properties associated with this event.
 
 
-## EventTrackProperties
+## Type: EventTrackProperties
 
 
 ```javascript
@@ -211,7 +211,7 @@ Integration with Adobe Marketing Cloud (formerly Omniture/SiteCatalyst) is suppo
 
 See the [Adobe Marketing Cloud documentation ](http://microsite.omniture.com/t2/help/en_US/sc/implement/oms_sc_implement.pdf) for more information on available tracking options.
 
-See [EventTrackProperties](#eventtrackproperties) for the properties available to the `'eventTrack'` event.
+See [EventTrackProperties](#event-eventtrackproperties) for the properties available to the `'eventTrack'` event.
 
 
 

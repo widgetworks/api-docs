@@ -135,6 +135,114 @@ paramN     | any    | The parameters to pass to the method.
 The following methods are available on the `iframeUtil`:
 
 
+## getData()
+
+> Get data from a Widget
+
+```javascript
+var _wiwo = _wiwo || [];
+_wiwo.push(['getData', 'wiwo-bimade', function(e, result){
+    if (result.success){
+        // Do something with `result.data`
+    } else {
+        // Check error with `result.message`
+    }
+}]);
+```
+
+
+### Summary
+
+The `getData()` method lets you easily request data from a Widget.
+
+
+<aside class="success">
+This is the recommended way of retrieving Widget data
+</aside>
+
+<aside class="success">
+This method may be called asynchronously
+</aside>
+
+
+
+### Syntax
+
+`iframeUtil.getData(frameId, callbackFn)`
+
+`_wiwo.push(['getData', frameId, callbackFn)`
+
+
+### Parameters
+
+Property  | Type   | Description
+--------- | ------ |------
+frameId   | string | The ID of the frame containing the Widget.
+callbackFn | Function | A function that will receive the Widget data. See [DiDo Events.getDataResult](#event-getdataresult) for parameter types.
+
+
+
+## setData()
+
+> Send new data to a Widget
+
+```javascript
+var _wiwo = _wiwo || [];
+_wiwo.push([
+    'setData',
+    'wiwo-bimade', 
+    {
+      "id": "wiwo-repayment-widget",
+      "version": 1,
+      
+      // This is the data that will be loaded by the Widget:
+      // This data is Widget-specific.
+      "input": {
+        "repaymentModel": {
+          "propertyValue": 530000,
+          "principal": 424000
+        }
+      }
+    },
+    function(e, result){
+      if (!result.success){
+        // Check error with `result.message`
+      }
+      
+    }
+]);
+```
+
+### Summary
+
+The `setData()` method lets you easily load new data in a Widget.
+
+<aside class="success">
+This is the recommended way of sending new data to a Widget
+</aside>
+
+<aside class="success">
+This method may be called asynchronously
+</aside>
+
+
+
+### Syntax
+
+`iframeUtil.setData(frameId, payload, callbackFn)`
+
+`_wiwo.push(['setData', frameId, payload, callbackFn)`
+
+
+### Parameters
+
+Property  | Type   | Description
+--------- | ------ |------
+frameId   | string | The ID of the frame containing the Widget.
+payload   | [WidgetData](#type-widgetdata) | The data the Widget should load.
+callbackFn | Function | A function that will receive the result of the `setData` call. See [DiDo Events.setDataResult](#event-getdataresult) for parameter types.
+
+
 
 ## addOrigins()
 
@@ -193,9 +301,6 @@ If the browser's JavaScript console shows the warning:
 Then you should make sure the domain of the hosting page has been added as a valid origin:
 
 
-
-
-
 ## on()
 
 ```javascript
@@ -249,27 +354,36 @@ eventName | string    | Add the listener for this event.
 handler   | function  | The function that will be invoked when the event is raised.
 
 
-#### handler()
 
-The handler function accepts these parameters:
-
-`function(e, data, originalEvent)`
+## once()
 
 ```javascript
-// FrameEvent structure:
-{
-	"frame": HTMLIFrameElement,	// The Element that raised the event.
-	"frameId": "wiwo-bimade",	// The ID of the element that raised the event.
-	"payload": {...},	// Event-specific data.
-	"wiwoEvent": "wiwo.dido.getDataResult"	// The name of the event.
-}
+// Add an event listener that will be deregistered after the callback is run.
+var _wiwo = _wiwo || [];
+_wiwo.push(['once', 'wiwo.dido.getDataResult', function(e, data, originalEvent){
+	console.log('`getDataResult` event triggered by frame=', e.frameId);
+	console.log('`getDataResult` received data=', data);
+}]);
 ```
 
-Parameter | Type       | Description
---------- | ---------  | -----------
-e         | [FrameEvent](#frameevent) | Information about the iframe (i.e. Widget) that raised this event.
-data      | object     | The data passed with the event. The data is event-specific.
-originalEvent | Event  | The original browser event, usually a `MessageEvent` instance [dispatched by `window.postMessage(...)`](https://developer.mozilla.org/en-US/docs/Web/API/Window.postMessage) inside the Widget.
+
+### Summary
+
+The `once()` method acts just like [on()](#on) except the event listener will be deregistered after the event has fired.
+
+This means the callback will only be invoked once for a given event.
+
+
+### Syntax
+
+`iframeUtil.once(eventName, function handler(e, data, originalEvent){...})`
+
+`_wiwo.push(['once', eventName, function handler(e, data, originalEvent){...}])`
+
+
+### Parameters and handler()
+
+This method accepts the same parameters and handler signature as the [on()](#on) method.
 
 
 
@@ -385,7 +499,199 @@ The `iframeUtil.getIframes()` method returns an array of objects containing a re
 
 
 
-## FrameEvent
+## getIframeIds()
+
+```javascript
+// Call `getIframeIds()` in the iframeUtil ready function:
+var _wiwo = _wiwo || [];
+_wiwo.push([function(iframeUtil){
+	var frameIds = iframeUtil.getIframeIds();
+	console.log('frameIds=', frameIds);
+}]);
+
+/*
+frameIds= ["wiwo-bimade", ...]
+*/
+```
+
+### Summary
+
+Call `getIframeIds()` to retrieve a list of all Widget iframe IDs currently registered with the `iframeUtil`.
+
+This method is only available after the `iframeUtil` has been loaded and initialised on the page and should be invoked inside the `iframeUtil` ready function.
+
+<aside class="warning">
+This method should be called __synchronously__
+</aside>
+
+
+### Syntax
+
+`iframeUtil.getIframeIds()`
+
+
+### Description
+
+The `iframeUtil.getIframeIds()` method returns a list of strings.
+
+Each string is the ID of a registered Widget.
+
+
+
+## refresh()
+
+
+```javascript
+// Reinitalise a Widget:
+var _wiwo = _wiwo || [];
+_wiwo.push(['refresh', 'wiwo-bimade']);
+```
+
+
+```javascript
+// Call `refresh()` to reinitialise a Widget:
+var _wiwo = _wiwo || [];
+_wiwo.push([function(iframeUtil){
+	iframeUtil.refresh('wiwo-bimade');
+}]);
+```
+
+### Summary
+
+Invoke `refresh()` to reinitialise a Widget on the current page.
+
+This will reset and reload the Widget.
+
+<aside class="success">
+This method may be called __asynchronously__
+</aside>
+
+
+### Syntax
+
+`iframeUtil.refresh(frameId)`
+
+`_wiwo.push(['refresh', frameId)`
+
+
+
+## scrollTo()
+
+
+```javascript
+// Smooth-scroll to a location on-page:
+var _wiwo = _wiwo || [];
+_wiwo.push(['scrollTo', 100]);
+
+// Scroll to the location in 100ms
+_wiwo.push(['scrollTo', {
+    to: 200,
+    duration: 100
+}]);
+```
+
+
+```javascript
+// Smooth-scroll an element or Widget into view:
+var _wiwo = _wiwo || [];
+_wiwo.push(['scrollTo', {
+    scrollTarget: '#wiwo-bimade'
+}]);
+
+// Scroll element into view in 500ms:
+_wiwo.push(['scrollTo', {
+    scrollTarget: '#wiwo-bimade',
+    duration: 500
+}]);
+```
+
+
+### Summary
+
+Invoke `scrollTo()` to scroll the page to a position or element.
+
+
+<aside class="success">
+This method may be called __asynchronously__
+</aside>
+
+
+### Syntax
+
+`iframeUtil.scrollTo(posOrOptions)`
+
+`_wiwo.push(['scrollTo', posOrOptions)`
+
+
+Parameter | Type | Description
+--------- | ---- | -----------
+posOrOptions | number or options | If a number then scroll to that position. Where 0 is the top of the page and positive numbers are further down the page.
+
+
+The options object has this structure:
+
+Property  | Type | Description
+--------- | ---- | -----------
+to        | number | (optional if `scrollTarget` given) The position to scroll to
+scrollTarget | string | (optional if `to` is given) The selector string of the element to scroll into view
+duration  | number | The duration, in milliseconds, of the smooth-scroll (default is 750)
+
+NOTE: The `scrollTarget` property should be given as an element selector string (with leading hash: '#wiwo-bimade') as it will be passed to `document.querySelector()`
+
+
+
+## scrollBy()
+
+
+```javascript
+// Smooth-scroll a relative amount:
+var _wiwo = _wiwo || [];
+_wiwo.push(['scrollBy', 100]);
+```
+
+
+```javascript
+// Smooth-scroll a relative amount over 100ms:
+var _wiwo = _wiwo || [];
+_wiwo.push(['scrollBy', {
+    to: 100,
+    duration: 100
+}]);
+```
+
+
+### Summary
+
+Invoke `scrollBy()` to scroll the page by a relative amount.
+
+
+<aside class="success">
+This method may be called __asynchronously__
+</aside>
+
+
+### Syntax
+
+`iframeUtil.scrollBy(posOrOptions)`
+
+`_wiwo.push(['scrollBy', posOrOptions)`
+
+
+Parameter | Type | Description
+--------- | ---- | -----------
+posOrOptions | number or options | If a number then scroll by that many pixels from the current location. Larger numbers will scroll further, negative numbers will scroll up the page.
+
+
+The options object has this structure:
+
+Property  | Type | Description
+--------- | ---- | -----------
+to        | number | The number of pixels to scroll by (positive is down the page, negative values scroll up the page)
+duration  | number | The duration, in milliseconds, of the smooth-scroll (default is 750)
+
+
+
+## Type: FrameEvent
 
 ```javascript
 // FrameEvent structure:

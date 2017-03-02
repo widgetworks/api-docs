@@ -5,7 +5,7 @@ The Data In/Data Out (DiDo) API.
 __Note:__ All of the events and sent to the Widget and any events received back are handled asynchronously. It is __not__ possible to make a synchronous event/method call to the Widget.
 
 
-## getData
+## Event: getData
 
 ```javascript
 // Post a message to request data from a Widget:
@@ -18,7 +18,22 @@ _wiwo.push(['postMessage', 'wiwo-bimade', 'wiwo.dido.getData']);
 
 The `'wiwo.dido.getData'` event is sent from the _host page_ to a _Widget_.
 
-The Widget will respond with a `wiwo.dido.getDataResult` event. See [__wiwo.dido.getDataResult__](#getdataresult) for detail on the response event.
+The Widget will respond with a `wiwo.dido.getDataResult` event. See [wiwo.dido.getDataResult](#event-getdataresult) for detail on the response event.
+
+
+### event vs method
+
+This is the `'wiwo.dido.getData'` event; there is also a [`getData()`](#getdata) method.
+
+Behind the scenes `getData()` method uses this event to implement its behaviour.
+
+<aside class="success">
+We recommend using the [__getData()__](#getdata) method to retrieve data from a Widget.
+
+If you've previously used the 'wiwo.dido.getData' and 'wiwo.dido.getDataResult' events then 
+you can easily migrate to using the [__getData()__](#getdata) method instead.
+</aside>
+
 
 
 ### Syntax
@@ -33,11 +48,11 @@ Parameter           | Type   | Description
 frameId             | string | The ID of the Widget that will receive the event.
 'wiwo.dido.getData' | string | The eventName.
 
-Widget responds with [__wiwo.dido.getDataResult__](#getdataresult) event.
+Widget responds with [wiwo.dido.getDataResult](#event-getdataresult) event.
 
 
 
-## getDataResult
+## Event: getDataResult
 
 
 ```javascript
@@ -55,7 +70,7 @@ _wiwo.push(['on', 'wiwo.dido.getDataResult', function(e, result){
 
 ### Summary
 
-The `'wiwo.dido.getDataResult'` event is sent from a _Widget_ to the _host page_ in response to a ['wiwo.dido.getData'](#getdata) request.
+The `'wiwo.dido.getDataResult'` event is sent from a _Widget_ to the _host page_ in response to a ['wiwo.dido.getData'](#event-getdata) request.
 
 
 ### Listener
@@ -66,7 +81,7 @@ The `'wiwo.dido.getDataResult'` event is sent from a _Widget_ to the _host page_
 
 Parameter | Type | Description
 --------- | ---- |-------------
-e         | [FrameEvent](#frameevent) | Information about the Widget that emitted the event.
+e         | [FrameEvent](#type-frameevent) | Information about the Widget that emitted the event.
 result    | object     | `DidoResult` object. See [DidoResult](#didoresult) for detail.
 
 
@@ -91,8 +106,14 @@ result    | object     | `DidoResult` object. See [DidoResult](#didoresult) for 
 __Note:__ The `result.data` object structure is Widget-specific.
 
 
+<aside class="success">
+If you're using the 'wiwo.dido.getData' and 'wiwo.dido.getDataResult' events then
+consider migrating to the [__getData()__](#getdata) method to retrieve data from a Widget
+</aside>
 
-## setData
+
+
+## Event: setData
 
 > Example 'wiwo.dido.setData' call:
 
@@ -115,9 +136,24 @@ _wiwo.push(['postMessage', 'wiwo-bimade', 'wiwo.dido.setData', {
 
 Send `'wiwo.dido.setData'` the event to a _Widget_ to trigger it to load data.
 
-The Widget will respond with a [wiwo.dido.setDataResult](#setdataresult) event.
+The Widget will respond with a [wiwo.dido.setDataResult](#event-setdataresult) event.
 
 Using `'wiwo.dido.setData'` you provide an object to the widget with all the of the standard input fields. Generally, any input field which is available on screen can be set via this API. Refer to the Widget-specific documentation for the input object model.
+
+
+### event vs method
+
+This is the `'wiwo.dido.setData'` event; there is also a [`setData()`](#setdata) method.
+
+Behind the scenes `setData()` method uses this event to implement its behaviour.
+
+<aside class="success">
+We recommend using the [__setData()__](#setdata) method to retrieve data from a Widget.
+
+If you've previously used the 'wiwo.dido.setData' and 'wiwo.dido.setDataResult' events then 
+you can easily migrate to using the [__setData()__](#setdata) method instead.
+</aside>
+
 
 ### Syntax
 
@@ -130,7 +166,7 @@ Parameter           | Type   | Description
 ------------------- | ------ | -------------
 frameId             | string | The ID of the Widget that will receive the event.
 'wiwo.dido.setData' | string | The eventName.
-payload             | object &#124; [WidgetData](#widgetdata) | The data to be loaded by the Widget. This data is Widget-specific.
+payload             | object &#124; [WidgetData](#type-widgetdata) | The data to be loaded by the Widget. This data is Widget-specific.
 
 
 <aside class="notice">
@@ -144,7 +180,7 @@ The input data payload must:
 
 
 
-## setDataResult
+## Event: setDataResult
 
 ```javascript
 // `wiwo.dido.setDataResult` listener:
@@ -163,8 +199,14 @@ Response event | Result
 wiwo.dido.setDataResult | result object with `result.data.input`, the values you called setData with
 
 
+<aside class="success">
+If you're using the 'wiwo.dido.setData' and 'wiwo.dido.setDataResult' events then
+consider migrating to the [__setData()__](#setdata) method to retrieve data from a Widget
+</aside>
 
-## DidoResult
+
+
+## Type: DidoResult
 
 > `DidoResult` type structure:
 
@@ -210,7 +252,7 @@ interface DidoResult {
 
 ### Summary
 
-The `DidoResult` object is returned by the ['wiwo.dido.getDataResult'](#getdataresult) and ['wiwo.dido.setDataResult'](#setdataresult) event listeners.
+The `DidoResult` object is returned by the ['wiwo.dido.getDataResult'](#event-getdataresult) and ['wiwo.dido.setDataResult'](#event-setdataresult) event listeners.
 
 It is used to indicate if the preceeding `'wiwo.dido.getData'` or `'wiwo.dido.setData'` event was successful and to return any data that may be associated with the event.
 
@@ -221,10 +263,10 @@ Property | Type | Description
 -------- | ---- | -----------
 success  | boolean | Indicates if the 'getData' or 'setData' request was successful.
 message  | string  | Will be an empty string if `success` is true. Otherwise holds the error message explaining why the request failed.
-data     | object &#124; [WidgetData](#widgetdata)  | Widget-specific response data. Will be `null` if `success` is false.
+data     | object &#124; [WidgetData](#type-widgetdata)  | Widget-specific response data. Will be `null` if `success` is false.
 
 
-## WidgetData
+## Type: WidgetData
 
 > `WidgetData` type structure:
 
@@ -256,9 +298,9 @@ interface WidgetData {
 
 The `WidgetData` object is used to describe the input and output data belonging to a Widget.
 
-The `WidgetData` is returned as the `result.data` property (see [DidoResult](#didoresult)) with the [wiwo.dido.getDataResult](#getdataresult) event.
+The `WidgetData` is returned as the `result.data` property (see [DidoResult](#didoresult)) with the [wiwo.dido.getDataResult](#event-getdataresult) event.
 
-A `WidgetData` object is passed to a Widget as the `payload` parameter with the [wiwo.dido.setData](#setdata) event.
+A `WidgetData` object is passed to a Widget as the `payload` parameter with the [wiwo.dido.setData](#event-setdata) event.
 
 
 ### Properties

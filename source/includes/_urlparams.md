@@ -43,7 +43,7 @@ The parameter should be the same JSON payload that passed with the `'wiwo.dido.s
 __NOTE:__ The URL parameters are only passed to the Widget during page load. Setting the URL parameters after the Widgets have loaded will have no effect.
 </aside>
 
-To set values after page load see the ['wiwo.dido.setData' event](#setdata) and ['wiwo.dido.setData' example](#example-send-data-to-widget).
+To set values after page load see the ['wiwo.dido.setData' event](#event-setdata) and ['wiwo.dido.setData' example](#example-send-data-to-widget).
 
 
 ## Example
@@ -61,7 +61,7 @@ Try it out:
 
 ## URI-encoding data
 
-> The `data` variable matches the structure of the [WidgetData type](#widgetdata)
+> The `data` variable matches the structure of the [WidgetData type](#type-widgetdata)
 
 ```javascript
 var frameId = 'wiwo-bimade';	// The ID of the Widget.
