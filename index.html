@@ -58,13 +58,12 @@
 <blockquote>
 <p>Copy and pase this into your HTML to add a Widget to your page:</p>
 </blockquote>
-<pre class="highlight html"><span class="c">&lt;!-- Start Widget Works - do not change --&gt;</span>
-<span class="nt">&lt;script </span><span class="na">type=</span><span class="s">"text/javascript"</span> <span class="na">src=</span><span class="s">"https://w.widgetworks.com.au/s/bimade.js"</span><span class="nt">&gt;&lt;/script&gt;</span>
-<span class="nt">&lt;iframe</span> <span class="na">id=</span><span class="s">"wiwo-bimade"</span> <span class="na">width=</span><span class="s">"100%"</span> <span class="na">height=</span><span class="s">"100"</span> <span class="na">src=</span><span class="s">""</span> <span class="na">frameborder=</span><span class="s">"0"</span> <span class="na">data-wiwo-init=</span><span class="s">"false"</span><span class="nt">&gt;&lt;/iframe&gt;</span>
-<span class="nt">&lt;script </span><span class="na">type=</span><span class="s">"text/javascript"</span> <span class="na">src=</span><span class="s">"//s3-ap-southeast-2.amazonaws.com/w-widgetworks-com-au/widget/widget-scout.min.js"</span><span class="nt">&gt;&lt;/script&gt;</span>
+<pre class="highlight html"><code><span class="c">&lt;!-- Start Widget Works - do not change --&gt;</span>
+<span class="nt">&lt;script </span><span class="na">src=</span><span class="s">"https://calcs.widgetworks.com.au/s/bimade/live.js"</span><span class="nt">&gt;&lt;/script&gt;</span>
+<span class="nt">&lt;iframe</span> <span class="na">id=</span><span class="s">"wiwo-bimade"</span> <span class="na">width=</span><span class="s">"100%"</span> <span class="na">height=</span><span class="s">"200"</span> <span class="na">src=</span><span class="s">""</span> <span class="na">frameborder=</span><span class="s">"0"</span> <span class="na">data-wiwo-init=</span><span class="s">"false"</span><span class="nt">&gt;&lt;/iframe&gt;</span>
+<span class="nt">&lt;script </span><span class="na">src=</span><span class="s">"https://scout.widgetworks.com.au/widget/widget-scout.min.js"</span><span class="nt">&gt;&lt;/script&gt;</span>
 <span class="c">&lt;!-- End Widget Works --&gt;</span>
-</pre>
-
+</code></pre>
 <p>First, copy and insert the Widget embed code from <a href="https://wm.widgetworks.com.au">Widget Manager</a>. Our examples will use the following Mortgage Repayment Widget:</p>
 
 <p>You can have multiple Widgets on the same page, just use the iframe id to refer to each instance specifically.</p>
@@ -97,36 +96,26 @@ The iframe id (<em>wiwo-bimade</em> in this case) identifies your license and th
 <blockquote>
 <p><strong>Example:</strong> Getting data from the Widget.</p>
 
-<p>&lsquo;wiwo.dido.getDataResult&rsquo; returns the full dataset (user inputs and calculated fields) from the Widget:</p>
+<p>This will return the full dataset (user inputs and calculated fields) from the Widget:</p>
 </blockquote>
-<pre class="highlight javascript"><span class="c1">// `getData` example
-</span><span class="kd">var</span> <span class="nx">_wiwo</span> <span class="o">=</span> <span class="nx">_wiwo</span> <span class="o">||</span> <span class="p">[];</span>
+<pre class="highlight javascript"><code><span class="c1">// `getData` example</span>
+<span class="kd">var</span> <span class="nx">_wiwo</span> <span class="o">=</span> <span class="nx">_wiwo</span> <span class="o">||</span> <span class="p">[];</span>
 
-<span class="c1">// 1. Add the `wiwo.dido.getDataResult` listener:
-</span><span class="nx">_wiwo</span><span class="p">.</span><span class="nx">push</span><span class="p">([</span><span class="s1">'on'</span><span class="p">,</span> <span class="s1">'wiwo.dido.getDataResult'</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">,</span> <span class="nx">result</span><span class="p">){</span>
-
-  <span class="c1">// 4. The Widget raises the `wiwo.dido.getDataResult` for us to handle here:
-</span>  <span class="k">if</span> <span class="p">(</span><span class="nx">result</span><span class="p">.</span><span class="nx">success</span><span class="p">){</span>
+<span class="c1">// 1. Invoke the `getData` method on the iframeUtil:</span>
+<span class="nx">_wiwo</span><span class="p">.</span><span class="nx">push</span><span class="p">([</span><span class="s1">'getData'</span><span class="p">,</span> <span class="s1">'wiwo-bimade'</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">,</span> <span class="nx">result</span><span class="p">){</span>
+  <span class="c1">// 2. This callback function will be invoked when the Widget raises the `wiwo.dido.getDataResult` event:</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">result</span><span class="p">.</span><span class="nx">success</span><span class="p">){</span>
     <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'Received data from Widget ID='</span><span class="p">,</span> <span class="nx">e</span><span class="p">.</span><span class="nx">frameId</span><span class="p">,</span> <span class="s1">', data='</span><span class="p">,</span> <span class="nx">result</span><span class="p">.</span><span class="nx">data</span><span class="p">);</span>
   <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
     <span class="nx">console</span><span class="p">.</span><span class="nx">warn</span><span class="p">(</span><span class="s1">'Unable to get data from Widget ID='</span><span class="p">,</span> <span class="nx">e</span><span class="p">.</span><span class="nx">frameId</span><span class="p">,</span> <span class="s1">', reason='</span><span class="p">,</span> <span class="nx">result</span><span class="p">.</span><span class="nx">message</span><span class="p">);</span>
   <span class="p">}</span>
 
 <span class="p">}]);</span>
-</pre>
-
-<blockquote>
-<p>&lsquo;wiwo.dido.getData&rsquo; requests the data from the Widget:</p>
-</blockquote>
-<pre class="highlight javascript"><span class="c1">// 2. Send the `wiwo.dido.getData` event to the Widget to get the current data:
-// [3. Step three is handled inside the Widget.]
-</span><span class="nx">_wiwo</span><span class="p">.</span><span class="nx">push</span><span class="p">([</span><span class="s1">'postMessage'</span><span class="p">,</span> <span class="s1">'wiwo-bimade'</span><span class="p">,</span> <span class="s1">'wiwo.dido.getData'</span><span class="p">]);</span>
-</pre>
-
+</code></pre>
 <blockquote>
 <p>Console output from the above example:</p>
 </blockquote>
-<pre class="highlight javascript"><span class="s1">'Received data from Widget ID=wiwo-bimade, data='</span><span class="p">{</span>
+<pre class="highlight javascript"><code><span class="s1">'Received data from Widget ID=wiwo-bimade, data='</span><span class="p">{</span>
   <span class="s2">"data"</span><span class="p">:</span> <span class="p">{</span>
     <span class="s2">"output"</span><span class="p">:</span> <span class="p">{</span>       
       <span class="s2">"repaymentResultModel"</span><span class="p">:</span> <span class="p">{</span>
@@ -148,8 +137,8 @@ The iframe id (<em>wiwo-bimade</em> in this case) identifies your license and th
                   <span class="mi">0</span><span class="p">,</span>
                   <span class="mf">189094.67</span>
                 <span class="p">]</span>
-                <span class="c1">//, ....
-</span>            <span class="p">]</span>
+                <span class="c1">//, ....</span>
+            <span class="p">]</span>
           <span class="p">}</span>
       <span class="p">}</span>
 
@@ -159,89 +148,87 @@ The iframe id (<em>wiwo-bimade</em> in this case) identifies your license and th
     <span class="p">}</span>
   <span class="p">}</span>
 <span class="p">}</span>
-</pre>
-
-<p>This is the process that occurs to get the current input values and calculation results from a Widget:</p>
+</code></pre>
+<p>This is the process that occurs when you request the current input values and calculation results from a Widget:</p>
 
 <ol>
-<li>Add listeners for the <code class="prettyprint">&#39;wiwo.dido.getDataResult&#39;</code> event.</li>
-<li>Once the Widget has loaded use the <a href="#postmessage">iframeUtil.postMessage() method</a> to send a <code class="prettyprint">&#39;wiwo.dido.getData&#39;</code> event to the Widget.</li>
+<li>Invoke the <a href="#getdata">getData()</a> method on the Widget.</li>
+<li>The iframeUtil will use the <a href="#postmessage">iframeUtil.postMessage() method</a> to send a <code class="prettyprint">&#39;wiwo.dido.getData&#39;</code> event to the Widget.</li>
 <li>The Widget receives the event and processes the data into the required JSON structure.</li>
-<li>Once processing is complete the Widget raises the <code class="prettyprint">&#39;wiwo.dido.getDataResult&#39;</code> event for your listener to handle.</li>
+<li>The Widget will send the <code class="prettyprint">&#39;wiwo.dido.getDataResult&#39;</code> event back to the iframeUtil.</li>
+<li>The iframeUtil will invoke your callback, passing the Widget data to the function.</li>
 </ol>
 
-<p>See <a href="#getdata">DiDo Events.getData</a> and <a href="#getdataresult">DiDo Events.getDataResult</a> for more detail.</p>
+<p>See <a href="#event-getdataresult">DiDo Events.getDataResult</a> for detail on the returned data.</p>
 <h2 id='example-send-data-to-widget'>Example: send data to Widget</h2>
 <blockquote>
 <p><strong>Example:</strong> Setting data on the Widget.</p>
 
-<p>The data payload you send should match the structure of the <a href="#widgetdata">WidgetData</a> type.</p>
+<p>The data payload you send should match the structure of the <a href="#type-widgetdata">WidgetData</a> type.</p>
 </blockquote>
-<pre class="highlight javascript"><span class="c1">// `setData` example
-</span><span class="kd">var</span> <span class="nx">_wiwo</span> <span class="o">=</span> <span class="nx">_wiwo</span> <span class="o">||</span> <span class="p">[];</span>
+<pre class="highlight javascript"><code><span class="c1">// `setData` example</span>
+<span class="kd">var</span> <span class="nx">_wiwo</span> <span class="o">=</span> <span class="nx">_wiwo</span> <span class="o">||</span> <span class="p">[];</span>
 
-<span class="c1">// 1. Add the `wiwo.dido.setDataResult` listener:
-</span><span class="nx">_wiwo</span><span class="p">.</span><span class="nx">push</span><span class="p">([</span><span class="s1">'on'</span><span class="p">,</span> <span class="s1">'wiwo.dido.setDataResult'</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">,</span> <span class="nx">result</span><span class="p">){</span>
+<span class="c1">// 1. Invoke the `setData` method on the iframeUtil:</span>
+<span class="nx">_wiwo</span><span class="p">.</span><span class="nx">push</span><span class="p">([</span>
+    <span class="s1">'setData'</span><span class="p">,</span>
+    <span class="s1">'wiwo-bimade'</span><span class="p">,</span> 
+    <span class="p">{</span>
+      <span class="s2">"id"</span><span class="p">:</span> <span class="s2">"wiwo-repayment-widget"</span><span class="p">,</span>
+      <span class="s2">"version"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
 
-  <span class="c1">// 4. The Widget raises the `wiwo.dido.setDataResult` event for us to handle here:
-</span>  <span class="k">if</span> <span class="p">(</span><span class="nx">result</span><span class="p">.</span><span class="nx">success</span><span class="p">){</span>
-    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'Successfully loaded data into Widget ID='</span><span class="p">,</span> <span class="nx">e</span><span class="p">.</span><span class="nx">frameId</span><span class="p">);</span>
-  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-    <span class="nx">console</span><span class="p">.</span><span class="nx">warn</span><span class="p">(</span><span class="s1">'Unable to set data on Widget ID='</span><span class="p">,</span> <span class="nx">e</span><span class="p">.</span><span class="nx">frameId</span><span class="p">,</span> <span class="s1">', reason='</span><span class="p">,</span> <span class="nx">result</span><span class="p">.</span><span class="nx">message</span><span class="p">);</span>
-  <span class="p">}</span>
+      <span class="c1">// This is the data that will be loaded by the Widget:</span>
+      <span class="c1">// This data is Widget-specific.</span>
+      <span class="s2">"input"</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">"repaymentModel"</span><span class="p">:</span> <span class="p">{</span>
+          <span class="s2">"propertyValue"</span><span class="p">:</span> <span class="mi">530000</span><span class="p">,</span>
+          <span class="s2">"principal"</span><span class="p">:</span> <span class="mi">424000</span>
+        <span class="p">}</span>
+      <span class="p">}</span>
+    <span class="p">},</span>
+    <span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">,</span> <span class="nx">result</span><span class="p">){</span>
+      <span class="c1">// 2. This callback will be invoked when Widget returns the `wiwo.dido.setDataResult` event:</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">result</span><span class="p">.</span><span class="nx">success</span><span class="p">){</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'Successfully loaded data into Widget ID='</span><span class="p">,</span> <span class="nx">e</span><span class="p">.</span><span class="nx">frameId</span><span class="p">);</span>
+      <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">warn</span><span class="p">(</span><span class="s1">'Unable to set data on Widget ID='</span><span class="p">,</span> <span class="nx">e</span><span class="p">.</span><span class="nx">frameId</span><span class="p">,</span> <span class="s1">', reason='</span><span class="p">,</span> <span class="nx">result</span><span class="p">.</span><span class="nx">message</span><span class="p">);</span>
+      <span class="p">}</span>
 
-<span class="p">}]);</span>
-
-<span class="c1">// 2. Send the `wiwo.dido.setData` event to load new data into the Widget:
-// [3. Step three is handled inside the Widget.]
-</span><span class="nx">_wiwo</span><span class="p">.</span><span class="nx">push</span><span class="p">([</span><span class="s1">'postMessage'</span><span class="p">,</span> <span class="s1">'wiwo-bimade'</span><span class="p">,</span> <span class="s1">'wiwo.dido.setData'</span><span class="p">,</span> <span class="p">{</span>
-  <span class="s2">"id"</span><span class="p">:</span> <span class="s2">"wiwo-repayment-widget"</span><span class="p">,</span>
-  <span class="s2">"version"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
-
-  <span class="c1">// This is the data that will be loaded by the Widget:
-</span>  <span class="c1">// This data is Widget-specific.
-</span>  <span class="s2">"input"</span><span class="p">:</span> <span class="p">{</span>
-    <span class="s2">"repaymentModel"</span><span class="p">:</span> <span class="p">{</span>
-      <span class="s2">"propertyValue"</span><span class="p">:</span> <span class="mi">530000</span><span class="p">,</span>
-      <span class="s2">"principal"</span><span class="p">:</span> <span class="mi">424000</span>
     <span class="p">}</span>
-  <span class="p">}</span>
-<span class="p">}]);</span>
-</pre>
-
+<span class="p">]);</span>
+</code></pre>
 <p>To dynamically load new data into a Widget:</p>
 
 <ol>
-<li>Add listeners for the <code class="prettyprint">&#39;wiwo.dido.setDataResult&#39;</code> event.</li>
-<li>Once the Widget has loaded use the <a href="#postmessage">iframeUtil.postMessage() method</a> to send a <code class="prettyprint">&#39;wiwo.dido.setData&#39;</code> event to the Widget, along with a data payload.</li>
+<li>Invoke the <a href="#setdata">setData()</a> method on the iframeUtil, passing the frameId and data you want to load.</li>
+<li>The iframeUtil will use the <a href="#postmessage">iframeUtil.postMessage() method</a> to send a <code class="prettyprint">&#39;wiwo.dido.setData&#39;</code> event to the Widget along with the data payload.</li>
 <li>The Widget receives the event, validates the data payload and loads the new data.</li>
-<li>Once the data has been loaded the Widget will raise the <code class="prettyprint">&#39;wiwo.dido.setDataResult&#39;</code> for your listener to handle.</li>
+<li>The Widget will send the <code class="prettyprint">&#39;wiwo.dido.setDataResult&#39;</code> event back to the iframeUtil.</li>
+<li>The iframeUtil will invoke your callback, passing the Widget data to the function.</li>
 </ol>
 
-<p>See <a href="#setdata">DiDo Events.setData</a> and <a href="#setdataresult">DiDo Events.setDataResult</a> for more detail.</p>
+<p>The <a href="#setdata">setData()</a> method expects a <a href="#type-widgetdata">WidgetData</a> object passed as the <code class="prettyprint">payload</code> parameter.</p>
 
-<p>The <code class="prettyprint">&#39;wiwo.dido.setData&#39;</code> event expects a <a href="#widgetdata">WidgetData</a> object passed as the <code class="prettyprint">payload</code> parameter.</p>
+<p>See <a href="#event-setdataresult">DiDo Events.setDataResult</a> detail on the data types expected by the Widget.</p>
 
 <p>To load data at Widget startup see <a href="#loading-values-from-url">Loading values from URL</a>.</p>
 
-          <h1 id='events-and-properties'>Events and Properties</h1><h2 id='host-events'>Host events</h2><pre class="highlight javascript"><span class="c1">// Example: send 'wiwo.dido.getData' and 'wiwo.dido.setData' events to a Widget
-</span><span class="kd">var</span> <span class="nx">_wiwo</span> <span class="o">=</span> <span class="nx">_wiwo</span> <span class="o">||</span> <span class="p">[];</span>
+          <h1 id='events-and-properties'>Events and Properties</h1><h2 id='host-events'>Host events</h2><pre class="highlight javascript"><code><span class="c1">// Example: send 'wiwo.dido.getData' and 'wiwo.dido.setData' events to a Widget</span>
+<span class="kd">var</span> <span class="nx">_wiwo</span> <span class="o">=</span> <span class="nx">_wiwo</span> <span class="o">||</span> <span class="p">[];</span>
 <span class="nx">_wiwo</span><span class="p">.</span><span class="nx">push</span><span class="p">([</span><span class="s1">'postMessage'</span><span class="p">,</span> <span class="s1">'wiwo-bimade'</span><span class="p">,</span> <span class="s1">'wiwo.dido.getData'</span><span class="p">]);</span>
 <span class="nx">_wiwo</span><span class="p">.</span><span class="nx">push</span><span class="p">([</span><span class="s1">'postMessage'</span><span class="p">,</span> <span class="s1">'wiwo-bimade'</span><span class="p">,</span> <span class="s1">'wiwo.dido.setData'</span><span class="p">,</span> <span class="p">{...}]);</span>
-</pre>
-
+</code></pre>
 <blockquote>
 <p>For more information see: <a href="#method-calls">method calls</a></p>
 </blockquote>
-<pre class="highlight javascript"><span class="c1">// Example: send 'wiwo.dido.getData' and 'wiwo.dido.setData' events to a Widget
-// Equivalent to above example but uses synchronous ready function:
-</span><span class="kd">var</span> <span class="nx">_wiwo</span> <span class="o">=</span> <span class="nx">_wiwo</span> <span class="o">||</span> <span class="p">[];</span>
+<pre class="highlight javascript"><code><span class="c1">// Example: send 'wiwo.dido.getData' and 'wiwo.dido.setData' events to a Widget</span>
+<span class="c1">// Equivalent to above example but uses synchronous ready function:</span>
+<span class="kd">var</span> <span class="nx">_wiwo</span> <span class="o">=</span> <span class="nx">_wiwo</span> <span class="o">||</span> <span class="p">[];</span>
 <span class="nx">_wiwo</span><span class="p">.</span><span class="nx">push</span><span class="p">([</span><span class="kd">function</span><span class="p">(</span><span class="nx">iframeUtil</span><span class="p">){</span>
   <span class="nx">iframeUtil</span><span class="p">.</span><span class="nx">postMessage</span><span class="p">(</span><span class="s1">'wiwo-bimade'</span><span class="p">,</span> <span class="s1">'wiwo.dido.getData'</span><span class="p">);</span>
   <span class="nx">iframeUtil</span><span class="p">.</span><span class="nx">postMessage</span><span class="p">(</span><span class="s1">'wiwo-bimade'</span><span class="p">,</span> <span class="s1">'wiwo.dido.setData'</span><span class="p">,</span> <span class="p">{...});</span>
 <span class="p">}]);</span>
-</pre>
-
+</code></pre>
 <blockquote>
 <p>For more information see: <a href="#ready-functions">ready functions</a></p>
 </blockquote>
@@ -256,36 +243,35 @@ The iframe id (<em>wiwo-bimade</em> in this case) identifies your license and th
 </tr>
 </thead><tbody>
 <tr>
-<td><a href="#getdata">wiwo.dido.getData</a></td>
+<td><a href="#event-getdata">wiwo.dido.getData</a></td>
 <td>Request data from the specified widget</td>
-<td><a href="#getdataresult">wiwo.dido.getDataResult</a></td>
+<td><a href="#event-getdataresult">wiwo.dido.getDataResult</a></td>
 </tr>
 <tr>
-<td><a href="#setdata">wiwo.dido.setData</a></td>
+<td><a href="#event-setdata">wiwo.dido.setData</a></td>
 <td>Request to set your data payload on the specified widget</td>
-<td><a href="#setdataresult">wiwo.dido.setDataResult</a></td>
+<td><a href="#event-setdataresult">wiwo.dido.setDataResult</a></td>
 </tr>
 </tbody></table>
 
 <p>See <a href="#iframeutil-api-reference">iframeUtil API</a> for detail on how to <a href="#on">add event listeners</a> and <a href="#postmessage">send messages to the Widget</a>.</p>
-<h2 id='widget-events'>Widget events</h2><pre class="highlight javascript"><span class="kd">var</span> <span class="nx">_wiwo</span> <span class="o">=</span> <span class="nx">_wiwo</span> <span class="o">||</span> <span class="p">[];</span>
+<h2 id='widget-events'>Widget events</h2><pre class="highlight javascript"><code><span class="kd">var</span> <span class="nx">_wiwo</span> <span class="o">=</span> <span class="nx">_wiwo</span> <span class="o">||</span> <span class="p">[];</span>
 <span class="nx">_wiwo</span><span class="p">.</span><span class="nx">push</span><span class="p">([</span><span class="s1">'on'</span><span class="p">,</span> <span class="s1">'wiwo.dido.getDataResult'</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">,</span> <span class="nx">result</span><span class="p">){</span>
-  <span class="c1">// Handle the event here.
-</span><span class="p">}]);</span>
+  <span class="c1">// Handle the event here.</span>
+<span class="p">}]);</span>
 
 <span class="nx">_wiwo</span><span class="p">.</span><span class="nx">push</span><span class="p">([</span><span class="s1">'on'</span><span class="p">,</span> <span class="s1">'wiwo.dido.setDataResult'</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">,</span> <span class="nx">result</span><span class="p">){</span>
-  <span class="c1">// Handle the event here.
-</span><span class="p">}]);</span>
+  <span class="c1">// Handle the event here.</span>
+<span class="p">}]);</span>
 
 <span class="nx">_wiwo</span><span class="p">.</span><span class="nx">push</span><span class="p">([</span><span class="s1">'on'</span><span class="p">,</span> <span class="s1">'pageTrack'</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">,</span> <span class="nx">data</span><span class="p">){</span>
-  <span class="c1">// Handle the event here.
-</span><span class="p">}]);</span>
+  <span class="c1">// Handle the event here.</span>
+<span class="p">}]);</span>
 
 <span class="nx">_wiwo</span><span class="p">.</span><span class="nx">push</span><span class="p">([</span><span class="s1">'on'</span><span class="p">,</span> <span class="s1">'eventTrack'</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">,</span> <span class="nx">data</span><span class="p">){</span>
-  <span class="c1">// Handle the event here.
-</span><span class="p">}]);</span>
-</pre>
-
+  <span class="c1">// Handle the event here.</span>
+<span class="p">}]);</span>
+</code></pre>
 <p>The following events may be raised by the Widget and handled on the host page:</p>
 
 <table><thead>
@@ -295,26 +281,26 @@ The iframe id (<em>wiwo-bimade</em> in this case) identifies your license and th
 </tr>
 </thead><tbody>
 <tr>
-<td><a href="#getdataresult">wiwo.dido.getDataResult</a></td>
+<td><a href="#event-getdataresult">wiwo.dido.getDataResult</a></td>
 <td>Indicates success of failure of preceeding &lsquo;wiwo.dido.getData&rsquo; event. Returns Widget data if successful.</td>
 </tr>
 <tr>
-<td><a href="#setdataresult">wiwo.dido.setDataResult</a></td>
+<td><a href="#event-setdataresult">wiwo.dido.setDataResult</a></td>
 <td>Indicates success or failure of preceeding &lsquo;wiwo.dido.setData&rsquo; event.</td>
 </tr>
 <tr>
-<td><a href="#pagetrack">pageTrack</a></td>
+<td><a href="#event-pagetrack">pageTrack</a></td>
 <td>Analytics event. The user has navigated to a new screen in the Widget.</td>
 </tr>
 <tr>
-<td><a href="#eventtrack">eventTrack</a></td>
+<td><a href="#event-eventtrack">eventTrack</a></td>
 <td>Analytics event. The user has interacted with the Widget.</td>
 </tr>
 </tbody></table>
 
 <p>See <a href="#on">iframeUtil.on()</a> for more detail on registering event listeners.</p>
 <h2 id='event-properties'>Event Properties</h2>
-<p>See <a href="#frameevent">iframeUtil.FrameEvent</a> for the properties on the <code class="prettyprint">e</code> parameter in event listeners.</p>
+<p>See <a href="#type-frameevent">iframeUtil.FrameEvent</a> for the properties on the <code class="prettyprint">e</code> parameter in event listeners.</p>
 
           <h1 id='loading-values-from-url'>Loading values from URL</h1><h2 id='override-defaults'>Override defaults</h2>
 <blockquote>
@@ -332,15 +318,13 @@ The iframe id (<em>wiwo-bimade</em> in this case) identifies your license and th
 
 <p>e.g. This JSON string:</p>
 </blockquote>
-<pre class="highlight json"><span class="p">{</span><span class="s2">"id"</span><span class="p">:</span><span class="s2">"wiwo-repayment-widget"</span><span class="p">,</span><span class="s2">"version"</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span><span class="s2">"input"</span><span class="p">:{</span><span class="s2">"repaymentModel"</span><span class="p">:{</span><span class="s2">"principal"</span><span class="p">:</span><span class="mi">123456</span><span class="p">,</span><span class="s2">"term"</span><span class="p">:</span><span class="mi">13</span><span class="p">,</span><span class="s2">"interestRate"</span><span class="p">:</span><span class="mf">0.13</span><span class="p">,</span><span class="s2">"repaymentType"</span><span class="p">:</span><span class="s2">"IO_ARR"</span><span class="p">,</span><span class="s2">"repaymentFrequency"</span><span class="p">:</span><span class="s2">"fortnight"</span><span class="p">,</span><span class="s2">"productGroup"</span><span class="p">:</span><span class="s2">"fixed"</span><span class="p">,</span><span class="s2">"product"</span><span class="p">:</span><span class="s2">"wiwoFixed3Y"</span><span class="p">},</span><span class="s2">"savingsModel"</span><span class="p">:{</span><span class="s2">"savingsEnabled"</span><span class="p">:</span><span class="kc">false</span><span class="p">,</span><span class="s2">"extraRepayment"</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span><span class="s2">"offset"</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span><span class="s2">"lumpSum"</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span><span class="s2">"lumpSumYear"</span><span class="p">:</span><span class="mi">3</span><span class="p">}}}</span><span class="w">
-</span></pre>
-
+<pre class="highlight json"><code><span class="p">{</span><span class="s2">"id"</span><span class="p">:</span><span class="s2">"wiwo-repayment-widget"</span><span class="p">,</span><span class="s2">"version"</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span><span class="s2">"input"</span><span class="p">:{</span><span class="s2">"repaymentModel"</span><span class="p">:{</span><span class="s2">"principal"</span><span class="p">:</span><span class="mi">123456</span><span class="p">,</span><span class="s2">"term"</span><span class="p">:</span><span class="mi">13</span><span class="p">,</span><span class="s2">"interestRate"</span><span class="p">:</span><span class="mf">0.13</span><span class="p">,</span><span class="s2">"repaymentType"</span><span class="p">:</span><span class="s2">"IO_ARR"</span><span class="p">,</span><span class="s2">"repaymentFrequency"</span><span class="p">:</span><span class="s2">"fortnight"</span><span class="p">,</span><span class="s2">"productGroup"</span><span class="p">:</span><span class="s2">"fixed"</span><span class="p">,</span><span class="s2">"product"</span><span class="p">:</span><span class="s2">"wiwoFixed3Y"</span><span class="p">},</span><span class="s2">"savingsModel"</span><span class="p">:{</span><span class="s2">"savingsEnabled"</span><span class="p">:</span><span class="kc">false</span><span class="p">,</span><span class="s2">"extraRepayment"</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span><span class="s2">"offset"</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span><span class="s2">"lumpSum"</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span><span class="s2">"lumpSumYear"</span><span class="p">:</span><span class="mi">3</span><span class="p">}}}</span><span class="w">
+</span></code></pre>
 <blockquote>
 <p>Is URI-encoded as:</p>
 </blockquote>
-<pre class="highlight html">%7B%22id%22%3A%22wiwo-repayment-widget%22%2C%22version%22%3A0%2C%22input%22%3A%7B%22repaymentModel%22%3A%7B%22principal%22%3A123456%2C%22term%22%3A13%2C%22interestRate%22%3A0.13%2C%22repaymentType%22%3A%22IO_ARR%22%2C%22repaymentFrequency%22%3A%22fortnight%22%2C%22productGroup%22%3A%22fixed%22%2C%22product%22%3A%22wiwoFixed3Y%22%7D%2C%22savingsModel%22%3A%7B%22savingsEnabled%22%3Afalse%2C%22extraRepayment%22%3A0%2C%22offset%22%3A0%2C%22lumpSum%22%3A0%2C%22lumpSumYear%22%3A3%7D%7D%7D
-</pre>
-
+<pre class="highlight html"><code>%7B%22id%22%3A%22wiwo-repayment-widget%22%2C%22version%22%3A0%2C%22input%22%3A%7B%22repaymentModel%22%3A%7B%22principal%22%3A123456%2C%22term%22%3A13%2C%22interestRate%22%3A0.13%2C%22repaymentType%22%3A%22IO_ARR%22%2C%22repaymentFrequency%22%3A%22fortnight%22%2C%22productGroup%22%3A%22fixed%22%2C%22product%22%3A%22wiwoFixed3Y%22%7D%2C%22savingsModel%22%3A%7B%22savingsEnabled%22%3Afalse%2C%22extraRepayment%22%3A0%2C%22offset%22%3A0%2C%22lumpSum%22%3A0%2C%22lumpSumYear%22%3A3%7D%7D%7D
+</code></pre>
 <p>The Widgets can load default values from the parent page query parameters.</p>
 
 <p>The data is passed into the Widget via a URL query parameter that matches the ID of the Widget&rsquo;s iframe.</p>
@@ -353,42 +337,40 @@ The iframe id (<em>wiwo-bimade</em> in this case) identifies your license and th
 <strong>NOTE:</strong> The URL parameters are only passed to the Widget during page load. Setting the URL parameters after the Widgets have loaded will have no effect.
 </aside></p>
 
-<p>To set values after page load see the <a href="#setdata">&lsquo;wiwo.dido.setData&rsquo; event</a> and <a href="#example-send-data-to-widget">&lsquo;wiwo.dido.setData&rsquo; example</a>.</p>
+<p>To set values after page load see the <a href="#event-setdata">&lsquo;wiwo.dido.setData&rsquo; event</a> and <a href="#example-send-data-to-widget">&lsquo;wiwo.dido.setData&rsquo; example</a>.</p>
 <h2 id='example'>Example</h2>
 <blockquote>
 <p>Combine the everything together to form the final URL:</p>
 </blockquote>
-<pre class="highlight html"><span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">"https://wm.widgetworks.com.au/widget/bimade/live/?wiwo-bimade=%7B%22id%22%3A%22wiwo-repayment-widget%22%2C%22version%22%3A0%2C%22input%22%3A%7B%22repaymentModel%22%3A%7B%22principal%22%3A123456%2C%22term%22%3A13%2C%22interestRate%22%3A0.13%2C%22repaymentType%22%3A%22IO_ARR%22%2C%22repaymentFrequency%22%3A%22fortnight%22%2C%22productGroup%22%3A%22fixed%22%2C%22product%22%3A%22wiwoFixed3Y%22%7D%2C%22savingsModel%22%3A%7B%22savingsEnabled%22%3Afalse%2C%22extraRepayment%22%3A0%2C%22offset%22%3A0%2C%22lumpSum%22%3A0%2C%22lumpSumYear%22%3A3%7D%7D%7D"</span> <span class="na">target=</span><span class="s">"_blank"</span><span class="nt">&gt;</span>Load Repayment Widget with custom data...<span class="nt">&lt;/a&gt;</span>
-</pre>
-
+<pre class="highlight html"><code><span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">"https://wm.widgetworks.com.au/widget/bimade/live/?wiwo-bimade=%7B%22id%22%3A%22wiwo-repayment-widget%22%2C%22version%22%3A0%2C%22input%22%3A%7B%22repaymentModel%22%3A%7B%22principal%22%3A123456%2C%22term%22%3A13%2C%22interestRate%22%3A0.13%2C%22repaymentType%22%3A%22IO_ARR%22%2C%22repaymentFrequency%22%3A%22fortnight%22%2C%22productGroup%22%3A%22fixed%22%2C%22product%22%3A%22wiwoFixed3Y%22%7D%2C%22savingsModel%22%3A%7B%22savingsEnabled%22%3Afalse%2C%22extraRepayment%22%3A0%2C%22offset%22%3A0%2C%22lumpSum%22%3A0%2C%22lumpSumYear%22%3A3%7D%7D%7D"</span> <span class="na">target=</span><span class="s">"_blank"</span><span class="nt">&gt;</span>Load Repayment Widget with custom data...<span class="nt">&lt;/a&gt;</span>
+</code></pre>
 <p>Try it out:</p>
 
 <p><a href="https://wm.widgetworks.com.au/widget/bimade/live/?wiwo-bimade=%7B%22id%22%3A%22wiwo-repayment-widget%22%2C%22version%22%3A0%2C%22input%22%3A%7B%22repaymentModel%22%3A%7B%22principal%22%3A123456%2C%22term%22%3A13%2C%22interestRate%22%3A0.13%2C%22repaymentType%22%3A%22IO_ARR%22%2C%22repaymentFrequency%22%3A%22fortnight%22%2C%22productGroup%22%3A%22fixed%22%2C%22product%22%3A%22wiwoFixed3Y%22%7D%2C%22savingsModel%22%3A%7B%22savingsEnabled%22%3Afalse%2C%22extraRepayment%22%3A0%2C%22offset%22%3A0%2C%22lumpSum%22%3A0%2C%22lumpSumYear%22%3A3%7D%7D%7D" target="_blank">Load Repayment Widget with custom data (look for a loan value of $123 456)</a></p>
 <h2 id='uri-encoding-data'>URI-encoding data</h2>
 <blockquote>
-<p>The <code class="prettyprint">data</code> variable matches the structure of the <a href="#widgetdata">WidgetData type</a></p>
+<p>The <code class="prettyprint">data</code> variable matches the structure of the <a href="#type-widgetdata">WidgetData type</a></p>
 </blockquote>
-<pre class="highlight javascript"><span class="kd">var</span> <span class="nx">frameId</span> <span class="o">=</span> <span class="s1">'wiwo-bimade'</span><span class="p">;</span>    <span class="c1">// The ID of the Widget.
-</span><span class="kd">var</span> <span class="nx">data</span> <span class="o">=</span> <span class="p">{</span>                    <span class="c1">// The data to set on the Widget.
-</span>    <span class="nl">id</span><span class="p">:</span> <span class="s1">''</span><span class="p">,</span>
-    <span class="nl">version</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
-    <span class="nl">input</span><span class="p">:</span> <span class="p">{</span>
+<pre class="highlight javascript"><code><span class="kd">var</span> <span class="nx">frameId</span> <span class="o">=</span> <span class="s1">'wiwo-bimade'</span><span class="p">;</span>    <span class="c1">// The ID of the Widget.</span>
+<span class="kd">var</span> <span class="nx">data</span> <span class="o">=</span> <span class="p">{</span>                    <span class="c1">// The data to set on the Widget.</span>
+    <span class="na">id</span><span class="p">:</span> <span class="s1">''</span><span class="p">,</span>
+    <span class="na">version</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="na">input</span><span class="p">:</span> <span class="p">{</span>
         <span class="na">repaymentModel</span><span class="p">:</span> <span class="p">{</span>
             <span class="na">principal</span><span class="p">:</span> <span class="mi">123456</span>
         <span class="p">}</span>
     <span class="p">}</span>
 <span class="p">};</span>
 
-<span class="c1">// Convert the data to a JSON string and encode it with `encodeURIComponent`:
-</span><span class="kd">var</span> <span class="nx">encodedData</span> <span class="o">=</span> <span class="nb">encodeURIComponent</span><span class="p">(</span><span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">data</span><span class="p">));</span>
+<span class="c1">// Convert the data to a JSON string and encode it with `encodeURIComponent`:</span>
+<span class="kd">var</span> <span class="nx">encodedData</span> <span class="o">=</span> <span class="nb">encodeURIComponent</span><span class="p">(</span><span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">data</span><span class="p">));</span>
 
-<span class="c1">// Combine the encoded data with the frameId:
-</span><span class="kd">var</span> <span class="nx">widgetParam</span> <span class="o">=</span> <span class="nx">frameId</span> <span class="o">+</span> <span class="s1">'='</span> <span class="o">+</span> <span class="nx">encodedData</span><span class="p">;</span>
+<span class="c1">// Combine the encoded data with the frameId:</span>
+<span class="kd">var</span> <span class="nx">widgetParam</span> <span class="o">=</span> <span class="nx">frameId</span> <span class="o">+</span> <span class="s1">'='</span> <span class="o">+</span> <span class="nx">encodedData</span><span class="p">;</span>
 
-<span class="c1">// `widgetParam` now has the value:
-// wiwo-bimade=%7B%22id%22%3A%22wiwo-repayment-widget%22%2C%22v...
-</span></pre>
-
+<span class="c1">// `widgetParam` now has the value:</span>
+<span class="c1">// wiwo-bimade=%7B%22id%22%3A%22wiwo-repayment-widget%22%2C%22v...</span>
+</code></pre>
 <blockquote>
 <p>The value of <code class="prettyprint">widgetParam</code> can now be used to pass data to the Widget via the URL.</p>
 </blockquote>
@@ -399,43 +381,40 @@ The iframe id (<em>wiwo-bimade</em> in this case) identifies your license and th
 <blockquote>
 <p>The structure of the result object:</p>
 </blockquote>
-<pre class="highlight javascript"><span class="kr">interface</span> <span class="nx">DidoResult</span> <span class="p">{</span>
-    <span class="na">success</span><span class="p">:</span> <span class="kr">boolean</span><span class="p">,</span>
-    <span class="na">message</span><span class="p">:</span> <span class="nx">string</span><span class="p">,</span>
-    <span class="na">data</span><span class="p">:</span> <span class="nx">object</span>
+<pre class="highlight javascript"><code><span class="kr">interface</span> <span class="nx">DidoResult</span> <span class="p">{</span>
+    <span class="nl">success</span><span class="p">:</span> <span class="kr">boolean</span><span class="p">,</span>
+    <span class="nx">message</span><span class="p">:</span> <span class="nx">string</span><span class="p">,</span>
+    <span class="nx">data</span><span class="p">:</span> <span class="nx">object</span>
 <span class="p">}</span>
-</pre>
-
+</code></pre>
 <blockquote>
 <p>&lsquo;wiwo.dido.getDataResult&rsquo; detail:</p>
 </blockquote>
-<pre class="highlight javascript"><span class="kd">var</span> <span class="nx">_wiwo</span> <span class="o">=</span> <span class="nx">_wiwo</span> <span class="o">||</span> <span class="p">[];</span>
+<pre class="highlight javascript"><code><span class="kd">var</span> <span class="nx">_wiwo</span> <span class="o">=</span> <span class="nx">_wiwo</span> <span class="o">||</span> <span class="p">[];</span>
 <span class="nx">_wiwo</span><span class="p">.</span><span class="nx">push</span><span class="p">([</span><span class="s1">'on'</span><span class="p">,</span> <span class="s1">'wiwo.dido.getDataResult'</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">event</span><span class="p">,</span> <span class="nx">result</span><span class="p">){</span>
     <span class="k">if</span> <span class="p">(</span><span class="nx">result</span><span class="p">.</span><span class="nx">success</span><span class="p">){</span>
-        <span class="nx">result</span><span class="p">.</span><span class="nx">message</span>  <span class="c1">// Extra information about the result (can be empty).
-</span>        <span class="nx">result</span><span class="p">.</span><span class="nx">data</span><span class="p">;</span>    <span class="c1">// Holds the Widget's input and result data.
-</span>    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-        <span class="nx">result</span><span class="p">.</span><span class="nx">message</span>  <span class="c1">// Error message.
-</span>        <span class="nx">result</span><span class="p">.</span><span class="nx">data</span><span class="p">;</span>    <span class="c1">// `data` will be null.
-</span>    <span class="p">}</span>
+        <span class="nx">result</span><span class="p">.</span><span class="nx">message</span>  <span class="c1">// Extra information about the result (can be empty).</span>
+        <span class="nx">result</span><span class="p">.</span><span class="nx">data</span><span class="p">;</span>    <span class="c1">// Holds the Widget's input and result data.</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="nx">result</span><span class="p">.</span><span class="nx">message</span>  <span class="c1">// Error message.</span>
+        <span class="nx">result</span><span class="p">.</span><span class="nx">data</span><span class="p">;</span>    <span class="c1">// `data` will be null.</span>
+    <span class="p">}</span>
 <span class="p">}]);</span>
-</pre>
-
+</code></pre>
 <blockquote>
 <p>&lsquo;wiwo.dido.setDataResult&rsquo; detail:</p>
 </blockquote>
-<pre class="highlight javascript"><span class="kd">var</span> <span class="nx">_wiwo</span> <span class="o">=</span> <span class="nx">_wiwo</span> <span class="o">||</span> <span class="p">[];</span>
+<pre class="highlight javascript"><code><span class="kd">var</span> <span class="nx">_wiwo</span> <span class="o">=</span> <span class="nx">_wiwo</span> <span class="o">||</span> <span class="p">[];</span>
 <span class="nx">_wiwo</span><span class="p">.</span><span class="nx">push</span><span class="p">([</span><span class="s1">'on'</span><span class="p">,</span> <span class="s1">'wiwo.dido.setDataResult'</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">event</span><span class="p">,</span> <span class="nx">result</span><span class="p">){</span>
     <span class="k">if</span> <span class="p">(</span><span class="nx">result</span><span class="p">.</span><span class="nx">success</span><span class="p">){</span>
-        <span class="nx">result</span><span class="p">.</span><span class="nx">message</span>  <span class="c1">// Holds information about 'setData' request (can be empty).
-</span>        <span class="nx">result</span><span class="p">.</span><span class="nx">data</span><span class="p">;</span>    <span class="c1">// Will be null.
-</span>    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-        <span class="nx">result</span><span class="p">.</span><span class="nx">message</span>  <span class="c1">// Holds information about the error.
-</span>        <span class="nx">result</span><span class="p">.</span><span class="nx">data</span><span class="p">;</span>    <span class="c1">// Will be null.
-</span>    <span class="p">}</span>
+        <span class="nx">result</span><span class="p">.</span><span class="nx">message</span>  <span class="c1">// Holds information about 'setData' request (can be empty).</span>
+        <span class="nx">result</span><span class="p">.</span><span class="nx">data</span><span class="p">;</span>    <span class="c1">// Will be null.</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="nx">result</span><span class="p">.</span><span class="nx">message</span>  <span class="c1">// Holds information about the error.</span>
+        <span class="nx">result</span><span class="p">.</span><span class="nx">data</span><span class="p">;</span>    <span class="c1">// Will be null.</span>
+    <span class="p">}</span>
 <span class="p">}]);</span>
-</pre>
-
+</code></pre>
 <p>Widgets do their best to keep in a consistent state and ensure they don&rsquo;t show complex or code related errors to users. We design them to accept a wide range of inputs, but to ensure accuracy they are conservative in their approach to error handling - they will reject data on error and provide you a result object detailing what went wrong.</p>
 
 <p><aside class="notice">Widgets do their best to keep in a consistent state and ensure they don&rsquo;t show complex or code related errors</aside></p>
@@ -456,20 +435,18 @@ The iframe id (<em>wiwo-bimade</em> in this case) identifies your license and th
 <blockquote>
 <p>The asynchronous API is accessed via the global <code class="prettyprint">_wiwo</code> object:</p>
 </blockquote>
-<pre class="highlight javascript"><span class="kd">var</span> <span class="nx">_wiwo</span> <span class="o">=</span> <span class="nx">_wiwo</span> <span class="o">||</span> <span class="p">[];</span>
+<pre class="highlight javascript"><code><span class="kd">var</span> <span class="nx">_wiwo</span> <span class="o">=</span> <span class="nx">_wiwo</span> <span class="o">||</span> <span class="p">[];</span>
 <span class="nx">_wiwo</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">paramList</span><span class="p">);</span>
-</pre>
-
+</code></pre>
 <blockquote>
 <p>Use the &ldquo;ready&rdquo; callback to get a reference to the <code class="prettyprint">iframeUtil</code> object to call synchronous methods:</p>
 </blockquote>
-<pre class="highlight javascript"><span class="kd">var</span> <span class="nx">_wiwo</span> <span class="o">=</span> <span class="nx">_wiwo</span> <span class="o">||</span> <span class="p">[];</span>
+<pre class="highlight javascript"><code><span class="kd">var</span> <span class="nx">_wiwo</span> <span class="o">=</span> <span class="nx">_wiwo</span> <span class="o">||</span> <span class="p">[];</span>
 <span class="nx">_wiwo</span><span class="p">.</span><span class="nx">push</span><span class="p">([</span><span class="kd">function</span><span class="p">(</span><span class="nx">iframeUtil</span><span class="p">){</span>
-    <span class="c1">// Call synchronous methods on `iframeUtil`:
-</span>    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">"Widets on page: "</span><span class="p">,</span> <span class="nx">iframeUtil</span><span class="p">.</span><span class="nx">getIframes</span><span class="p">());</span>
+    <span class="c1">// Call synchronous methods on `iframeUtil`:</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">"Widets on page: "</span><span class="p">,</span> <span class="nx">iframeUtil</span><span class="p">.</span><span class="nx">getIframes</span><span class="p">());</span>
 <span class="p">}]);</span>
-</pre>
-
+</code></pre>
 <p>The <code class="prettyprint">iframeUtil</code> is used to facilitate communication between the host page and Widgets loaded on that page.</p>
 
 <p>The <code class="prettyprint">iframeUtil</code> proivdes an asynchronous API for interacting with the Widgets (based on the <a href="https://developers.google.com/analytics/devguides/collection/gajs/#Syntax">Google Analytics asynchronous syntax</a>). This API is exposed via the global <code class="prettyprint">_wiwo</code> object.</p>
@@ -520,12 +497,11 @@ In all cases <code class="prettyprint">_wiwo.push()</code> must be passed an arr
 <blockquote>
 <p>Register a &ldquo;ready&rdquo; callback:</p>
 </blockquote>
-<pre class="highlight javascript"><span class="kd">var</span> <span class="nx">_wiwo</span> <span class="o">=</span> <span class="nx">_wiwo</span> <span class="o">||</span> <span class="p">[];</span>
+<pre class="highlight javascript"><code><span class="kd">var</span> <span class="nx">_wiwo</span> <span class="o">=</span> <span class="nx">_wiwo</span> <span class="o">||</span> <span class="p">[];</span>
 <span class="nx">_wiwo</span><span class="p">.</span><span class="nx">push</span><span class="p">([</span><span class="kd">function</span><span class="p">(</span><span class="nx">iframeUtil</span><span class="p">){</span>
-  <span class="c1">// Work with the initialised `iframeUtil` instance.
-</span><span class="p">}]);</span>
-</pre>
-
+  <span class="c1">// Work with the initialised `iframeUtil` instance.</span>
+<span class="p">}]);</span>
+</code></pre>
 <p>It is possible to push function objects onto the <code class="prettyprint">_wiwo</code> queue. The functions will be invoked in order once the <code class="prettyprint">iframeUtil</code> has been initialised on the page.</p>
 
 <p>This is useful for calling synchronous methods on the <code class="prettyprint">iframeUtil</code> once it has been initialised on the page.</p>
@@ -545,30 +521,28 @@ In all cases <code class="prettyprint">_wiwo.push()</code> must be passed an arr
 <td>A function that will be invoked once the <code class="prettyprint">iframeUtil</code> is initalised. The <code class="prettyprint">callback</code> function will be passed the <code class="prettyprint">iframeUtil</code> instance as the first parameter.</td>
 </tr>
 </tbody></table>
-<h3 id='examples'>Examples</h3><pre class="highlight javascript"><span class="c1">// List the Widget iframes that have been loaded onto the page.
-</span><span class="kd">var</span> <span class="nx">_wiwo</span> <span class="o">=</span> <span class="nx">_wiwo</span> <span class="o">||</span> <span class="p">[];</span>
+<h3 id='examples'>Examples</h3><pre class="highlight javascript"><code><span class="c1">// List the Widget iframes that have been loaded onto the page.</span>
+<span class="kd">var</span> <span class="nx">_wiwo</span> <span class="o">=</span> <span class="nx">_wiwo</span> <span class="o">||</span> <span class="p">[];</span>
 <span class="nx">_wiwo</span><span class="p">.</span><span class="nx">push</span><span class="p">([</span><span class="kd">function</span><span class="p">(</span><span class="nx">iframeUtil</span><span class="p">){</span>
     <span class="kd">var</span> <span class="nx">frameList</span> <span class="o">=</span> <span class="nx">iframeUtil</span><span class="p">.</span><span class="nx">getIframes</span><span class="p">();</span>
     <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'frameList='</span><span class="p">,</span> <span class="nx">frameList</span><span class="p">);</span>
 <span class="p">}]);</span>
-</pre>
-<h2 id='method-calls'>Method calls</h2><h3 id='queue-a-method-call'>Queue a method call</h3>
+</code></pre><h2 id='method-calls'>Method calls</h2><h3 id='queue-a-method-call'>Queue a method call</h3>
 <blockquote>
 <p>Queue up a series of method calls using the asynchronous API:</p>
 </blockquote>
-<pre class="highlight javascript"><span class="c1">// This event listener will be registered once the `iframeUtil` is initialised.
-</span><span class="kd">var</span> <span class="nx">_wiwo</span> <span class="o">=</span> <span class="nx">_wiwo</span> <span class="o">||</span> <span class="p">[];</span>
+<pre class="highlight javascript"><code><span class="c1">// This event listener will be registered once the `iframeUtil` is initialised.</span>
+<span class="kd">var</span> <span class="nx">_wiwo</span> <span class="o">=</span> <span class="nx">_wiwo</span> <span class="o">||</span> <span class="p">[];</span>
 <span class="nx">_wiwo</span><span class="p">.</span><span class="nx">push</span><span class="p">([</span><span class="s1">'on'</span><span class="p">,</span> <span class="s1">'wiwo.data.getDataResult'</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">,</span> <span class="nx">data</span><span class="p">){</span>
   <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'getDataResult: data='</span><span class="p">,</span> <span class="nx">data</span><span class="p">);</span>
 <span class="p">}]);</span>
 
-<span class="c1">// Register these origins with the `iframeUtil`.
-</span><span class="nx">_wiwo</span><span class="p">.</span><span class="nx">push</span><span class="p">([</span><span class="s1">'addOrigins'</span><span class="p">,</span> <span class="p">[</span>
+<span class="c1">// Register these origins with the `iframeUtil`.</span>
+<span class="nx">_wiwo</span><span class="p">.</span><span class="nx">push</span><span class="p">([</span><span class="s1">'addOrigins'</span><span class="p">,</span> <span class="p">[</span>
     <span class="s1">'http://www.example.com'</span><span class="p">,</span>
     <span class="s1">'https://www.example.com'</span>
 <span class="p">]]);</span>
-</pre>
-
+</code></pre>
 <p>Push a list containing the methodName and parameters for that method:</p>
 
 <p><code class="prettyprint">_wiwo.push([methodName[, param1[, param2[, ...]]]])</code></p>
@@ -593,23 +567,132 @@ In all cases <code class="prettyprint">_wiwo.push()</code> must be passed an arr
 </tbody></table>
 
 <p>The following methods are available on the <code class="prettyprint">iframeUtil</code>:</p>
+<h2 id='getdata'>getData()</h2>
+<blockquote>
+<p>Get data from a Widget</p>
+</blockquote>
+<pre class="highlight javascript"><code><span class="kd">var</span> <span class="nx">_wiwo</span> <span class="o">=</span> <span class="nx">_wiwo</span> <span class="o">||</span> <span class="p">[];</span>
+<span class="nx">_wiwo</span><span class="p">.</span><span class="nx">push</span><span class="p">([</span><span class="s1">'getData'</span><span class="p">,</span> <span class="s1">'wiwo-bimade'</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">,</span> <span class="nx">result</span><span class="p">){</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">result</span><span class="p">.</span><span class="nx">success</span><span class="p">){</span>
+        <span class="c1">// Do something with `result.data`</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="c1">// Check error with `result.message`</span>
+    <span class="p">}</span>
+<span class="p">}]);</span>
+</code></pre><h3 id='summary'>Summary</h3>
+<p>The <code class="prettyprint">getData()</code> method lets you easily request data from a Widget.</p>
+
+<p><aside class="success">
+This is the recommended way of retrieving Widget data
+</aside></p>
+
+<p><aside class="success">
+This method may be called asynchronously
+</aside></p>
+<h3 id='syntax'>Syntax</h3>
+<p><code class="prettyprint">iframeUtil.getData(frameId, callbackFn)</code></p>
+
+<p><code class="prettyprint">_wiwo.push([&#39;getData&#39;, frameId, callbackFn)</code></p>
+<h3 id='parameters'>Parameters</h3>
+<table><thead>
+<tr>
+<th>Property</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>frameId</td>
+<td>string</td>
+<td>The ID of the frame containing the Widget.</td>
+</tr>
+<tr>
+<td>callbackFn</td>
+<td>Function</td>
+<td>A function that will receive the Widget data. See <a href="#event-getdataresult">DiDo Events.getDataResult</a> for parameter types.</td>
+</tr>
+</tbody></table>
+<h2 id='setdata'>setData()</h2>
+<blockquote>
+<p>Send new data to a Widget</p>
+</blockquote>
+<pre class="highlight javascript"><code><span class="kd">var</span> <span class="nx">_wiwo</span> <span class="o">=</span> <span class="nx">_wiwo</span> <span class="o">||</span> <span class="p">[];</span>
+<span class="nx">_wiwo</span><span class="p">.</span><span class="nx">push</span><span class="p">([</span>
+    <span class="s1">'setData'</span><span class="p">,</span>
+    <span class="s1">'wiwo-bimade'</span><span class="p">,</span> 
+    <span class="p">{</span>
+      <span class="s2">"id"</span><span class="p">:</span> <span class="s2">"wiwo-repayment-widget"</span><span class="p">,</span>
+      <span class="s2">"version"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+
+      <span class="c1">// This is the data that will be loaded by the Widget:</span>
+      <span class="c1">// This data is Widget-specific.</span>
+      <span class="s2">"input"</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">"repaymentModel"</span><span class="p">:</span> <span class="p">{</span>
+          <span class="s2">"propertyValue"</span><span class="p">:</span> <span class="mi">530000</span><span class="p">,</span>
+          <span class="s2">"principal"</span><span class="p">:</span> <span class="mi">424000</span>
+        <span class="p">}</span>
+      <span class="p">}</span>
+    <span class="p">},</span>
+    <span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">,</span> <span class="nx">result</span><span class="p">){</span>
+      <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">result</span><span class="p">.</span><span class="nx">success</span><span class="p">){</span>
+        <span class="c1">// Check error with `result.message`</span>
+      <span class="p">}</span>
+
+    <span class="p">}</span>
+<span class="p">]);</span>
+</code></pre><h3 id='summary'>Summary</h3>
+<p>The <code class="prettyprint">setData()</code> method lets you easily load new data in a Widget.</p>
+
+<p><aside class="success">
+This is the recommended way of sending new data to a Widget
+</aside></p>
+
+<p><aside class="success">
+This method may be called asynchronously
+</aside></p>
+<h3 id='syntax'>Syntax</h3>
+<p><code class="prettyprint">iframeUtil.setData(frameId, payload, callbackFn)</code></p>
+
+<p><code class="prettyprint">_wiwo.push([&#39;setData&#39;, frameId, payload, callbackFn)</code></p>
+<h3 id='parameters'>Parameters</h3>
+<table><thead>
+<tr>
+<th>Property</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>frameId</td>
+<td>string</td>
+<td>The ID of the frame containing the Widget.</td>
+</tr>
+<tr>
+<td>payload</td>
+<td><a href="#type-widgetdata">WidgetData</a></td>
+<td>The data the Widget should load.</td>
+</tr>
+<tr>
+<td>callbackFn</td>
+<td>Function</td>
+<td>A function that will receive the result of the <code class="prettyprint">setData</code> call. See <a href="#event-getdataresult">DiDo Events.setDataResult</a> for parameter types.</td>
+</tr>
+</tbody></table>
 <h2 id='addorigins'>addOrigins()</h2>
 <blockquote>
 <p>Add the widget domain as an allowed origin:</p>
 </blockquote>
-<pre class="highlight javascript"><span class="kd">var</span> <span class="nx">_wiwo</span> <span class="o">=</span> <span class="nx">_wiwo</span> <span class="o">||</span> <span class="p">[];</span>
+<pre class="highlight javascript"><code><span class="kd">var</span> <span class="nx">_wiwo</span> <span class="o">=</span> <span class="nx">_wiwo</span> <span class="o">||</span> <span class="p">[];</span>
 <span class="nx">_wiwo</span><span class="p">.</span><span class="nx">push</span><span class="p">([</span><span class="s2">"addOrigins"</span><span class="p">,</span> <span class="p">[</span>
   <span class="s2">"http://your-widget-domain"</span><span class="p">,</span>
   <span class="s2">"https://your-widget-domain"</span>
 <span class="p">]]);</span>
-</pre>
-<pre class="highlight javascript"><span class="c1">// Equivalent to above but using a RegExp
-</span><span class="kd">var</span> <span class="nx">_wiwo</span> <span class="o">=</span> <span class="nx">_wiwo</span> <span class="o">|</span> <span class="p">[];</span>
+</code></pre><pre class="highlight javascript"><code><span class="c1">// Equivalent to above but using a RegExp</span>
+<span class="kd">var</span> <span class="nx">_wiwo</span> <span class="o">=</span> <span class="nx">_wiwo</span> <span class="o">|</span> <span class="p">[];</span>
 <span class="nx">_wiwo</span><span class="p">.</span><span class="nx">push</span><span class="p">([</span><span class="s1">'addOrigins'</span><span class="p">,</span> <span class="p">[</span>
-    <span class="sr">/https?:\/\/your-widget-domain/</span>
+    <span class="sr">/https</span><span class="se">?</span><span class="sr">:</span><span class="se">\/\/</span><span class="sr">your-widget-domain/</span>
 <span class="p">]]);</span>
-</pre>
-<h3 id='summary'>Summary</h3>
+</code></pre><h3 id='summary'>Summary</h3>
 <p>The <code class="prettyprint">addOrigins()</code> method allows additional domains to communicate with the host page.</p>
 
 <p>The <code class="prettyprint">iframeUtil</code> implements a whitelist of domains that are allowed to host Widgets and communicate with the host page. By default only Widgets loaded from the same domain as the host page or loaded from Widget Works Cloud Servers are allowed to send messages to the host page.</p>
@@ -642,29 +725,27 @@ This method may be called asynchronously
 <code class="prettyprint">(iframeUtil) ERROR: Invalid event.origin=&quot;&lt;your domain here&gt;&quot; with event=&quot;wiwoResize&quot;</code></p>
 
 <p>Then you should make sure the domain of the hosting page has been added as a valid origin:</p>
-<h2 id='on'>on()</h2><pre class="highlight javascript"><span class="c1">// Add an event listener for the `getDataResult` event:
-</span><span class="kd">var</span> <span class="nx">_wiwo</span> <span class="o">=</span> <span class="nx">_wiwo</span> <span class="o">||</span> <span class="p">[];</span>
+<h2 id='on'>on()</h2><pre class="highlight javascript"><code><span class="c1">// Add an event listener for the `getDataResult` event:</span>
+<span class="kd">var</span> <span class="nx">_wiwo</span> <span class="o">=</span> <span class="nx">_wiwo</span> <span class="o">||</span> <span class="p">[];</span>
 <span class="nx">_wiwo</span><span class="p">.</span><span class="nx">push</span><span class="p">([</span><span class="s1">'on'</span><span class="p">,</span> <span class="s1">'wiwo.dido.getDataResult'</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">,</span> <span class="nx">data</span><span class="p">,</span> <span class="nx">originalEvent</span><span class="p">){</span>
     <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'`getDataResult` event triggered by frame='</span><span class="p">,</span> <span class="nx">e</span><span class="p">.</span><span class="nx">frameId</span><span class="p">);</span>
     <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'`getDataResult` received data='</span><span class="p">,</span> <span class="nx">data</span><span class="p">);</span>
 <span class="p">}]);</span>
-</pre>
-
+</code></pre>
 <blockquote>
 <p>Check which Widget raised the event:</p>
 </blockquote>
-<pre class="highlight javascript"><span class="kd">var</span> <span class="nx">_wiwo</span> <span class="o">=</span> <span class="nx">_wiwo</span> <span class="o">||</span> <span class="p">[];</span>
+<pre class="highlight javascript"><code><span class="kd">var</span> <span class="nx">_wiwo</span> <span class="o">=</span> <span class="nx">_wiwo</span> <span class="o">||</span> <span class="p">[];</span>
 <span class="nx">_wiwo</span><span class="p">.</span><span class="nx">push</span><span class="p">([</span><span class="s1">'on'</span><span class="p">,</span> <span class="s1">'wiwo.dido.getDataResult'</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">,</span> <span class="nx">data</span><span class="p">){</span>
-    <span class="c1">// Make sure this event came from the 'wiwo-bimade' iframe.
-</span>    <span class="k">if</span> <span class="p">(</span><span class="nx">e</span><span class="p">.</span><span class="nx">frameId</span> <span class="o">!=</span> <span class="s1">'wiwo-bimade'</span><span class="p">){</span>
-        <span class="c1">// Ignore if not from 'wiwo-bimade'.
-</span>        <span class="k">return</span><span class="p">;</span>
+    <span class="c1">// Make sure this event came from the 'wiwo-bimade' iframe.</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">e</span><span class="p">.</span><span class="nx">frameId</span> <span class="o">!=</span> <span class="s1">'wiwo-bimade'</span><span class="p">){</span>
+        <span class="c1">// Ignore if not from 'wiwo-bimade'.</span>
+        <span class="k">return</span><span class="p">;</span>
     <span class="p">}</span>
 
-    <span class="c1">// ... handle the event ...
-</span><span class="p">}]);</span>
-</pre>
-<h3 id='summary'>Summary</h3>
+    <span class="c1">// ... handle the event ...</span>
+<span class="p">}]);</span>
+</code></pre><h3 id='summary'>Summary</h3>
 <p>The <code class="prettyprint">on()</code> method registers an event listener for events raised by any Widget loaded on the host page.</p>
 
 <p>To determine which Widget instance raised the event check the <code class="prettyprint">e.frameId</code> property.</p>
@@ -695,50 +776,29 @@ This method may be called asynchronously
 <td>The function that will be invoked when the event is raised.</td>
 </tr>
 </tbody></table>
-<h4 id='handler'>handler()</h4>
-<p>The handler function accepts these parameters:</p>
+<h2 id='once'>once()</h2><pre class="highlight javascript"><code><span class="c1">// Add an event listener that will be deregistered after the callback is run.</span>
+<span class="kd">var</span> <span class="nx">_wiwo</span> <span class="o">=</span> <span class="nx">_wiwo</span> <span class="o">||</span> <span class="p">[];</span>
+<span class="nx">_wiwo</span><span class="p">.</span><span class="nx">push</span><span class="p">([</span><span class="s1">'once'</span><span class="p">,</span> <span class="s1">'wiwo.dido.getDataResult'</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">,</span> <span class="nx">data</span><span class="p">,</span> <span class="nx">originalEvent</span><span class="p">){</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'`getDataResult` event triggered by frame='</span><span class="p">,</span> <span class="nx">e</span><span class="p">.</span><span class="nx">frameId</span><span class="p">);</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'`getDataResult` received data='</span><span class="p">,</span> <span class="nx">data</span><span class="p">);</span>
+<span class="p">}]);</span>
+</code></pre><h3 id='summary'>Summary</h3>
+<p>The <code class="prettyprint">once()</code> method acts just like <a href="#on">on()</a> except the event listener will be deregistered after the event has fired.</p>
 
-<p><code class="prettyprint">function(e, data, originalEvent)</code></p>
-<pre class="highlight javascript"><span class="c1">// FrameEvent structure:
-</span><span class="p">{</span>
-    <span class="s2">"frame"</span><span class="p">:</span> <span class="nx">HTMLIFrameElement</span><span class="p">,</span> <span class="c1">// The Element that raised the event.
-</span>    <span class="s2">"frameId"</span><span class="p">:</span> <span class="s2">"wiwo-bimade"</span><span class="p">,</span>   <span class="c1">// The ID of the element that raised the event.
-</span>    <span class="s2">"payload"</span><span class="p">:</span> <span class="p">{...},</span>   <span class="c1">// Event-specific data.
-</span>    <span class="s2">"wiwoEvent"</span><span class="p">:</span> <span class="s2">"wiwo.dido.getDataResult"</span>  <span class="c1">// The name of the event.
-</span><span class="p">}</span>
-</pre>
+<p>This means the callback will only be invoked once for a given event.</p>
+<h3 id='syntax'>Syntax</h3>
+<p><code class="prettyprint">iframeUtil.once(eventName, function handler(e, data, originalEvent){...})</code></p>
 
-<table><thead>
-<tr>
-<th>Parameter</th>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead><tbody>
-<tr>
-<td>e</td>
-<td><a href="#frameevent">FrameEvent</a></td>
-<td>Information about the iframe (i.e. Widget) that raised this event.</td>
-</tr>
-<tr>
-<td>data</td>
-<td>object</td>
-<td>The data passed with the event. The data is event-specific.</td>
-</tr>
-<tr>
-<td>originalEvent</td>
-<td>Event</td>
-<td>The original browser event, usually a <code class="prettyprint">MessageEvent</code> instance <a href="https://developer.mozilla.org/en-US/docs/Web/API/Window.postMessage">dispatched by <code class="prettyprint">window.postMessage(...)</code></a> inside the Widget.</td>
-</tr>
-</tbody></table>
-<h2 id='postmessage'>postMessage()</h2><pre class="highlight javascript"><span class="c1">// Request data from the 'wiwo-bimade' Widget iframe.
-// The data will be returned via a 'wiwo.dido.getDataResult' event from that iframe.
-</span><span class="kd">var</span> <span class="nx">_wiwo</span> <span class="o">=</span> <span class="nx">_wiwo</span> <span class="o">||</span> <span class="p">[];</span>
+<p><code class="prettyprint">_wiwo.push([&#39;once&#39;, eventName, function handler(e, data, originalEvent){...}])</code></p>
+<h3 id='parameters-and-handler'>Parameters and handler()</h3>
+<p>This method accepts the same parameters and handler signature as the <a href="#on">on()</a> method.</p>
+<h2 id='postmessage'>postMessage()</h2><pre class="highlight javascript"><code><span class="c1">// Request data from the 'wiwo-bimade' Widget iframe.</span>
+<span class="c1">// The data will be returned via a 'wiwo.dido.getDataResult' event from that iframe.</span>
+<span class="kd">var</span> <span class="nx">_wiwo</span> <span class="o">=</span> <span class="nx">_wiwo</span> <span class="o">||</span> <span class="p">[];</span>
 <span class="nx">_wiwo</span><span class="p">.</span><span class="nx">push</span><span class="p">([</span><span class="s1">'postMessage'</span><span class="p">,</span> <span class="s1">'wiwo-bimade'</span><span class="p">,</span> <span class="s1">'wiwo.dido.getData'</span><span class="p">]);</span>
-</pre>
-<pre class="highlight javascript"><span class="c1">// Set new data on the 'wiwo-bimade' Widget.
-// The success/failure result will be returned via a 'wiwo.dido.setDataResult' event.
-</span><span class="kd">var</span> <span class="nx">_wiwo</span> <span class="o">=</span> <span class="nx">_wiwo</span> <span class="o">||</span> <span class="p">[];</span>
+</code></pre><pre class="highlight javascript"><code><span class="c1">// Set new data on the 'wiwo-bimade' Widget.</span>
+<span class="c1">// The success/failure result will be returned via a 'wiwo.dido.setDataResult' event.</span>
+<span class="kd">var</span> <span class="nx">_wiwo</span> <span class="o">=</span> <span class="nx">_wiwo</span> <span class="o">||</span> <span class="p">[];</span>
 <span class="nx">_wiwo</span><span class="p">.</span><span class="nx">push</span><span class="p">([</span><span class="s1">'postMessage'</span><span class="p">,</span> <span class="s1">'wiwo-bimade'</span><span class="p">,</span> <span class="s1">'wiwo.dido.setData'</span><span class="p">,</span> <span class="p">{</span>
     <span class="na">id</span><span class="p">:</span> <span class="s1">'wiwo-repayment-widget'</span><span class="p">,</span>
     <span class="na">version</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
@@ -749,8 +809,7 @@ This method may be called asynchronously
         <span class="p">}</span>
     <span class="p">}</span>
 <span class="p">}]);</span>
-</pre>
-<h3 id='summary'>Summary</h3>
+</code></pre><h3 id='summary'>Summary</h3>
 <p>The <code class="prettyprint">postMessage()</code> method sends an event to a Widget loaded inside an iframe.</p>
 
 <p>The Widget is identified by the <code class="prettyprint">targetFrame</code> parameter.</p>
@@ -788,8 +847,8 @@ This method may be called asynchronously
 <td>Optional. The data to send with the frame. This is event-specific.</td>
 </tr>
 </tbody></table>
-<h2 id='getiframes'>getIframes()</h2><pre class="highlight javascript"><span class="c1">// Call `getIframes()` in the iframeUtil ready function:
-</span><span class="kd">var</span> <span class="nx">_wiwo</span> <span class="o">=</span> <span class="nx">_wiwo</span> <span class="o">||</span> <span class="p">[];</span>
+<h2 id='getiframes'>getIframes()</h2><pre class="highlight javascript"><code><span class="c1">// Call `getIframes()` in the iframeUtil ready function:</span>
+<span class="kd">var</span> <span class="nx">_wiwo</span> <span class="o">=</span> <span class="nx">_wiwo</span> <span class="o">||</span> <span class="p">[];</span>
 <span class="nx">_wiwo</span><span class="p">.</span><span class="nx">push</span><span class="p">([</span><span class="kd">function</span><span class="p">(</span><span class="nx">iframeUtil</span><span class="p">){</span>
     <span class="kd">var</span> <span class="nx">frameList</span> <span class="o">=</span> <span class="nx">iframeUtil</span><span class="p">.</span><span class="nx">getIframes</span><span class="p">();</span>
     <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'frameList='</span><span class="p">,</span> <span class="nx">frameList</span><span class="p">);</span>
@@ -803,8 +862,7 @@ frameList= [
     }
 ]
 */</span>
-</pre>
-<h3 id='summary'>Summary</h3>
+</code></pre><h3 id='summary'>Summary</h3>
 <p>Call <code class="prettyprint">getIframes()</code> to retrieve a list of all Widget iframes currently registered with the <code class="prettyprint">iframeUtil</code>.</p>
 
 <p>This method is only available after the <code class="prettyprint">iframeUtil</code> has been loaded and initialised on the page and should be invoked inside the <code class="prettyprint">iframeUtil</code> ready function.</p>
@@ -812,43 +870,209 @@ frameList= [
 <p><aside class="warning">
 This method should be called <strong>synchronously</strong>
 </aside></p>
-<h3 id='syntax'>Syntax</h3><pre class="highlight javascript"><span class="c1">// `getIframes()` result structure:
-</span><span class="p">[</span>
+<h3 id='syntax'>Syntax</h3><pre class="highlight javascript"><code><span class="c1">// `getIframes()` result structure:</span>
+<span class="p">[</span>
     <span class="p">{</span>
         <span class="na">frame</span><span class="p">:</span> <span class="nx">HTMLIFrameElement</span><span class="p">,</span>
         <span class="na">frameId</span><span class="p">:</span> <span class="nx">string</span>
     <span class="p">},</span>
     <span class="p">...</span>
 <span class="p">]</span>
-</pre>
-
+</code></pre>
 <p><code class="prettyprint">iframeUtil.getIframes()</code></p>
 <h3 id='description'>Description</h3>
 <p>The <code class="prettyprint">iframeUtil.getIframes()</code> method returns an array of objects containing a reference to the Widget&rsquo;s iframe element and the ID of the frame.</p>
-<h2 id='frameevent'>FrameEvent</h2><pre class="highlight javascript"><span class="c1">// FrameEvent structure:
-</span><span class="kr">interface</span> <span class="nx">FrameEvent</span> <span class="p">{</span>
-    <span class="s2">"frame"</span><span class="p">:</span> <span class="nx">HTMLIFrameElement</span><span class="p">,</span> <span class="c1">// The Element that raised the event.
-</span>    <span class="s2">"frameId"</span><span class="p">:</span> <span class="nx">string</span><span class="p">,</span>          <span class="c1">// The ID of the element that raised the event.
-</span>    <span class="s2">"wiwoEvent"</span><span class="p">:</span> <span class="nx">string</span><span class="p">,</span>        <span class="c1">// The name of the event.
-</span>    <span class="s2">"payload"</span><span class="p">:</span> <span class="nx">object</span>           <span class="c1">// Event-specific data.
-</span><span class="p">}</span>
-</pre>
-<pre class="highlight javascript"><span class="c1">// Example FrameEvent object:
-</span><span class="p">{</span>
-    <span class="s2">"frame"</span><span class="p">:</span> <span class="nx">HTMLIFrameElement</span><span class="p">,</span> <span class="c1">// The Element that raised the event.
-</span>    <span class="s2">"frameId"</span><span class="p">:</span> <span class="s2">"wiwo-bimade"</span><span class="p">,</span>   <span class="c1">// The ID of the element that raised the event.
-</span>    <span class="s2">"wiwoEvent"</span><span class="p">:</span> <span class="s2">"wiwo.dido.getDataResult"</span><span class="p">,</span> <span class="c1">// The name of the event.
-</span>    <span class="s2">"payload"</span><span class="p">:</span> <span class="p">{...}</span>            <span class="c1">// Event-specific data.
-</span><span class="p">}</span>
-</pre>
-<pre class="highlight javascript"><span class="c1">// Example usage:
-</span><span class="kd">var</span> <span class="nx">_wiwo</span> <span class="o">=</span> <span class="nx">_wiwo</span> <span class="o">||</span> <span class="p">[];</span>
+<h2 id='getiframeids'>getIframeIds()</h2><pre class="highlight javascript"><code><span class="c1">// Call `getIframeIds()` in the iframeUtil ready function:</span>
+<span class="kd">var</span> <span class="nx">_wiwo</span> <span class="o">=</span> <span class="nx">_wiwo</span> <span class="o">||</span> <span class="p">[];</span>
+<span class="nx">_wiwo</span><span class="p">.</span><span class="nx">push</span><span class="p">([</span><span class="kd">function</span><span class="p">(</span><span class="nx">iframeUtil</span><span class="p">){</span>
+    <span class="kd">var</span> <span class="nx">frameIds</span> <span class="o">=</span> <span class="nx">iframeUtil</span><span class="p">.</span><span class="nx">getIframeIds</span><span class="p">();</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'frameIds='</span><span class="p">,</span> <span class="nx">frameIds</span><span class="p">);</span>
+<span class="p">}]);</span>
+
+<span class="cm">/*
+frameIds= ["wiwo-bimade", ...]
+*/</span>
+</code></pre><h3 id='summary'>Summary</h3>
+<p>Call <code class="prettyprint">getIframeIds()</code> to retrieve a list of all Widget iframe IDs currently registered with the <code class="prettyprint">iframeUtil</code>.</p>
+
+<p>This method is only available after the <code class="prettyprint">iframeUtil</code> has been loaded and initialised on the page and should be invoked inside the <code class="prettyprint">iframeUtil</code> ready function.</p>
+
+<p><aside class="warning">
+This method should be called <strong>synchronously</strong>
+</aside></p>
+<h3 id='syntax'>Syntax</h3>
+<p><code class="prettyprint">iframeUtil.getIframeIds()</code></p>
+<h3 id='description'>Description</h3>
+<p>The <code class="prettyprint">iframeUtil.getIframeIds()</code> method returns a list of strings.</p>
+
+<p>Each string is the ID of a registered Widget.</p>
+<h2 id='refresh'>refresh()</h2><pre class="highlight javascript"><code><span class="c1">// Reinitalise a Widget:</span>
+<span class="kd">var</span> <span class="nx">_wiwo</span> <span class="o">=</span> <span class="nx">_wiwo</span> <span class="o">||</span> <span class="p">[];</span>
+<span class="nx">_wiwo</span><span class="p">.</span><span class="nx">push</span><span class="p">([</span><span class="s1">'refresh'</span><span class="p">,</span> <span class="s1">'wiwo-bimade'</span><span class="p">]);</span>
+</code></pre><pre class="highlight javascript"><code><span class="c1">// Call `refresh()` to reinitialise a Widget:</span>
+<span class="kd">var</span> <span class="nx">_wiwo</span> <span class="o">=</span> <span class="nx">_wiwo</span> <span class="o">||</span> <span class="p">[];</span>
+<span class="nx">_wiwo</span><span class="p">.</span><span class="nx">push</span><span class="p">([</span><span class="kd">function</span><span class="p">(</span><span class="nx">iframeUtil</span><span class="p">){</span>
+    <span class="nx">iframeUtil</span><span class="p">.</span><span class="nx">refresh</span><span class="p">(</span><span class="s1">'wiwo-bimade'</span><span class="p">);</span>
+<span class="p">}]);</span>
+</code></pre><h3 id='summary'>Summary</h3>
+<p>Invoke <code class="prettyprint">refresh()</code> to reinitialise a Widget on the current page.</p>
+
+<p>This will reset and reload the Widget.</p>
+
+<p><aside class="success">
+This method may be called <strong>asynchronously</strong>
+</aside></p>
+<h3 id='syntax'>Syntax</h3>
+<p><code class="prettyprint">iframeUtil.refresh(frameId)</code></p>
+
+<p><code class="prettyprint">_wiwo.push([&#39;refresh&#39;, frameId)</code></p>
+<h2 id='scrollto'>scrollTo()</h2><pre class="highlight javascript"><code><span class="c1">// Smooth-scroll to a location on-page:</span>
+<span class="kd">var</span> <span class="nx">_wiwo</span> <span class="o">=</span> <span class="nx">_wiwo</span> <span class="o">||</span> <span class="p">[];</span>
+<span class="nx">_wiwo</span><span class="p">.</span><span class="nx">push</span><span class="p">([</span><span class="s1">'scrollTo'</span><span class="p">,</span> <span class="mi">100</span><span class="p">]);</span>
+
+<span class="c1">// Scroll to the location in 100ms</span>
+<span class="nx">_wiwo</span><span class="p">.</span><span class="nx">push</span><span class="p">([</span><span class="s1">'scrollTo'</span><span class="p">,</span> <span class="p">{</span>
+    <span class="na">to</span><span class="p">:</span> <span class="mi">200</span><span class="p">,</span>
+    <span class="na">duration</span><span class="p">:</span> <span class="mi">100</span>
+<span class="p">}]);</span>
+</code></pre><pre class="highlight javascript"><code><span class="c1">// Smooth-scroll an element or Widget into view:</span>
+<span class="kd">var</span> <span class="nx">_wiwo</span> <span class="o">=</span> <span class="nx">_wiwo</span> <span class="o">||</span> <span class="p">[];</span>
+<span class="nx">_wiwo</span><span class="p">.</span><span class="nx">push</span><span class="p">([</span><span class="s1">'scrollTo'</span><span class="p">,</span> <span class="p">{</span>
+    <span class="na">scrollTarget</span><span class="p">:</span> <span class="s1">'#wiwo-bimade'</span>
+<span class="p">}]);</span>
+
+<span class="c1">// Scroll element into view in 500ms:</span>
+<span class="nx">_wiwo</span><span class="p">.</span><span class="nx">push</span><span class="p">([</span><span class="s1">'scrollTo'</span><span class="p">,</span> <span class="p">{</span>
+    <span class="na">scrollTarget</span><span class="p">:</span> <span class="s1">'#wiwo-bimade'</span><span class="p">,</span>
+    <span class="na">duration</span><span class="p">:</span> <span class="mi">500</span>
+<span class="p">}]);</span>
+</code></pre><h3 id='summary'>Summary</h3>
+<p>Invoke <code class="prettyprint">scrollTo()</code> to scroll the page to a position or element.</p>
+
+<p><aside class="success">
+This method may be called <strong>asynchronously</strong>
+</aside></p>
+<h3 id='syntax'>Syntax</h3>
+<p><code class="prettyprint">iframeUtil.scrollTo(posOrOptions)</code></p>
+
+<p><code class="prettyprint">_wiwo.push([&#39;scrollTo&#39;, posOrOptions)</code></p>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>posOrOptions</td>
+<td>number or options</td>
+<td>If a number then scroll to that position. Where 0 is the top of the page and positive numbers are further down the page.</td>
+</tr>
+</tbody></table>
+
+<p>The options object has this structure:</p>
+
+<table><thead>
+<tr>
+<th>Property</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>to</td>
+<td>number</td>
+<td>(optional if <code class="prettyprint">scrollTarget</code> given) The position to scroll to</td>
+</tr>
+<tr>
+<td>scrollTarget</td>
+<td>string</td>
+<td>(optional if <code class="prettyprint">to</code> is given) The selector string of the element to scroll into view</td>
+</tr>
+<tr>
+<td>duration</td>
+<td>number</td>
+<td>The duration, in milliseconds, of the smooth-scroll (default is 750)</td>
+</tr>
+</tbody></table>
+
+<p>NOTE: The <code class="prettyprint">scrollTarget</code> property should be given as an element selector string (with leading hash: &lsquo;#wiwo-bimade&rsquo;) as it will be passed to <code class="prettyprint">document.querySelector()</code></p>
+<h2 id='scrollby'>scrollBy()</h2><pre class="highlight javascript"><code><span class="c1">// Smooth-scroll a relative amount:</span>
+<span class="kd">var</span> <span class="nx">_wiwo</span> <span class="o">=</span> <span class="nx">_wiwo</span> <span class="o">||</span> <span class="p">[];</span>
+<span class="nx">_wiwo</span><span class="p">.</span><span class="nx">push</span><span class="p">([</span><span class="s1">'scrollBy'</span><span class="p">,</span> <span class="mi">100</span><span class="p">]);</span>
+</code></pre><pre class="highlight javascript"><code><span class="c1">// Smooth-scroll a relative amount over 100ms:</span>
+<span class="kd">var</span> <span class="nx">_wiwo</span> <span class="o">=</span> <span class="nx">_wiwo</span> <span class="o">||</span> <span class="p">[];</span>
+<span class="nx">_wiwo</span><span class="p">.</span><span class="nx">push</span><span class="p">([</span><span class="s1">'scrollBy'</span><span class="p">,</span> <span class="p">{</span>
+    <span class="na">to</span><span class="p">:</span> <span class="mi">100</span><span class="p">,</span>
+    <span class="na">duration</span><span class="p">:</span> <span class="mi">100</span>
+<span class="p">}]);</span>
+</code></pre><h3 id='summary'>Summary</h3>
+<p>Invoke <code class="prettyprint">scrollBy()</code> to scroll the page by a relative amount.</p>
+
+<p><aside class="success">
+This method may be called <strong>asynchronously</strong>
+</aside></p>
+<h3 id='syntax'>Syntax</h3>
+<p><code class="prettyprint">iframeUtil.scrollBy(posOrOptions)</code></p>
+
+<p><code class="prettyprint">_wiwo.push([&#39;scrollBy&#39;, posOrOptions)</code></p>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>posOrOptions</td>
+<td>number or options</td>
+<td>If a number then scroll by that many pixels from the current location. Larger numbers will scroll further, negative numbers will scroll up the page.</td>
+</tr>
+</tbody></table>
+
+<p>The options object has this structure:</p>
+
+<table><thead>
+<tr>
+<th>Property</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>to</td>
+<td>number</td>
+<td>The number of pixels to scroll by (positive is down the page, negative values scroll up the page)</td>
+</tr>
+<tr>
+<td>duration</td>
+<td>number</td>
+<td>The duration, in milliseconds, of the smooth-scroll (default is 750)</td>
+</tr>
+</tbody></table>
+<h2 id='type-frameevent'>Type: FrameEvent</h2><pre class="highlight javascript"><code><span class="c1">// FrameEvent structure:</span>
+<span class="kr">interface</span> <span class="nx">FrameEvent</span> <span class="p">{</span>
+    <span class="s2">"frame"</span><span class="p">:</span> <span class="nx">HTMLIFrameElement</span><span class="p">,</span> <span class="c1">// The Element that raised the event.</span>
+    <span class="s2">"frameId"</span><span class="p">:</span> <span class="nx">string</span><span class="p">,</span>          <span class="c1">// The ID of the element that raised the event.</span>
+    <span class="s2">"wiwoEvent"</span><span class="p">:</span> <span class="nx">string</span><span class="p">,</span>        <span class="c1">// The name of the event.</span>
+    <span class="s2">"payload"</span><span class="p">:</span> <span class="nx">object</span>           <span class="c1">// Event-specific data.</span>
+<span class="p">}</span>
+</code></pre><pre class="highlight javascript"><code><span class="c1">// Example FrameEvent object:</span>
+<span class="p">{</span>
+    <span class="s2">"frame"</span><span class="p">:</span> <span class="nx">HTMLIFrameElement</span><span class="p">,</span> <span class="c1">// The Element that raised the event.</span>
+    <span class="s2">"frameId"</span><span class="p">:</span> <span class="s2">"wiwo-bimade"</span><span class="p">,</span>   <span class="c1">// The ID of the element that raised the event.</span>
+    <span class="s2">"wiwoEvent"</span><span class="p">:</span> <span class="s2">"wiwo.dido.getDataResult"</span><span class="p">,</span> <span class="c1">// The name of the event.</span>
+    <span class="s2">"payload"</span><span class="p">:</span> <span class="p">{...}</span>            <span class="c1">// Event-specific data.</span>
+<span class="p">}</span>
+</code></pre><pre class="highlight javascript"><code><span class="c1">// Example usage:</span>
+<span class="kd">var</span> <span class="nx">_wiwo</span> <span class="o">=</span> <span class="nx">_wiwo</span> <span class="o">||</span> <span class="p">[];</span>
 <span class="nx">_wiwo</span><span class="p">.</span><span class="nx">push</span><span class="p">([</span><span class="s1">'on'</span><span class="p">,</span> <span class="s1">'wiwo.dido.getDataResult'</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">,</span> <span class="nx">data</span><span class="p">){</span>
-    <span class="c1">// `e` is a `FrameEvent` object.
-</span>    <span class="c1">// `data` is a `DidoResult` object (event-specific).
-</span><span class="p">}]);</span>
-</pre>
-<h3 id='summary'>Summary</h3>
+    <span class="c1">// `e` is a `FrameEvent` object.</span>
+    <span class="c1">// `data` is a `DidoResult` object (event-specific).</span>
+<span class="p">}]);</span>
+</code></pre><h3 id='summary'>Summary</h3>
 <p>The <code class="prettyprint">FrameEvent</code> type is the first parameter returned to the <a href="#on"><code class="prettyprint">on()</code> event handler</a>.</p>
 <h3 id='properties'>Properties</h3>
 <table><thead>
@@ -884,14 +1108,24 @@ This method should be called <strong>synchronously</strong>
 <p>The Data In/Data Out (DiDo) API.</p>
 
 <p><strong>Note:</strong> All of the events and sent to the Widget and any events received back are handled asynchronously. It is <strong>not</strong> possible to make a synchronous event/method call to the Widget.</p>
-<h2 id='getdata'>getData</h2><pre class="highlight javascript"><span class="c1">// Post a message to request data from a Widget:
-</span><span class="kd">var</span> <span class="nx">_wiwo</span> <span class="o">=</span> <span class="nx">_wiwo</span> <span class="o">||</span> <span class="p">[];</span>
+<h2 id='event-getdata'>Event: getData</h2><pre class="highlight javascript"><code><span class="c1">// Post a message to request data from a Widget:</span>
+<span class="kd">var</span> <span class="nx">_wiwo</span> <span class="o">=</span> <span class="nx">_wiwo</span> <span class="o">||</span> <span class="p">[];</span>
 <span class="nx">_wiwo</span><span class="p">.</span><span class="nx">push</span><span class="p">([</span><span class="s1">'postMessage'</span><span class="p">,</span> <span class="s1">'wiwo-bimade'</span><span class="p">,</span> <span class="s1">'wiwo.dido.getData'</span><span class="p">]);</span>
-</pre>
-<h3 id='summary'>Summary</h3>
+</code></pre><h3 id='summary'>Summary</h3>
 <p>The <code class="prettyprint">&#39;wiwo.dido.getData&#39;</code> event is sent from the <em>host page</em> to a <em>Widget</em>.</p>
 
-<p>The Widget will respond with a <code class="prettyprint">wiwo.dido.getDataResult</code> event. See <a href="#getdataresult"><strong>wiwo.dido.getDataResult</strong></a> for detail on the response event.</p>
+<p>The Widget will respond with a <code class="prettyprint">wiwo.dido.getDataResult</code> event. See <a href="#event-getdataresult">wiwo.dido.getDataResult</a> for detail on the response event.</p>
+<h3 id='event-vs-method'>event vs method</h3>
+<p>This is the <code class="prettyprint">&#39;wiwo.dido.getData&#39;</code> event; there is also a <a href="#getdata"><code class="prettyprint">getData()</code></a> method.</p>
+
+<p>Behind the scenes <code class="prettyprint">getData()</code> method uses this event to implement its behaviour.</p>
+
+<p><aside class="success">
+We recommend using the <a href="#getdata"><strong>getData()</strong></a> method to retrieve data from a Widget.</p>
+
+<p>If you&rsquo;ve previously used the &lsquo;wiwo.dido.getData&rsquo; and &lsquo;wiwo.dido.getDataResult&rsquo; events then 
+you can easily migrate to using the <a href="#getdata"><strong>getData()</strong></a> method instead.
+</aside></p>
 <h3 id='syntax'>Syntax</h3>
 <p><code class="prettyprint">iframeUtil.postMessage(frameId, &#39;wiwo.dido.getData&#39;);</code></p>
 
@@ -916,9 +1150,9 @@ This method should be called <strong>synchronously</strong>
 </tr>
 </tbody></table>
 
-<p>Widget responds with <a href="#getdataresult"><strong>wiwo.dido.getDataResult</strong></a> event.</p>
-<h2 id='getdataresult'>getDataResult</h2><pre class="highlight javascript"><span class="c1">// `wiwo.dido.getDataResult` listener:
-</span><span class="kd">var</span> <span class="nx">_wiwo</span> <span class="o">=</span> <span class="nx">_wiwo</span> <span class="o">||</span> <span class="p">[];</span>
+<p>Widget responds with <a href="#event-getdataresult">wiwo.dido.getDataResult</a> event.</p>
+<h2 id='event-getdataresult'>Event: getDataResult</h2><pre class="highlight javascript"><code><span class="c1">// `wiwo.dido.getDataResult` listener:</span>
+<span class="kd">var</span> <span class="nx">_wiwo</span> <span class="o">=</span> <span class="nx">_wiwo</span> <span class="o">||</span> <span class="p">[];</span>
 <span class="nx">_wiwo</span><span class="p">.</span><span class="nx">push</span><span class="p">([</span><span class="s1">'on'</span><span class="p">,</span> <span class="s1">'wiwo.dido.getDataResult'</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">,</span> <span class="nx">result</span><span class="p">){</span>
   <span class="k">if</span> <span class="p">(</span><span class="nx">result</span><span class="p">.</span><span class="nx">success</span><span class="p">){</span>
     <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'Received data from Widget ID='</span><span class="p">,</span> <span class="nx">e</span><span class="p">.</span><span class="nx">frameId</span><span class="p">,</span> <span class="s1">', data='</span><span class="p">,</span> <span class="nx">result</span><span class="p">.</span><span class="nx">data</span><span class="p">);</span>
@@ -926,9 +1160,8 @@ This method should be called <strong>synchronously</strong>
     <span class="nx">console</span><span class="p">.</span><span class="nx">warn</span><span class="p">(</span><span class="s1">'Unable to get data from Widget ID='</span><span class="p">,</span> <span class="nx">e</span><span class="p">.</span><span class="nx">frameId</span><span class="p">,</span> <span class="s1">', reason='</span><span class="p">,</span> <span class="nx">result</span><span class="p">.</span><span class="nx">message</span><span class="p">);</span>
   <span class="p">}</span>
 <span class="p">}]);</span>
-</pre>
-<h3 id='summary'>Summary</h3>
-<p>The <code class="prettyprint">&#39;wiwo.dido.getDataResult&#39;</code> event is sent from a <em>Widget</em> to the <em>host page</em> in response to a <a href="#getdata">&lsquo;wiwo.dido.getData&rsquo;</a> request.</p>
+</code></pre><h3 id='summary'>Summary</h3>
+<p>The <code class="prettyprint">&#39;wiwo.dido.getDataResult&#39;</code> event is sent from a <em>Widget</em> to the <em>host page</em> in response to a <a href="#event-getdata">&lsquo;wiwo.dido.getData&rsquo;</a> request.</p>
 <h3 id='listener'>Listener</h3>
 <p><code class="prettyprint">_wiwo.push([&#39;on&#39;, &#39;wiwo.dido.getDataResult&#39;, function handler(e, result){...}])</code></p>
 <h4 id='handler-parameters'>Handler parameters</h4>
@@ -941,7 +1174,7 @@ This method should be called <strong>synchronously</strong>
 </thead><tbody>
 <tr>
 <td>e</td>
-<td><a href="#frameevent">FrameEvent</a></td>
+<td><a href="#type-frameevent">FrameEvent</a></td>
 <td>Information about the Widget that emitted the event.</td>
 </tr>
 <tr>
@@ -950,8 +1183,8 @@ This method should be called <strong>synchronously</strong>
 <td><code class="prettyprint">DidoResult</code> object. See <a href="#didoresult">DidoResult</a> for detail.</td>
 </tr>
 </tbody></table>
-<pre class="highlight javascript"><span class="c1">// Example `DidoResult` success structure
-</span><span class="p">{</span>
+<pre class="highlight javascript"><code><span class="c1">// Example `DidoResult` success structure</span>
+<span class="p">{</span>
     <span class="s2">"success"</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
     <span class="s2">"message"</span><span class="p">:</span> <span class="s1">''</span><span class="p">,</span>
     <span class="s2">"data"</span><span class="p">:</span> <span class="p">{</span>
@@ -965,15 +1198,19 @@ This method should be called <strong>synchronously</strong>
         <span class="p">}</span>
     <span class="p">}</span>
 <span class="p">}</span>
-</pre>
-
+</code></pre>
 <p><strong>Note:</strong> The <code class="prettyprint">result.data</code> object structure is Widget-specific.</p>
-<h2 id='setdata'>setData</h2>
+
+<p><aside class="success">
+If you&rsquo;re using the &lsquo;wiwo.dido.getData&rsquo; and &lsquo;wiwo.dido.getDataResult&rsquo; events then
+consider migrating to the <a href="#getdata"><strong>getData()</strong></a> method to retrieve data from a Widget
+</aside></p>
+<h2 id='event-setdata'>Event: setData</h2>
 <blockquote>
 <p>Example &lsquo;wiwo.dido.setData&rsquo; call:</p>
 </blockquote>
-<pre class="highlight javascript"><span class="c1">// The Widget will respond with a 'wiwo.dido.setDataResult' event.
-</span><span class="kd">var</span> <span class="nx">_wiwo</span> <span class="o">=</span> <span class="nx">_wiwo</span> <span class="o">||</span> <span class="p">[];</span>
+<pre class="highlight javascript"><code><span class="c1">// The Widget will respond with a 'wiwo.dido.setDataResult' event.</span>
+<span class="kd">var</span> <span class="nx">_wiwo</span> <span class="o">=</span> <span class="nx">_wiwo</span> <span class="o">||</span> <span class="p">[];</span>
 <span class="nx">_wiwo</span><span class="p">.</span><span class="nx">push</span><span class="p">([</span><span class="s1">'postMessage'</span><span class="p">,</span> <span class="s1">'wiwo-bimade'</span><span class="p">,</span> <span class="s1">'wiwo.dido.setData'</span><span class="p">,</span> <span class="p">{</span>
     <span class="s2">"id"</span><span class="p">:</span> <span class="s2">"wiwo-repayment-widget"</span><span class="p">,</span>
     <span class="s2">"version"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
@@ -984,13 +1221,23 @@ This method should be called <strong>synchronously</strong>
         <span class="p">}</span>
     <span class="p">}</span>
 <span class="p">}]);</span>
-</pre>
-<h3 id='summary'>Summary</h3>
+</code></pre><h3 id='summary'>Summary</h3>
 <p>Send <code class="prettyprint">&#39;wiwo.dido.setData&#39;</code> the event to a <em>Widget</em> to trigger it to load data.</p>
 
-<p>The Widget will respond with a <a href="#setdataresult">wiwo.dido.setDataResult</a> event.</p>
+<p>The Widget will respond with a <a href="#event-setdataresult">wiwo.dido.setDataResult</a> event.</p>
 
 <p>Using <code class="prettyprint">&#39;wiwo.dido.setData&#39;</code> you provide an object to the widget with all the of the standard input fields. Generally, any input field which is available on screen can be set via this API. Refer to the Widget-specific documentation for the input object model.</p>
+<h3 id='event-vs-method'>event vs method</h3>
+<p>This is the <code class="prettyprint">&#39;wiwo.dido.setData&#39;</code> event; there is also a <a href="#setdata"><code class="prettyprint">setData()</code></a> method.</p>
+
+<p>Behind the scenes <code class="prettyprint">setData()</code> method uses this event to implement its behaviour.</p>
+
+<p><aside class="success">
+We recommend using the <a href="#setdata"><strong>setData()</strong></a> method to retrieve data from a Widget.</p>
+
+<p>If you&rsquo;ve previously used the &lsquo;wiwo.dido.setData&rsquo; and &lsquo;wiwo.dido.setDataResult&rsquo; events then 
+you can easily migrate to using the <a href="#setdata"><strong>setData()</strong></a> method instead.
+</aside></p>
 <h3 id='syntax'>Syntax</h3>
 <p><code class="prettyprint">iframeUtil.postMessage(frameId, &#39;wiwo.dido.setData&#39;, payload)</code></p>
 
@@ -1015,7 +1262,7 @@ This method should be called <strong>synchronously</strong>
 </tr>
 <tr>
 <td>payload</td>
-<td>object &#124; <a href="#widgetdata">WidgetData</a></td>
+<td>object &#124; <a href="#type-widgetdata">WidgetData</a></td>
 <td>The data to be loaded by the Widget. This data is Widget-specific.</td>
 </tr>
 </tbody></table>
@@ -1029,8 +1276,8 @@ The input data payload must:</p>
 </ul>
 
 <p></aside></p>
-<h2 id='setdataresult'>setDataResult</h2><pre class="highlight javascript"><span class="c1">// `wiwo.dido.setDataResult` listener:
-</span><span class="kd">var</span> <span class="nx">_wiwo</span> <span class="o">=</span> <span class="nx">_wiwo</span> <span class="o">||</span> <span class="p">[];</span>
+<h2 id='event-setdataresult'>Event: setDataResult</h2><pre class="highlight javascript"><code><span class="c1">// `wiwo.dido.setDataResult` listener:</span>
+<span class="kd">var</span> <span class="nx">_wiwo</span> <span class="o">=</span> <span class="nx">_wiwo</span> <span class="o">||</span> <span class="p">[];</span>
 <span class="nx">_wiwo</span><span class="p">.</span><span class="nx">push</span><span class="p">([</span><span class="s1">'on'</span><span class="p">,</span> <span class="s1">'wiwo.dido.setDataResult'</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">,</span> <span class="nx">result</span><span class="p">){</span>
   <span class="k">if</span> <span class="p">(</span><span class="nx">result</span><span class="p">.</span><span class="nx">success</span><span class="p">){</span>
     <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'Successfully loaded data into Widget ID='</span><span class="p">,</span> <span class="nx">e</span><span class="p">.</span><span class="nx">frameId</span><span class="p">);</span>
@@ -1038,8 +1285,7 @@ The input data payload must:</p>
     <span class="nx">console</span><span class="p">.</span><span class="nx">warn</span><span class="p">(</span><span class="s1">'Unable to set data on Widget ID='</span><span class="p">,</span> <span class="nx">e</span><span class="p">.</span><span class="nx">frameId</span><span class="p">,</span> <span class="s1">', reason='</span><span class="p">,</span> <span class="nx">result</span><span class="p">.</span><span class="nx">message</span><span class="p">);</span>
   <span class="p">}</span>
 <span class="p">}]);</span>
-</pre>
-
+</code></pre>
 <table><thead>
 <tr>
 <th>Response event</th>
@@ -1051,21 +1297,25 @@ The input data payload must:</p>
 <td>result object with <code class="prettyprint">result.data.input</code>, the values you called setData with</td>
 </tr>
 </tbody></table>
-<h2 id='didoresult'>DidoResult</h2>
+
+<p><aside class="success">
+If you&rsquo;re using the &lsquo;wiwo.dido.setData&rsquo; and &lsquo;wiwo.dido.setDataResult&rsquo; events then
+consider migrating to the <a href="#setdata"><strong>setData()</strong></a> method to retrieve data from a Widget
+</aside></p>
+<h2 id='type-didoresult'>Type: DidoResult</h2>
 <blockquote>
 <p><code class="prettyprint">DidoResult</code> type structure:</p>
 </blockquote>
-<pre class="highlight javascript"><span class="kr">interface</span> <span class="nx">DidoResult</span> <span class="p">{</span>
+<pre class="highlight javascript"><code><span class="kr">interface</span> <span class="nx">DidoResult</span> <span class="p">{</span>
     <span class="s2">"success"</span><span class="p">:</span> <span class="kr">boolean</span><span class="p">,</span>
     <span class="s2">"message"</span><span class="p">:</span> <span class="nx">string</span><span class="p">,</span>
     <span class="s2">"data"</span><span class="p">:</span> <span class="nx">object</span>
 <span class="p">}</span>
-</pre>
-
+</code></pre>
 <blockquote>
 <p>Example <code class="prettyprint">DidoResult</code> success structure:</p>
 </blockquote>
-<pre class="highlight javascript"><span class="p">{</span>
+<pre class="highlight javascript"><code><span class="p">{</span>
     <span class="s2">"success"</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
     <span class="s2">"message"</span><span class="p">:</span> <span class="s1">''</span><span class="p">,</span>
     <span class="s2">"data"</span><span class="p">:</span> <span class="p">{</span>
@@ -1079,19 +1329,17 @@ The input data payload must:</p>
         <span class="p">}</span>
     <span class="p">}</span>
 <span class="p">}</span>
-</pre>
-
+</code></pre>
 <blockquote>
 <p>Example <code class="prettyprint">DidoResult</code> failure structure:</p>
 </blockquote>
-<pre class="highlight javascript"><span class="p">{</span>
+<pre class="highlight javascript"><code><span class="p">{</span>
     <span class="s2">"success"</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
     <span class="s2">"message"</span><span class="p">:</span> <span class="s1">'Widget has not been initialised yet.'</span><span class="p">,</span>
     <span class="s2">"data"</span><span class="p">:</span> <span class="kc">null</span>
 <span class="p">}</span>
-</pre>
-<h3 id='summary'>Summary</h3>
-<p>The <code class="prettyprint">DidoResult</code> object is returned by the <a href="#getdataresult">&lsquo;wiwo.dido.getDataResult&rsquo;</a> and <a href="#setdataresult">&lsquo;wiwo.dido.setDataResult&rsquo;</a> event listeners.</p>
+</code></pre><h3 id='summary'>Summary</h3>
+<p>The <code class="prettyprint">DidoResult</code> object is returned by the <a href="#event-getdataresult">&lsquo;wiwo.dido.getDataResult&rsquo;</a> and <a href="#event-setdataresult">&lsquo;wiwo.dido.setDataResult&rsquo;</a> event listeners.</p>
 
 <p>It is used to indicate if the preceeding <code class="prettyprint">&#39;wiwo.dido.getData&#39;</code> or <code class="prettyprint">&#39;wiwo.dido.setData&#39;</code> event was successful and to return any data that may be associated with the event.</p>
 <h3 id='properties'>Properties</h3>
@@ -1114,26 +1362,25 @@ The input data payload must:</p>
 </tr>
 <tr>
 <td>data</td>
-<td>object &#124; <a href="#widgetdata">WidgetData</a></td>
+<td>object &#124; <a href="#type-widgetdata">WidgetData</a></td>
 <td>Widget-specific response data. Will be <code class="prettyprint">null</code> if <code class="prettyprint">success</code> is false.</td>
 </tr>
 </tbody></table>
-<h2 id='widgetdata'>WidgetData</h2>
+<h2 id='type-widgetdata'>Type: WidgetData</h2>
 <blockquote>
 <p><code class="prettyprint">WidgetData</code> type structure:</p>
 </blockquote>
-<pre class="highlight javascript"><span class="kr">interface</span> <span class="nx">WidgetData</span> <span class="p">{</span>
+<pre class="highlight javascript"><code><span class="kr">interface</span> <span class="nx">WidgetData</span> <span class="p">{</span>
     <span class="s2">"id"</span><span class="p">:</span> <span class="nx">string</span><span class="p">,</span>
     <span class="s2">"version"</span><span class="p">:</span> <span class="nx">number</span><span class="p">,</span>
     <span class="s2">"input"</span><span class="p">:</span> <span class="nx">object</span><span class="p">,</span>
     <span class="s2">"output"</span><span class="p">:</span> <span class="nx">object</span>
 <span class="p">}</span>
-</pre>
-
+</code></pre>
 <blockquote>
 <p>Example <code class="prettyprint">WidgetData</code> structure:</p>
 </blockquote>
-<pre class="highlight javascript"><span class="p">{</span>
+<pre class="highlight javascript"><code><span class="p">{</span>
     <span class="s2">"id"</span><span class="p">:</span> <span class="s2">"wiwo-repayment-widget"</span><span class="p">,</span>
     <span class="s2">"version"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
     <span class="s2">"input"</span><span class="p">:</span> <span class="p">{</span>
@@ -1143,13 +1390,12 @@ The input data payload must:</p>
         <span class="p">...</span> <span class="nx">Widget</span><span class="o">-</span><span class="nx">specific</span> <span class="nx">properties</span> <span class="p">...</span>
     <span class="p">}</span>
 <span class="p">}</span>
-</pre>
-<h3 id='summary'>Summary</h3>
+</code></pre><h3 id='summary'>Summary</h3>
 <p>The <code class="prettyprint">WidgetData</code> object is used to describe the input and output data belonging to a Widget.</p>
 
-<p>The <code class="prettyprint">WidgetData</code> is returned as the <code class="prettyprint">result.data</code> property (see <a href="#didoresult">DidoResult</a>) with the <a href="#getdataresult">wiwo.dido.getDataResult</a> event.</p>
+<p>The <code class="prettyprint">WidgetData</code> is returned as the <code class="prettyprint">result.data</code> property (see <a href="#didoresult">DidoResult</a>) with the <a href="#event-getdataresult">wiwo.dido.getDataResult</a> event.</p>
 
-<p>A <code class="prettyprint">WidgetData</code> object is passed to a Widget as the <code class="prettyprint">payload</code> parameter with the <a href="#setdata">wiwo.dido.setData</a> event.</p>
+<p>A <code class="prettyprint">WidgetData</code> object is passed to a Widget as the <code class="prettyprint">payload</code> parameter with the <a href="#event-setdata">wiwo.dido.setData</a> event.</p>
 <h3 id='properties'>Properties</h3>
 <table><thead>
 <tr>
@@ -1186,16 +1432,15 @@ The input data payload must:</p>
 <p>The Widgets may emit tracking events that can be used to integrate with data analytics services.</p>
 
 <p>See the examples for <a href="#adobe-marketing-cloud-integration">Adobe Marketing Cloud</a> and <a href="#google-analytics-integration">Google Analytics</a>.</p>
-<h2 id='pagetrack'>pageTrack</h2>
+<h2 id='event-pagetrack'>Event: pageTrack</h2>
 <blockquote>
 <p>Example &lsquo;pageTrack&rsquo; event listener:</p>
 </blockquote>
-<pre class="highlight javascript"><span class="kd">var</span> <span class="nx">_wiwo</span> <span class="o">=</span> <span class="nx">_wiwo</span> <span class="o">||</span> <span class="p">[];</span>
+<pre class="highlight javascript"><code><span class="kd">var</span> <span class="nx">_wiwo</span> <span class="o">=</span> <span class="nx">_wiwo</span> <span class="o">||</span> <span class="p">[];</span>
 <span class="nx">_wiwo</span><span class="p">.</span><span class="nx">push</span><span class="p">([</span><span class="s1">'on'</span><span class="p">,</span> <span class="s1">'pageTrack'</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">,</span> <span class="nx">path</span><span class="p">){</span>
     <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'User viewing path: '</span><span class="p">,</span> <span class="nx">path</span><span class="p">);</span>
 <span class="p">}]);</span>
-</pre>
-<h3 id='summary'>Summary</h3>
+</code></pre><h3 id='summary'>Summary</h3>
 <p>The <code class="prettyprint">&#39;pageTrack&#39;</code> event is emitted by the Widget as the user navigates through the Widget.</p>
 
 <p>The event listener parameters contain information about the Widget that raised the event and the URL path fragment that represents the application state that the user is viewing.</p>
@@ -1211,7 +1456,7 @@ The input data payload must:</p>
 </thead><tbody>
 <tr>
 <td>e</td>
-<td><a href="#frameevent">FrameEvent</a></td>
+<td><a href="#type-frameevent">FrameEvent</a></td>
 <td>Information about the Widget that emitted the event.</td>
 </tr>
 <tr>
@@ -1220,11 +1465,11 @@ The input data payload must:</p>
 <td>The URL path fragment that represents the application state that the user is viewing. This value always includes a leading slash &lsquo;/&rsquo;.</td>
 </tr>
 </tbody></table>
-<h2 id='eventtrack'>eventTrack</h2>
+<h2 id='event-eventtrack'>Event: eventTrack</h2>
 <blockquote>
 <p>Example &lsquo;eventTrack&rsquo; event listener:</p>
 </blockquote>
-<pre class="highlight javascript"><span class="kd">var</span> <span class="nx">_wiwo</span> <span class="o">=</span> <span class="nx">_wiwo</span> <span class="o">||</span> <span class="p">[];</span>
+<pre class="highlight javascript"><code><span class="kd">var</span> <span class="nx">_wiwo</span> <span class="o">=</span> <span class="nx">_wiwo</span> <span class="o">||</span> <span class="p">[];</span>
 <span class="nx">_wiwo</span><span class="p">.</span><span class="nx">push</span><span class="p">([</span><span class="s1">'on'</span><span class="p">,</span> <span class="s1">'eventTrack'</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">,</span> <span class="nx">properties</span><span class="p">){</span>
     <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'User interaction: category="%s", action="%s", label="%s", value=%s'</span><span class="p">,</span>
         <span class="nx">properties</span><span class="p">.</span><span class="nx">category</span><span class="p">,</span>
@@ -1233,8 +1478,7 @@ The input data payload must:</p>
         <span class="nx">properties</span><span class="p">.</span><span class="nx">value</span>
     <span class="p">);</span>
 <span class="p">}]);</span>
-</pre>
-<h3 id='summary'>Summary</h3>
+</code></pre><h3 id='summary'>Summary</h3>
 <p>The <code class="prettyprint">&#39;eventTrack&#39;</code> event is emitted by the Widget when the user interacts with the Widget.</p>
 
 <p>It represents the user performing some action inside the Widget - e.g. clicking a button, showing a tooltip, etc.</p>
@@ -1252,23 +1496,22 @@ The input data payload must:</p>
 </thead><tbody>
 <tr>
 <td>e</td>
-<td><a href="#frameevent">FrameEvent</a></td>
+<td><a href="#type-frameevent">FrameEvent</a></td>
 <td>Information about the Widget that emitted the event.</td>
 </tr>
 <tr>
 <td>properties</td>
-<td><a href="#eventtrackproperties">EventTrackProperties</a></td>
+<td><a href="#event-eventtrackproperties">EventTrackProperties</a></td>
 <td>The tracking properties associated with this event.</td>
 </tr>
 </tbody></table>
-<h2 id='eventtrackproperties'>EventTrackProperties</h2><pre class="highlight javascript"><span class="kr">interface</span> <span class="nx">EventTrackProperties</span> <span class="p">{</span>
-    <span class="na">category</span><span class="p">:</span> <span class="nx">string</span><span class="p">,</span>
-    <span class="na">action</span><span class="p">:</span> <span class="nx">string</span><span class="p">,</span>
-    <span class="na">label</span><span class="p">:</span> <span class="nx">string</span><span class="p">,</span>
-    <span class="na">value</span><span class="p">:</span> <span class="nx">number</span>
+<h2 id='type-eventtrackproperties'>Type: EventTrackProperties</h2><pre class="highlight javascript"><code><span class="kr">interface</span> <span class="nx">EventTrackProperties</span> <span class="p">{</span>
+    <span class="nl">category</span><span class="p">:</span> <span class="nx">string</span><span class="p">,</span>
+    <span class="nx">action</span><span class="p">:</span> <span class="nx">string</span><span class="p">,</span>
+    <span class="nx">label</span><span class="p">:</span> <span class="nx">string</span><span class="p">,</span>
+    <span class="nx">value</span><span class="p">:</span> <span class="nx">number</span>
 <span class="p">}</span>
-</pre>
-
+</code></pre>
 <table>
     <thead>
         <tr>
@@ -1354,7 +1597,7 @@ The input data payload must:</p>
 <blockquote>
 <p>Example page view tracking (navigation event) in Adobe Marketing Cloud.</p>
 </blockquote>
-<pre class="highlight javascript"><span class="kd">var</span> <span class="nx">_wiwo</span> <span class="o">=</span> <span class="nx">_wiwo</span> <span class="o">||</span> <span class="p">[];</span>
+<pre class="highlight javascript"><code><span class="kd">var</span> <span class="nx">_wiwo</span> <span class="o">=</span> <span class="nx">_wiwo</span> <span class="o">||</span> <span class="p">[];</span>
 <span class="nx">_wiwo</span><span class="p">.</span><span class="nx">push</span><span class="p">([</span><span class="s1">'on'</span><span class="p">,</span> <span class="s1">'pageTrack'</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">,</span> <span class="nx">path</span><span class="p">){</span>
     <span class="cm">/*
     // Set additional tracking properties here as determined
@@ -1365,14 +1608,13 @@ The input data payload must:</p>
 
     <span class="nx">s</span><span class="p">.</span><span class="nx">t</span><span class="p">();</span>
 <span class="p">}]);</span>
-</pre>
-
+</code></pre>
 <blockquote>
 <p>Example link/interaction tracking in Adobe Marketing Cloud.</p>
 </blockquote>
-<pre class="highlight javascript"><span class="kd">var</span> <span class="nx">_wiwo</span> <span class="o">=</span> <span class="nx">_wiwo</span> <span class="o">||</span> <span class="p">[];</span>
-<span class="c1">// An example of how 
-</span><span class="nx">_wiwo</span><span class="p">.</span><span class="nx">push</span><span class="p">([</span><span class="s1">'on'</span><span class="p">,</span> <span class="s1">'pageTrack'</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">,</span> <span class="nx">properties</span><span class="p">){</span>
+<pre class="highlight javascript"><code><span class="kd">var</span> <span class="nx">_wiwo</span> <span class="o">=</span> <span class="nx">_wiwo</span> <span class="o">||</span> <span class="p">[];</span>
+<span class="c1">// An example of how </span>
+<span class="nx">_wiwo</span><span class="p">.</span><span class="nx">push</span><span class="p">([</span><span class="s1">'on'</span><span class="p">,</span> <span class="s1">'pageTrack'</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">,</span> <span class="nx">properties</span><span class="p">){</span>
     <span class="cm">/*
     // Set additional tracking properties here as determined
     // by your tracking requirements.
@@ -1384,37 +1626,34 @@ The input data payload must:</p>
 
     <span class="nx">s</span><span class="p">.</span><span class="nx">tl</span><span class="p">(</span><span class="kc">true</span><span class="p">,</span> <span class="s1">'o'</span><span class="p">,</span> <span class="nx">properties</span><span class="p">.</span><span class="nx">label</span><span class="p">);</span>
 <span class="p">}]);</span>
-</pre>
-
+</code></pre>
 <p>Integration with Adobe Marketing Cloud (formerly Omniture/SiteCatalyst) is supported through the <code class="prettyprint">&#39;pageTrack&#39;</code> and <code class="prettyprint">&#39;eventTrack&#39;</code> events emitted by the Widgets.</p>
 
 <p>See the <a href="http://microsite.omniture.com/t2/help/en_US/sc/implement/oms_sc_implement.pdf">Adobe Marketing Cloud documentation </a> for more information on available tracking options.</p>
 
-<p>See <a href="#eventtrackproperties">EventTrackProperties</a> for the properties available to the <code class="prettyprint">&#39;eventTrack&#39;</code> event.</p>
+<p>See <a href="#event-eventtrackproperties">EventTrackProperties</a> for the properties available to the <code class="prettyprint">&#39;eventTrack&#39;</code> event.</p>
 <h2 id='google-analytics-integration'>Google Analytics Integration</h2>
 <blockquote>
 <p>Example page tracking in Google Analytics.</p>
 </blockquote>
-<pre class="highlight javascript"><span class="kd">var</span> <span class="nx">_wiwo</span> <span class="o">=</span> <span class="nx">_wiwo</span> <span class="o">||</span> <span class="p">[];</span>
+<pre class="highlight javascript"><code><span class="kd">var</span> <span class="nx">_wiwo</span> <span class="o">=</span> <span class="nx">_wiwo</span> <span class="o">||</span> <span class="p">[];</span>
 <span class="nx">_wiwo</span><span class="p">.</span><span class="nx">push</span><span class="p">([</span><span class="s1">'on'</span><span class="p">,</span> <span class="s1">'pageTrack'</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">,</span> <span class="nx">path</span><span class="p">){</span>
     <span class="nx">_gaq</span><span class="p">.</span><span class="nx">push</span><span class="p">([</span><span class="s1">'_trackPageview'</span><span class="p">,</span> <span class="nx">path</span><span class="p">]);</span>
 <span class="p">}]);</span>
-</pre>
-
+</code></pre>
 <blockquote>
 <p>Example interaction tracking in Google Analytics.</p>
 </blockquote>
-<pre class="highlight javascript"><span class="kd">var</span> <span class="nx">_wiwo</span> <span class="o">=</span> <span class="nx">_wiwo</span> <span class="o">||</span> <span class="p">[];</span>
+<pre class="highlight javascript"><code><span class="kd">var</span> <span class="nx">_wiwo</span> <span class="o">=</span> <span class="nx">_wiwo</span> <span class="o">||</span> <span class="p">[];</span>
 <span class="nx">_wiwo</span><span class="p">.</span><span class="nx">push</span><span class="p">([</span><span class="s1">'on'</span><span class="p">,</span> <span class="s1">'eventTrack'</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">,</span> <span class="nx">properties</span><span class="p">){</span>
-    <span class="c1">// Pass `properties.value` if it exists, otherwise set `value` to `undefined`.
-</span>    <span class="kd">var</span> <span class="nx">value</span> <span class="o">=</span> <span class="nx">properties</span><span class="p">.</span><span class="nx">value</span> <span class="o">==</span> <span class="kc">null</span> <span class="p">?</span> <span class="k">void</span> <span class="mi">0</span> <span class="p">:</span> <span class="nx">properties</span><span class="p">.</span><span class="nx">value</span><span class="p">;</span>
+    <span class="c1">// Pass `properties.value` if it exists, otherwise set `value` to `undefined`.</span>
+    <span class="kd">var</span> <span class="nx">value</span> <span class="o">=</span> <span class="nx">properties</span><span class="p">.</span><span class="nx">value</span> <span class="o">==</span> <span class="kc">null</span> <span class="p">?</span> <span class="k">void</span> <span class="mi">0</span> <span class="p">:</span> <span class="nx">properties</span><span class="p">.</span><span class="nx">value</span><span class="p">;</span>
 
-    <span class="c1">// Set any additional tracking properties as required by your analytics requirements.
-</span>
+    <span class="c1">// Set any additional tracking properties as required by your analytics requirements.</span>
+
     <span class="nx">_gaq</span><span class="p">.</span><span class="nx">push</span><span class="p">([</span><span class="s1">'_trackEvent'</span><span class="p">,</span> <span class="nx">properties</span><span class="p">.</span><span class="nx">category</span><span class="p">,</span> <span class="nx">properties</span><span class="p">.</span><span class="nx">action</span><span class="p">,</span> <span class="nx">properties</span><span class="p">.</span><span class="nx">label</span><span class="p">,</span> <span class="nx">value</span><span class="p">]);</span>
 <span class="p">}]);</span>
-</pre>
-
+</code></pre>
 <p>Google Analytics tracking is supported through the <code class="prettyprint">&#39;pageTrack&#39;</code> and <code class="prettyprint">&#39;eventTrack&#39;</code> events emitted by the Widgets.</p>
 
 <p>See the <a href="https://developers.google.com/analytics/devguides/collection/gajs/methods/">Google Analytics documentation</a> for more detail:</p>
