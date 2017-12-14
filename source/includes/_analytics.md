@@ -217,18 +217,53 @@ See [EventTrackProperties](#event-eventtrackproperties) for the properties avail
 
 ## Google Analytics Integration
 
-> Example page tracking in Google Analytics.
+> Example analytics.js tracking:
+
+Google Analytics tracking is supported through the `'pageTrack'` and `'eventTrack'` events emitted by the Widgets.
+
+These can be mapped to the `pageview` and `event` commands.
 
 ```javascript
+// With `analytics.js`
+var _wiwo = _wiwo || [];
+_wiwo.push(['on', 'pageTrack', function(e, path){
+	ga('send', 'pageview', path);
+}]);
+```
+
+```javascript
+// With `analytics.js`
+var _wiwo = _wiwo || [];
+_wiwo.push(['on', 'eventTrack', function(e, properties){
+	// Pass `properties.value` if it exists, otherwise set `value` to `undefined`.
+	var value = properties.value == null ? void 0 : properties.value;
+	
+	// Set any additional tracking properties as required by your analytics requirements.
+	
+	ga('send', 'event', properties.category, properties.action, properties.label, value);
+}]);
+```
+
+See the [Universal Analytics documentation](https://developers.google.com/analytics/devguides/collection/analyticsjs/):
+
+ * [pageview command](https://developers.google.com/analytics/devguides/collection/analyticsjs/pages)
+ * [event command](https://developers.google.com/analytics/devguides/collection/analyticsjs/events)
+
+--------------------------------------------------------
+
+> Legacy ga.js tracking:
+
+
+```javascript
+// With legacy `ga.js`
 var _wiwo = _wiwo || [];
 _wiwo.push(['on', 'pageTrack', function(e, path){
 	_gaq.push(['_trackPageview', path]);
 }]);
 ```
 
-> Example interaction tracking in Google Analytics.
-
 ```javascript
+// With legacy `ga.js`
 var _wiwo = _wiwo || [];
 _wiwo.push(['on', 'eventTrack', function(e, properties){
 	// Pass `properties.value` if it exists, otherwise set `value` to `undefined`.
@@ -240,9 +275,7 @@ _wiwo.push(['on', 'eventTrack', function(e, properties){
 }]);
 ```
 
-Google Analytics tracking is supported through the `'pageTrack'` and `'eventTrack'` events emitted by the Widgets.
-
-See the [Google Analytics documentation](https://developers.google.com/analytics/devguides/collection/gajs/methods/) for more detail:
+The the [legacy `ga.js` Google Analytics library](https://developers.google.com/analytics/devguides/collection/gajs/) will map to:
 
  * [`_trackPageview` documentation](https://developers.google.com/analytics/devguides/collection/gajs/methods/gaJSApiBasicConfiguration#_gat.GA_Tracker_._trackPageview)
  * [`_trackEvent` documentation](https://developers.google.com/analytics/devguides/collection/gajs/methods/gaJSApiEventTracking#_gat.GA_EventTracker_._trackEvent)

@@ -19,7 +19,7 @@ The Widget is made up of four components that work together to embed the tool on
 <!-- Start Widget Works - do not change -->
 <script src="https://calcs.widgetworks.com.au/s/bimade/live.js"></script>
 <iframe id="wiwo-bimade" width="100%" height="200" src="" frameborder="0" data-wiwo-init="false"></iframe>
-<script src="https://scout.widgetworks.com.au/widget/widget-scout.min.js"></script>
+<script src="https://calcs.widgetworks.com.au/widget/widget-scout.min.js"></script>
 <!-- End Widget Works -->
 ```
 

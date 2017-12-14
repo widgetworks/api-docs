@@ -313,3 +313,43 @@ input     | object  | Optional. Widget-specific input data.
 output    | object  | Optional. Widget-specific result data.
 
 __Note:__ Whilst the `id` and `version` properties are required, any other properties on `WidgetData` are Widget-specific. The previous table should be used as a general guide only - see Widget-specific documentation to see if the structure differs for that Widget.
+
+
+## Type: InitPayload
+
+> `InitPayload` type structure
+
+```javascript
+interface InitPayload {
+	"setData": WidgetData
+}
+```
+
+> Example `InitPayload` strucutre:
+
+```javascript
+{
+	"setData": {
+		"id": "WidgetId" // e.g. "wiwo-repayment-widget",
+		"version": 1,
+		"input": {
+			... Widget-specific properties ...
+		},
+		"output": {
+			... Widget-specific properties ...
+		}
+	}
+}
+```
+
+### Summary
+
+The `InitPayload` object is used to pass default data to a Widget during initialisation (see the [`init` method](#init)).
+
+If given a valid strucutre, the Widget will startup with the default values set.
+
+### Properties
+
+Property | Type   | Description
+-------- | ------ | -----------
+setData       | [WidgetData](#type-widgetdata) | (optional) Default data to set on the Widget during initialisation

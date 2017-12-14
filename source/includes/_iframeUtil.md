@@ -135,6 +135,91 @@ paramN     | any    | The parameters to pass to the method.
 The following methods are available on the `iframeUtil`:
 
 
+## init()
+
+> Manually initialise a Widget
+
+```html
+<!-- NOTE: the `data-wiwo-init` attribute is set to "paused" to disable automatic initialisation -->
+<script src="https://calcs.widgetworks.com.au/s/bimade/live.js"></script>
+<iframe id="wiwo-bimade" width="100%" height="200" src="" frameborder="0" data-wiwo-init="paused"></iframe>
+<script src="https://calcs.widgetworks.com.au/widget/widget-scout.min.js"></script>
+```
+
+```javascript
+var _wiwo = _wiwo || [];
+_wiwo.push(['init', 'wiwo-bimade');
+```
+
+
+### Summary
+
+Use the `init()` method to manually initialise a Widget.
+
+Use this method if you want to pass default startup data to a Widget.
+
+By default Widgets are automatically initialised on a page.
+
+If the Widget iframe has the `data-wiwo-init` attribute set to `"false"` then the Widget will be automatically initialised on page load.
+
+Set the attribute to `data-wiwo-init="paused"` to disable automatic initialisation for that Widget and require manual initialisation.
+
+Manual initialisation is triggered by invoking the `init()` method (see example to the right).
+
+
+#### Setting default data
+
+The `init()` method accepts an optional second parameter of data to set on the Widget during startup.
+
+This is the recommended way of setting default data on a Widget during startup.
+
+This parameter is an [InitPayload object](http://api-docs.widgetworks.com.au/#type-initpayload).
+
+
+> Pass default data to a Widget
+
+```javascript
+var _wiwo = _wiwo || [];
+_wiwo.push(['init', 'wiwo-bimade', {
+    setData: {
+        // ... startup data goes here ...
+        // This is a WidgetData object - the same structure passed to the `setData()` method
+        {
+            "id": "wiwo-repayment-widget",
+            "version": 1,
+            
+            // This is the data that will be loaded by the Widget:
+            // This data is Widget-specific.
+            "input": {
+                "repaymentModel": {
+                    // The Widget will show these values at startup
+                    "propertyValue": 530000,
+                    "principal": 424000
+                    //...
+                }
+            }
+        }
+    }
+});
+```
+
+
+### Syntax
+
+`iframeUtil.init(frameId[, payload])`
+
+`_wiwo.push(['setData', frameId[, payload])`
+
+
+### Parameters
+
+Property  | Type   | Description
+--------- | ------ |------
+frameId   | string | The ID of the frame containing the Widget.
+payload   | [InitPayload](#type-initpayload) | (optional) An object with a `setData` property with the default data that should be shown in the Widget at startup.
+
+
+
 ## getData()
 
 > Get data from a Widget
