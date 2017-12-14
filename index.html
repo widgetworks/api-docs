@@ -61,7 +61,7 @@
 <pre class="highlight html"><code><span class="c">&lt;!-- Start Widget Works - do not change --&gt;</span>
 <span class="nt">&lt;script </span><span class="na">src=</span><span class="s">"https://calcs.widgetworks.com.au/s/bimade/live.js"</span><span class="nt">&gt;&lt;/script&gt;</span>
 <span class="nt">&lt;iframe</span> <span class="na">id=</span><span class="s">"wiwo-bimade"</span> <span class="na">width=</span><span class="s">"100%"</span> <span class="na">height=</span><span class="s">"200"</span> <span class="na">src=</span><span class="s">""</span> <span class="na">frameborder=</span><span class="s">"0"</span> <span class="na">data-wiwo-init=</span><span class="s">"false"</span><span class="nt">&gt;&lt;/iframe&gt;</span>
-<span class="nt">&lt;script </span><span class="na">src=</span><span class="s">"https://scout.widgetworks.com.au/widget/widget-scout.min.js"</span><span class="nt">&gt;&lt;/script&gt;</span>
+<span class="nt">&lt;script </span><span class="na">src=</span><span class="s">"https://calcs.widgetworks.com.au/widget/widget-scout.min.js"</span><span class="nt">&gt;&lt;/script&gt;</span>
 <span class="c">&lt;!-- End Widget Works --&gt;</span>
 </code></pre>
 <p>First, copy and insert the Widget embed code from <a href="https://wm.widgetworks.com.au">Widget Manager</a>. Our examples will use the following Mortgage Repayment Widget:</p>
@@ -567,6 +567,83 @@ In all cases <code class="prettyprint">_wiwo.push()</code> must be passed an arr
 </tbody></table>
 
 <p>The following methods are available on the <code class="prettyprint">iframeUtil</code>:</p>
+<h2 id='init'>init()</h2>
+<blockquote>
+<p>Manually initialise a Widget</p>
+</blockquote>
+<pre class="highlight html"><code><span class="c">&lt;!-- NOTE: the `data-wiwo-init` attribute is set to "paused" to disable automatic initialisation --&gt;</span>
+<span class="nt">&lt;script </span><span class="na">src=</span><span class="s">"https://calcs.widgetworks.com.au/s/bimade/live.js"</span><span class="nt">&gt;&lt;/script&gt;</span>
+<span class="nt">&lt;iframe</span> <span class="na">id=</span><span class="s">"wiwo-bimade"</span> <span class="na">width=</span><span class="s">"100%"</span> <span class="na">height=</span><span class="s">"200"</span> <span class="na">src=</span><span class="s">""</span> <span class="na">frameborder=</span><span class="s">"0"</span> <span class="na">data-wiwo-init=</span><span class="s">"paused"</span><span class="nt">&gt;&lt;/iframe&gt;</span>
+<span class="nt">&lt;script </span><span class="na">src=</span><span class="s">"https://calcs.widgetworks.com.au/widget/widget-scout.min.js"</span><span class="nt">&gt;&lt;/script&gt;</span>
+</code></pre><pre class="highlight javascript"><code><span class="kd">var</span> <span class="nx">_wiwo</span> <span class="o">=</span> <span class="nx">_wiwo</span> <span class="o">||</span> <span class="p">[];</span>
+<span class="nx">_wiwo</span><span class="p">.</span><span class="nx">push</span><span class="p">([</span><span class="s1">'init'</span><span class="p">,</span> <span class="s1">'wiwo-bimade'</span><span class="p">);</span>
+</code></pre><h3 id='summary'>Summary</h3>
+<p>Use the <code class="prettyprint">init()</code> method to manually initialise a Widget.</p>
+
+<p>Use this method if you want to pass default startup data to a Widget.</p>
+
+<p>By default Widgets are automatically initialised on a page.</p>
+
+<p>If the Widget iframe has the <code class="prettyprint">data-wiwo-init</code> attribute set to <code class="prettyprint">&quot;false&quot;</code> then the Widget will be automatically initialised on page load.</p>
+
+<p>Set the attribute to <code class="prettyprint">data-wiwo-init=&quot;paused&quot;</code> to disable automatic initialisation for that Widget and require manual initialisation.</p>
+
+<p>Manual initialisation is triggered by invoking the <code class="prettyprint">init()</code> method (see example to the right).</p>
+<h4 id='setting-default-data'>Setting default data</h4>
+<p>The <code class="prettyprint">init()</code> method accepts an optional second parameter of data to set on the Widget during startup.</p>
+
+<p>This is the recommended way of setting default data on a Widget during startup.</p>
+
+<p>This parameter is an <a href="http://api-docs.widgetworks.com.au/#type-initpayload">InitPayload object</a>.</p>
+
+<blockquote>
+<p>Pass default data to a Widget</p>
+</blockquote>
+<pre class="highlight javascript"><code><span class="kd">var</span> <span class="nx">_wiwo</span> <span class="o">=</span> <span class="nx">_wiwo</span> <span class="o">||</span> <span class="p">[];</span>
+<span class="nx">_wiwo</span><span class="p">.</span><span class="nx">push</span><span class="p">([</span><span class="s1">'init'</span><span class="p">,</span> <span class="s1">'wiwo-bimade'</span><span class="p">,</span> <span class="p">{</span>
+    <span class="na">setData</span><span class="p">:</span> <span class="p">{</span>
+        <span class="c1">// ... startup data goes here ...</span>
+        <span class="c1">// This is a WidgetData object - the same structure passed to the `setData()` method</span>
+        <span class="p">{</span>
+            <span class="s2">"id"</span><span class="p">:</span> <span class="s2">"wiwo-repayment-widget"</span><span class="p">,</span>
+            <span class="s2">"version"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+
+            <span class="c1">// This is the data that will be loaded by the Widget:</span>
+            <span class="c1">// This data is Widget-specific.</span>
+            <span class="s2">"input"</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">"repaymentModel"</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="c1">// The Widget will show these values at startup</span>
+                    <span class="s2">"propertyValue"</span><span class="p">:</span> <span class="mi">530000</span><span class="p">,</span>
+                    <span class="s2">"principal"</span><span class="p">:</span> <span class="mi">424000</span>
+                    <span class="c1">//...</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">});</span>
+</code></pre><h3 id='syntax'>Syntax</h3>
+<p><code class="prettyprint">iframeUtil.init(frameId[, payload])</code></p>
+
+<p><code class="prettyprint">_wiwo.push([&#39;setData&#39;, frameId[, payload])</code></p>
+<h3 id='parameters'>Parameters</h3>
+<table><thead>
+<tr>
+<th>Property</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>frameId</td>
+<td>string</td>
+<td>The ID of the frame containing the Widget.</td>
+</tr>
+<tr>
+<td>payload</td>
+<td><a href="#type-initpayload">InitPayload</a></td>
+<td>(optional) An object with a <code class="prettyprint">setData</code> property with the default data that should be shown in the Widget at startup.</td>
+</tr>
+</tbody></table>
 <h2 id='getdata'>getData()</h2>
 <blockquote>
 <p>Get data from a Widget</p>
@@ -1427,6 +1504,47 @@ consider migrating to the <a href="#setdata"><strong>setData()</strong></a> meth
 </tbody></table>
 
 <p><strong>Note:</strong> Whilst the <code class="prettyprint">id</code> and <code class="prettyprint">version</code> properties are required, any other properties on <code class="prettyprint">WidgetData</code> are Widget-specific. The previous table should be used as a general guide only - see Widget-specific documentation to see if the structure differs for that Widget.</p>
+<h2 id='type-initpayload'>Type: InitPayload</h2>
+<blockquote>
+<p><code class="prettyprint">InitPayload</code> type structure</p>
+</blockquote>
+<pre class="highlight javascript"><code><span class="kr">interface</span> <span class="nx">InitPayload</span> <span class="p">{</span>
+    <span class="s2">"setData"</span><span class="p">:</span> <span class="nx">WidgetData</span>
+<span class="p">}</span>
+</code></pre>
+<blockquote>
+<p>Example <code class="prettyprint">InitPayload</code> strucutre:</p>
+</blockquote>
+<pre class="highlight javascript"><code><span class="p">{</span>
+    <span class="s2">"setData"</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">"id"</span><span class="p">:</span> <span class="s2">"WidgetId"</span> <span class="c1">// e.g. "wiwo-repayment-widget",</span>
+        <span class="s2">"version"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="s2">"input"</span><span class="p">:</span> <span class="p">{</span>
+            <span class="p">...</span> <span class="nx">Widget</span><span class="o">-</span><span class="nx">specific</span> <span class="nx">properties</span> <span class="p">...</span>
+        <span class="p">},</span>
+        <span class="s2">"output"</span><span class="p">:</span> <span class="p">{</span>
+            <span class="p">...</span> <span class="nx">Widget</span><span class="o">-</span><span class="nx">specific</span> <span class="nx">properties</span> <span class="p">...</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre><h3 id='summary'>Summary</h3>
+<p>The <code class="prettyprint">InitPayload</code> object is used to pass default data to a Widget during initialisation (see the <a href="#init"><code class="prettyprint">init</code> method</a>).</p>
+
+<p>If given a valid strucutre, the Widget will startup with the default values set.</p>
+<h3 id='properties'>Properties</h3>
+<table><thead>
+<tr>
+<th>Property</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>setData</td>
+<td><a href="#type-widgetdata">WidgetData</a></td>
+<td>(optional) Default data to set on the Widget during initialisation</td>
+</tr>
+</tbody></table>
 
           <h1 id='analytics-event-reference'>Analytics Event Reference</h1>
 <p>The Widgets may emit tracking events that can be used to integrate with data analytics services.</p>
@@ -1634,17 +1752,47 @@ consider migrating to the <a href="#setdata"><strong>setData()</strong></a> meth
 <p>See <a href="#event-eventtrackproperties">EventTrackProperties</a> for the properties available to the <code class="prettyprint">&#39;eventTrack&#39;</code> event.</p>
 <h2 id='google-analytics-integration'>Google Analytics Integration</h2>
 <blockquote>
-<p>Example page tracking in Google Analytics.</p>
+<p>Example analytics.js tracking:</p>
 </blockquote>
-<pre class="highlight javascript"><code><span class="kd">var</span> <span class="nx">_wiwo</span> <span class="o">=</span> <span class="nx">_wiwo</span> <span class="o">||</span> <span class="p">[];</span>
+
+<p>Google Analytics tracking is supported through the <code class="prettyprint">&#39;pageTrack&#39;</code> and <code class="prettyprint">&#39;eventTrack&#39;</code> events emitted by the Widgets.</p>
+
+<p>These can be mapped to the <code class="prettyprint">pageview</code> and <code class="prettyprint">event</code> commands.</p>
+<pre class="highlight javascript"><code><span class="c1">// With `analytics.js`</span>
+<span class="kd">var</span> <span class="nx">_wiwo</span> <span class="o">=</span> <span class="nx">_wiwo</span> <span class="o">||</span> <span class="p">[];</span>
+<span class="nx">_wiwo</span><span class="p">.</span><span class="nx">push</span><span class="p">([</span><span class="s1">'on'</span><span class="p">,</span> <span class="s1">'pageTrack'</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">,</span> <span class="nx">path</span><span class="p">){</span>
+    <span class="nx">ga</span><span class="p">(</span><span class="s1">'send'</span><span class="p">,</span> <span class="s1">'pageview'</span><span class="p">,</span> <span class="nx">path</span><span class="p">);</span>
+<span class="p">}]);</span>
+</code></pre><pre class="highlight javascript"><code><span class="c1">// With `analytics.js`</span>
+<span class="kd">var</span> <span class="nx">_wiwo</span> <span class="o">=</span> <span class="nx">_wiwo</span> <span class="o">||</span> <span class="p">[];</span>
+<span class="nx">_wiwo</span><span class="p">.</span><span class="nx">push</span><span class="p">([</span><span class="s1">'on'</span><span class="p">,</span> <span class="s1">'eventTrack'</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">,</span> <span class="nx">properties</span><span class="p">){</span>
+    <span class="c1">// Pass `properties.value` if it exists, otherwise set `value` to `undefined`.</span>
+    <span class="kd">var</span> <span class="nx">value</span> <span class="o">=</span> <span class="nx">properties</span><span class="p">.</span><span class="nx">value</span> <span class="o">==</span> <span class="kc">null</span> <span class="p">?</span> <span class="k">void</span> <span class="mi">0</span> <span class="p">:</span> <span class="nx">properties</span><span class="p">.</span><span class="nx">value</span><span class="p">;</span>
+
+    <span class="c1">// Set any additional tracking properties as required by your analytics requirements.</span>
+
+    <span class="nx">ga</span><span class="p">(</span><span class="s1">'send'</span><span class="p">,</span> <span class="s1">'event'</span><span class="p">,</span> <span class="nx">properties</span><span class="p">.</span><span class="nx">category</span><span class="p">,</span> <span class="nx">properties</span><span class="p">.</span><span class="nx">action</span><span class="p">,</span> <span class="nx">properties</span><span class="p">.</span><span class="nx">label</span><span class="p">,</span> <span class="nx">value</span><span class="p">);</span>
+<span class="p">}]);</span>
+</code></pre>
+<p>See the <a href="https://developers.google.com/analytics/devguides/collection/analyticsjs/">Universal Analytics documentation</a>:</p>
+
+<ul>
+<li><a href="https://developers.google.com/analytics/devguides/collection/analyticsjs/pages">pageview command</a></li>
+<li><a href="https://developers.google.com/analytics/devguides/collection/analyticsjs/events">event command</a></li>
+</ul>
+
+<hr>
+
+<blockquote>
+<p>Legacy ga.js tracking:</p>
+</blockquote>
+<pre class="highlight javascript"><code><span class="c1">// With legacy `ga.js`</span>
+<span class="kd">var</span> <span class="nx">_wiwo</span> <span class="o">=</span> <span class="nx">_wiwo</span> <span class="o">||</span> <span class="p">[];</span>
 <span class="nx">_wiwo</span><span class="p">.</span><span class="nx">push</span><span class="p">([</span><span class="s1">'on'</span><span class="p">,</span> <span class="s1">'pageTrack'</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">,</span> <span class="nx">path</span><span class="p">){</span>
     <span class="nx">_gaq</span><span class="p">.</span><span class="nx">push</span><span class="p">([</span><span class="s1">'_trackPageview'</span><span class="p">,</span> <span class="nx">path</span><span class="p">]);</span>
 <span class="p">}]);</span>
-</code></pre>
-<blockquote>
-<p>Example interaction tracking in Google Analytics.</p>
-</blockquote>
-<pre class="highlight javascript"><code><span class="kd">var</span> <span class="nx">_wiwo</span> <span class="o">=</span> <span class="nx">_wiwo</span> <span class="o">||</span> <span class="p">[];</span>
+</code></pre><pre class="highlight javascript"><code><span class="c1">// With legacy `ga.js`</span>
+<span class="kd">var</span> <span class="nx">_wiwo</span> <span class="o">=</span> <span class="nx">_wiwo</span> <span class="o">||</span> <span class="p">[];</span>
 <span class="nx">_wiwo</span><span class="p">.</span><span class="nx">push</span><span class="p">([</span><span class="s1">'on'</span><span class="p">,</span> <span class="s1">'eventTrack'</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">,</span> <span class="nx">properties</span><span class="p">){</span>
     <span class="c1">// Pass `properties.value` if it exists, otherwise set `value` to `undefined`.</span>
     <span class="kd">var</span> <span class="nx">value</span> <span class="o">=</span> <span class="nx">properties</span><span class="p">.</span><span class="nx">value</span> <span class="o">==</span> <span class="kc">null</span> <span class="p">?</span> <span class="k">void</span> <span class="mi">0</span> <span class="p">:</span> <span class="nx">properties</span><span class="p">.</span><span class="nx">value</span><span class="p">;</span>
@@ -1654,9 +1802,7 @@ consider migrating to the <a href="#setdata"><strong>setData()</strong></a> meth
     <span class="nx">_gaq</span><span class="p">.</span><span class="nx">push</span><span class="p">([</span><span class="s1">'_trackEvent'</span><span class="p">,</span> <span class="nx">properties</span><span class="p">.</span><span class="nx">category</span><span class="p">,</span> <span class="nx">properties</span><span class="p">.</span><span class="nx">action</span><span class="p">,</span> <span class="nx">properties</span><span class="p">.</span><span class="nx">label</span><span class="p">,</span> <span class="nx">value</span><span class="p">]);</span>
 <span class="p">}]);</span>
 </code></pre>
-<p>Google Analytics tracking is supported through the <code class="prettyprint">&#39;pageTrack&#39;</code> and <code class="prettyprint">&#39;eventTrack&#39;</code> events emitted by the Widgets.</p>
-
-<p>See the <a href="https://developers.google.com/analytics/devguides/collection/gajs/methods/">Google Analytics documentation</a> for more detail:</p>
+<p>The the <a href="https://developers.google.com/analytics/devguides/collection/gajs/">legacy <code class="prettyprint">ga.js</code> Google Analytics library</a> will map to:</p>
 
 <ul>
 <li><a href="https://developers.google.com/analytics/devguides/collection/gajs/methods/gaJSApiBasicConfiguration#_gat.GA_Tracker_._trackPageview"><code class="prettyprint">_trackPageview</code> documentation</a></li>
