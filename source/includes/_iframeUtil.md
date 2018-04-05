@@ -325,7 +325,76 @@ Property  | Type   | Description
 --------- | ------ |------
 frameId   | string | The ID of the frame containing the Widget.
 payload   | [WidgetData](#type-widgetdata) | The data the Widget should load.
-callbackFn | Function | A function that will receive the result of the `setData` call. See [DiDo Events.setDataResult](#event-getdataresult) for parameter types.
+callbackFn | Function | A function that will receive the result of the `setData` call. See [DiDo Events.setDataResult](#event-setdataresult) for parameter types.
+
+
+
+## setAndGetData()
+
+> Send new data to a Widget and immediately retrieve the result
+
+```javascript
+var _wiwo = _wiwo || [];
+_wiwo.push([
+    'setAndGetData',
+    'wiwo-bimade', 
+    {
+      "id": "wiwo-repayment-widget",
+      "version": 1,
+      
+      // This is the data that will be loaded by the Widget:
+      // This data is Widget-specific.
+      "input": {
+        "repaymentModel": {
+          "propertyValue": 530000,
+          "principal": 424000
+        }
+      }
+    },
+    function(e, result){
+      if (result.success){
+        // Access calculated results via `result.data`
+        result.data
+      } else {
+        // Check error with `result.message`
+      }
+      
+    }
+]);
+```
+
+### Summary
+
+The `setAndGetData()` method lets you easily load new data in a Widget and immediately retrieve the calculated results.
+
+Behind the scenes it runs `setData()` and then immediately `getData()` to get the calculated results.
+
+If there is an error with the `setData()` call then the error is passed to the callback and `getData()` is *not* called.
+
+<aside class="success">
+This is the recommended way of running a calculation scenario in a Widget and retrieving the results
+</aside>
+
+<aside class="success">
+This method may be called asynchronously
+</aside>
+
+
+
+### Syntax
+
+`iframeUtil.setAndGetData(frameId, payload, callbackFn)`
+
+`_wiwo.push(['setAndGetData', frameId, payload, callbackFn)`
+
+
+### Parameters
+
+Property  | Type   | Description
+--------- | ------ |------
+frameId   | string | The ID of the frame containing the Widget.
+payload   | [WidgetData](#type-widgetdata) | The data the Widget should load.
+callbackFn | Function | A function that will receive the calculated results from a `getData` call. See [DiDo Events.getDataResult](#event-getdataresult) for parameter types.
 
 
 
