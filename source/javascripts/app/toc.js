@@ -16,7 +16,9 @@
       ignoreSelector: '.toc-ignore',
       highlightOffset: 60,
       scrollTo: -1,
-      scrollHistory: true,
+      scrollHistory: false,
+      showAndHide: false,
+      showAndHideOnScroll: false,
       hashGenerator: function (text, element) {
         return element.prop('id');
       }
@@ -28,8 +30,8 @@
       return false;
     });
 
-    $(".page-wrapper").click(closeToc);
-    $(".tocify-item").click(closeToc);
+    // $(".page-wrapper").click(closeToc);
+    // $(".tocify-item").click(closeToc);
   };
 
   // Hack to make already open sections to start opened,
@@ -41,7 +43,7 @@
   }
 
   $(makeToc);
-  $(animate);
+  // $(animate);
 
 })(window);
 

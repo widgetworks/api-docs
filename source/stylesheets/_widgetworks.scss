@@ -1,5 +1,10 @@
 @import url(//fonts.googleapis.com/css?family=Roboto:400);
 
+// 2020-02-11 - always show the TOC expanded
+.tocify-wrapper .tocify-subheader {
+    display: block;
+}
+
 //space the logo a touch
 .tocify-wrapper > img {
     margin-left: 6px;

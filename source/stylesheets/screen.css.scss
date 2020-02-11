@@ -5,7 +5,7 @@
 @import 'syntax';
 @import 'icon-font';
 
-@import 'widgetworks';
+// 2020-02-11: NOTE: _widgetworks import is now at the *BOTTOM* of this file.
 
 /*
 Copyright 2008-2013 Concur Technologies, Inc.
@@ -627,3 +627,7 @@ html, body {
     margin-top: $main-padding;
   }
 }
+
+
+// Move our styles to the bottom so we can override the defaults
+@import 'widgetworks';

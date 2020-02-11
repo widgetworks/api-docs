@@ -17,5 +17,5 @@ includes:
  - dido
  - analytics
 
-search: true
+search: false
 ---
